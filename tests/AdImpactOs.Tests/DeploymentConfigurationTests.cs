@@ -132,7 +132,7 @@ public class DeploymentConfigurationTests
         var filePath = Path.Combine(RepoRoot, ".github", "workflows", "cd.yml");
         var content = File.ReadAllText(filePath);
 
-        content.Should().Contain("default: 'dev'", "CD workflow default environment should be dev");
+        content.Should().Contain("environment: dev", "CD workflow should deploy to dev environment");
     }
 
     [Fact]
