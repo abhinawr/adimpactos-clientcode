@@ -11,25 +11,25 @@ $scriptRoot = $PSScriptRoot
 if (-not $scriptRoot) { $scriptRoot = (Get-Location).Path }
 
 # ?? Colour helpers ??????????????????????????????????????????????
-function Write-Step  { param($msg) Write-Host "`n>> $msg" -ForegroundColor Cyan }
-function Write-Ok    { param($msg) Write-Host "   OK  $msg" -ForegroundColor Green }
-function Write-Warn  { param($msg) Write-Host "   !   $msg" -ForegroundColor Yellow }
-function Write-Err   { param($msg) Write-Host "   ERR $msg" -ForegroundColor Red }
-function Write-Info  { param($msg) Write-Host "       $msg" -ForegroundColor Gray }
+function Write-Step { param($msg) Write-Host "`n>> $msg" -ForegroundColor Cyan }
+function Write-Ok { param($msg) Write-Host "   OK  $msg" -ForegroundColor Green }
+function Write-Warn { param($msg) Write-Host "   !   $msg" -ForegroundColor Yellow }
+function Write-Err { param($msg) Write-Host "   ERR $msg" -ForegroundColor Red }
+function Write-Info { param($msg) Write-Host "       $msg" -ForegroundColor Gray }
 
 # ?? Configuration ???????????????????????????????????????????????
-$composeFile      = Join-Path $scriptRoot "docker-compose.infra.yml"
-$solutionRoot     = $scriptRoot
+$composeFile = Join-Path $scriptRoot "docker-compose.infra.yml"
+$solutionRoot = $scriptRoot
 
 $apiProjects = @(
     @{ Name = "PanelistAPI"; Path = "src\AdImpactOs.PanelistAPI"; Port = 5001; HealthPath = "/api/panelists" },
-    @{ Name = "SurveyAPI";   Path = "src\AdImpactOs.Survey";      Port = 5002; HealthPath = "/api/surveys" },
-    @{ Name = "CampaignAPI"; Path = "src\AdImpactOs.Campaign";    Port = 5003; HealthPath = "/api/campaigns" }
+    @{ Name = "SurveyAPI"; Path = "src\AdImpactOs.Survey"; Port = 5002; HealthPath = "/api/surveys" },
+    @{ Name = "CampaignAPI"; Path = "src\AdImpactOs.Campaign"; Port = 5003; HealthPath = "/api/campaigns" }
 )
 
 $uiProjects = @(
     @{ Name = "Dashboard"; Path = "src\AdImpactOs.Dashboard"; Port = 5004; HealthPath = "/" },
-    @{ Name = "DemoUI";    Path = "src\AdImpactOs.DemoUI";    Port = 5010; HealthPath = "/" }
+    @{ Name = "DemoUI"; Path = "src\AdImpactOs.DemoUI"; Port = 5010; HealthPath = "/" }
 )
 
 # Track background jobs so we can clean up on exit
@@ -45,7 +45,8 @@ function Stop-Everything {
             try {
                 Stop-Job -Id $job.Id -ErrorAction SilentlyContinue
                 Remove-Job -Id $job.Id -Force -ErrorAction SilentlyContinue
-            } catch {}
+            }
+            catch {}
         }
     }
 
@@ -86,7 +87,8 @@ try {
         throw "Docker not running"
     }
     Write-Host "Docker Desktop is running" -ForegroundColor Green
-} catch {
+}
+catch {
     $ErrorActionPreference = $oldEAP
     Write-Host "ERROR: Docker Desktop is not running!" -ForegroundColor Red
     Write-Host "Please start Docker Desktop and try again." -ForegroundColor Red
@@ -97,8 +99,9 @@ try {
 try {
     $dotnetVersion = dotnet --version 2>&1
     Write-Ok ".NET SDK $dotnetVersion"
-} catch {
-    Write-Err ".NET SDK not found. Please install the .NET 8 SDK."
+}
+catch {
+    Write-Err ".NET SDK not found. Please install the .NET 10 SDK."
     exit 1
 }
 
@@ -137,14 +140,16 @@ while (-not $cosmosReady -and $cosmosAttempts -lt $cosmosMaxAttempts) {
         $health = $health.Trim()
         if ($health -eq "healthy") {
             $cosmosReady = $true
-        } else {
+        }
+        else {
             $elapsed = $cosmosAttempts * 5
             if ($cosmosAttempts % 6 -eq 0) {
                 Write-Info "Still waiting... ($elapsed`s elapsed, status: $health)"
             }
             Start-Sleep -Seconds 5
         }
-    } catch {
+    }
+    catch {
         Start-Sleep -Seconds 5
     }
 }
@@ -166,7 +171,8 @@ for ($i = 0; $i -lt 12; $i++) {
         $kh = (docker inspect --format='{{.State.Health.Status}}' adimpactos-eventhub 2>&1) | Out-String
         $kh = $kh.Trim()
         if ($kh -eq "healthy") { $kafkaReady = $true; break }
-    } catch {}
+    }
+    catch {}
     Start-Sleep -Seconds 5
 }
 if ($kafkaReady) { Write-Ok "Kafka is healthy" } else { Write-Warn "Kafka not yet healthy (APIs will still start)" }
@@ -231,7 +237,8 @@ for ($apiIdx = 0; $apiIdx -lt $apiProjects.Count; $apiIdx++) {
             if ($resp.StatusCode -eq 200) {
                 $ready = $true
             }
-        } catch {
+        }
+        catch {
             if ($attempts % 10 -eq 0) {
                 $elapsed = $attempts * 3
                 Write-Info "  $($api.Name) still starting... ($elapsed`s)"
@@ -242,7 +249,8 @@ for ($apiIdx = 0; $apiIdx -lt $apiProjects.Count; $apiIdx++) {
 
     if ($ready) {
         Write-Ok "$($api.Name) is ready (port $($api.Port)) - migration complete"
-    } else {
+    }
+    else {
         Write-Err "$($api.Name) did not respond within 4 minutes."
         Write-Info "Check log: $logFile"
         Write-Err "Aborting � later APIs depend on the shared database."
@@ -288,19 +296,23 @@ if ($funcAvailable -and (Test-Path (Join-Path $funcBinDir "host.json"))) {
         try {
             $resp = Invoke-WebRequest -Uri "http://localhost:7071/api/pixel?cid=healthcheck&crid=hc&uid=hc" -UseBasicParsing -TimeoutSec 3 -ErrorAction Stop
             if ($resp.StatusCode -eq 200) { $funcReady = $true; break }
-        } catch {}
+        }
+        catch {}
         Start-Sleep -Seconds 3
     }
     if ($funcReady) {
         Write-Ok "Azure Functions host is ready (port 7071)"
-    } else {
+    }
+    else {
         Write-Warn "Azure Functions is starting up (port 7071) - may need a few more seconds"
     }
-} else {
+}
+else {
     if (-not $funcAvailable) {
         Write-Warn "Azure Functions Core Tools not found. Skipping Functions host."
         Write-Info "  Install: npm install -g azure-functions-core-tools@4"
-    } else {
+    }
+    else {
         Write-Warn "Functions build output not found at $funcBinDir. Skipping."
     }
 }
@@ -355,13 +367,15 @@ foreach ($ui in $uiProjects) {
         try {
             $resp = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 3 -ErrorAction Stop
             if ($resp.StatusCode -eq 200) { $ready = $true; break }
-        } catch {}
+        }
+        catch {}
         Start-Sleep -Seconds 3
     }
 
     if ($ready) {
         Write-Ok "$($ui.Name) is ready (port $($ui.Port))"
-    } else {
+    }
+    else {
         Write-Warn "$($ui.Name) is starting up (port $($ui.Port)) - may need a few more seconds"
     }
 }
@@ -403,7 +417,8 @@ Write-Host ""
 # Open Dashboard in browser
 try {
     Start-Process "http://localhost:5004"
-} catch {}
+}
+catch {}
 
 # ================================================================
 #  Keep alive � stream API logs until Ctrl+C
@@ -418,6 +433,7 @@ try {
         }
         Start-Sleep -Seconds 10
     }
-} finally {
+}
+finally {
     Stop-Everything
 }

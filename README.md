@@ -182,7 +182,7 @@ AdImpactOs/
 ### Prerequisites
 
 - Docker Desktop (with 8GB+ RAM)
-- .NET 8 SDK
+- .NET 10 SDK
 - Azure Functions Core Tools v4 (optional)
 - Visual Studio 2022 or VS Code
 
@@ -340,6 +340,6 @@ For issues and questions:
 
 ---
 
-**Built with**: .NET 8, Azure Functions, Cosmos DB, Event Hubs, Databricks, Power BI (excluded from this solution)
+**Built with**: .NET 10, Azure Functions, Cosmos DB, Event Hubs, Databricks, Power BI (excluded from this solution)
 
 **Documentation**: See **[docs/](docs/)** folder for complete guides

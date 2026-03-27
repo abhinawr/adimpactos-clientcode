@@ -47,7 +47,7 @@ jobs:
           (github.event.pull_request.base.ref == 'main' && startsWith(github.event.pull_request.head.ref, 'release/'))
         )
       )
-    name: Build & Test (.NET 8)
+    name: Build & Test (.NET 10)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -58,7 +58,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up .NET 8
+      - name: Set up .NET 10
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
