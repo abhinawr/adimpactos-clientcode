@@ -5,112 +5,15 @@ on:
     types: [closed]
     branches:
       - main
-
-jobs:
-  prevent-direct-merge:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Prevent direct merge to main
-        if: >
-          github.event.pull_request.merged == true &&
-          github.event.pull_request.base.ref == 'main' && !startsWith(github.event.pull_request.head.ref, 'release/')
-        run: |
-          echo "Direct merges to main are not allowed."
-          exit 1
-
-  build-and-push:
-    if: >
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.base.ref == 'main' && startsWith(github.event.pull_request.head.ref, 'release/')
-    name: Build & Push Docker Images
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      image-tag: ${{ steps.meta.outputs.version }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set image tag
-        id: meta
-        run: echo "version=$(echo $GITHUB_SHA | head -c 8)" >> $GITHUB_OUTPUT
-      - name: Log in to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Log in to Azure Container Registry
-        run: az acr login --name ${{ secrets.ACR_NAME }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build and push – Panelist API
-        uses: docker/build-push-action@v5
-        with:
-          context: src/AdImpactOs.PanelistAPI
-          push: true
-          tags: |
-            ${{ env.ACR_LOGIN_SERVER }}/panelistapi:${{ steps.meta.outputs.version }}
-            ${{ env.ACR_LOGIN_SERVER }}/panelistapi:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Build and push – Survey API
-        uses: docker/build-push-action@v5
-        with:
-          context: src/AdImpactOs.Survey
-          push: true
-          tags: |
-            ${{ env.ACR_LOGIN_SERVER }}/surveyapi:${{ steps.meta.outputs.version }}
-            ${{ env.ACR_LOGIN_SERVER }}/surveyapi:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Build and push – Campaign API
-        uses: docker/build-push-action@v5
-        with:
-          context: src/AdImpactOs.Campaign
-          push: true
-          tags: |
-            ${{ env.ACR_LOGIN_SERVER }}/campaignapi:${{ steps.meta.outputs.version }}
-            ${{ env.ACR_LOGIN_SERVER }}/campaignapi:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Build and push – Event Consumer
-        uses: docker/build-push-action@v5
-        with:
-          context: src/AdImpactOs.EventConsumer
-          push: true
-          tags: |
-            ${{ env.ACR_LOGIN_SERVER }}/eventconsumer:${{ steps.meta.outputs.version }}
-            ${{ env.ACR_LOGIN_SERVER }}/eventconsumer:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Build and push – Dashboard
-        uses: docker/build-push-action@v5
-        with:
-          context: src/AdImpactOs.Dashboard
-          push: true
-          tags: |
-            ${{ env.ACR_LOGIN_SERVER }}/dashboard:${{ steps.meta.outputs.version }}
-            ${{ env.ACR_LOGIN_SERVER }}/dashboard:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: Build and push – Demo UI
-        uses: docker/build-push-action@v5
-        with:
-          context: src/AdImpactOs.DemoUI
-          push: true
-          tags: |
-            ${{ env.ACR_LOGIN_SERVER }}/demoui:${{ steps.meta.outputs.version }}
-            ${{ env.ACR_LOGIN_SERVER }}/demoui:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
   workflow_dispatch:
     inputs:
       environment:
         description: 'Target environment'
         required: true
-        default: 'production'
+        default: 'dev'
         type: choice
         options:
-          - production
+          - dev
           - staging
 
 env:
@@ -118,13 +21,41 @@ env:
   RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
   FUNCTION_APP_NAME: ${{ secrets.AZURE_FUNCTION_APP_NAME }}
 
+# Free org: only one deploy at a time (no environment protection rules available)
+concurrency:
+  group: cd-${{ inputs.environment || 'dev' }}
+  cancel-in-progress: false
+
 jobs:
+  # ─────────────────────────────────────────────
+  # 0. Branch naming gate (PR merges only)
+  # ─────────────────────────────────────────────
+  prevent-direct-merge:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Enforce release/* → main convention
+        if: >
+          github.event.pull_request.merged == true &&
+          !startsWith(github.event.pull_request.head.ref, 'release/')
+        run: |
+          echo "::error::Only release/* branches may be merged to main."
+          exit 1
+
   # ─────────────────────────────────────────────
   # 1. Build & push all Docker images to ACR
   # ─────────────────────────────────────────────
   build-and-push:
     name: Build & Push Docker Images
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.pull_request.merged == true &&
+        startsWith(github.event.pull_request.head.ref, 'release/')
+      )
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: read
     outputs:
@@ -152,7 +83,8 @@ jobs:
       - name: Build and push – Panelist API
         uses: docker/build-push-action@v5
         with:
-          context: src/AdImpactOs.PanelistAPI
+          context: .
+          file: src/AdImpactOs.PanelistAPI/Dockerfile
           push: true
           tags: |
             ${{ env.ACR_LOGIN_SERVER }}/panelistapi:${{ steps.meta.outputs.version }}
@@ -163,7 +95,8 @@ jobs:
       - name: Build and push – Survey API
         uses: docker/build-push-action@v5
         with:
-          context: src/AdImpactOs.Survey
+          context: .
+          file: src/AdImpactOs.Survey/Dockerfile
           push: true
           tags: |
             ${{ env.ACR_LOGIN_SERVER }}/surveyapi:${{ steps.meta.outputs.version }}
@@ -174,7 +107,8 @@ jobs:
       - name: Build and push – Campaign API
         uses: docker/build-push-action@v5
         with:
-          context: src/AdImpactOs.Campaign
+          context: .
+          file: src/AdImpactOs.Campaign/Dockerfile
           push: true
           tags: |
             ${{ env.ACR_LOGIN_SERVER }}/campaignapi:${{ steps.meta.outputs.version }}
@@ -185,7 +119,8 @@ jobs:
       - name: Build and push – Event Consumer
         uses: docker/build-push-action@v5
         with:
-          context: src/AdImpactOs.EventConsumer
+          context: .
+          file: src/AdImpactOs.EventConsumer/Dockerfile
           push: true
           tags: |
             ${{ env.ACR_LOGIN_SERVER }}/eventconsumer:${{ steps.meta.outputs.version }}
@@ -196,7 +131,8 @@ jobs:
       - name: Build and push – Dashboard
         uses: docker/build-push-action@v5
         with:
-          context: src/AdImpactOs.Dashboard
+          context: .
+          file: src/AdImpactOs.Dashboard/Dockerfile
           push: true
           tags: |
             ${{ env.ACR_LOGIN_SERVER }}/dashboard:${{ steps.meta.outputs.version }}
@@ -207,7 +143,8 @@ jobs:
       - name: Build and push – Demo UI
         uses: docker/build-push-action@v5
         with:
-          context: src/AdImpactOs.DemoUI
+          context: .
+          file: src/AdImpactOs.DemoUI/Dockerfile
           push: true
           tags: |
             ${{ env.ACR_LOGIN_SERVER }}/demoui:${{ steps.meta.outputs.version }}
@@ -221,8 +158,9 @@ jobs:
   deploy-functions:
     name: Deploy Azure Functions
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: build-and-push
-    environment: ${{ inputs.environment || 'production' }}
+    environment: ${{ inputs.environment || 'dev' }}
     permissions:
       contents: read
 
@@ -258,9 +196,9 @@ jobs:
   deploy-services:
     name: Deploy Container Services
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: build-and-push
-    environment: ${{ inputs.environment || 'production' }}
-    permissions: {}
+    environment: ${{ inputs.environment || 'dev' }}
 
     steps:
       - name: Log in to Azure
@@ -316,9 +254,9 @@ jobs:
   smoke-test:
     name: Post-Deployment Smoke Test
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [deploy-functions, deploy-services]
-    environment: ${{ inputs.environment || 'production' }}
-    permissions: {}
+    environment: ${{ inputs.environment || 'dev' }}
 
     steps:
       - name: Log in to Azure
@@ -341,7 +279,7 @@ jobs:
             --name ${{ secrets.PANELIST_API_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query defaultHostName --output tsv)
-          curl --fail --silent "https://$url/health"
+          curl --fail --silent --retry 3 --retry-delay 10 "https://$url/health"
 
       - name: Health-check Survey API
         run: |
@@ -349,7 +287,7 @@ jobs:
             --name ${{ secrets.SURVEY_API_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query defaultHostName --output tsv)
-          curl --fail --silent "https://$url/health"
+          curl --fail --silent --retry 3 --retry-delay 10 "https://$url/health"
 
       - name: Health-check Campaign API
         run: |
@@ -357,4 +295,4 @@ jobs:
             --name ${{ secrets.CAMPAIGN_API_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --query defaultHostName --output tsv)
-          curl --fail --silent "https://$url/health"
+          curl --fail --silent --retry 3 --retry-delay 10 "https://$url/health"

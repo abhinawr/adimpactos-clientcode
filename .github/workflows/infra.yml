@@ -1,0 +1,333 @@
+name: Infrastructure – Provision Azure Resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      prefix:
+        description: 'Project prefix for resource naming'
+        required: true
+        default: 'adimpact'
+        type: string
+      environment:
+        description: 'Environment name'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+      location:
+        description: 'Azure region'
+        required: true
+        default: 'eastus'
+        type: string
+
+env:
+  PREFIX: ${{ inputs.prefix }}
+  ENV: ${{ inputs.environment }}
+  LOCATION: ${{ inputs.location }}
+  RG: ${{ inputs.prefix }}-${{ inputs.environment }}-rg
+  ALERT_EMAIL: tech@theeditorialinstitute.com
+
+# Free org: only one infra provision at a time
+concurrency:
+  group: infra-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  provision:
+    name: Provision Azure Resources
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # ── Phase 4: Resource Group ──
+      - name: Create Resource Group
+        run: |
+          az group create \
+            --name "$RG" \
+            --location "$LOCATION" \
+            --tags project=AdImpactOs environment=$ENV
+
+      # ── Phase 5: Container Registry ──
+      - name: Create Azure Container Registry
+        run: |
+          ACR_NAME="${PREFIX}${ENV}acr"
+          az acr create \
+            --resource-group "$RG" \
+            --name "$ACR_NAME" \
+            --sku Basic \
+            --location "$LOCATION"
+          az acr update --name "$ACR_NAME" --admin-enabled true
+          echo "ACR_NAME=$ACR_NAME" >> $GITHUB_ENV
+
+      # ── Phase 6: Cosmos DB (Serverless) ──
+      - name: Create Cosmos DB Account
+        run: |
+          COSMOS_NAME="${PREFIX}-cosmos-${ENV}"
+          az cosmosdb create \
+            --resource-group "$RG" \
+            --name "$COSMOS_NAME" \
+            --kind GlobalDocumentDB \
+            --default-consistency-level Session \
+            --locations regionName="$LOCATION" failoverPriority=0 isZoneRedundant=false \
+            --capabilities EnableServerless \
+            --enable-automatic-failover false \
+            --backup-policy-type Continuous
+          echo "COSMOS_NAME=$COSMOS_NAME" >> $GITHUB_ENV
+
+      - name: Create Cosmos DB Database and Containers
+        run: |
+          az cosmosdb sql database create \
+            --resource-group "$RG" \
+            --account-name "$COSMOS_NAME" \
+            --name "AdImpactOsDB"
+
+          for CONTAINER_SPEC in "Panelists:/panelistId" "Campaigns:/campaignId" "Impressions:/campaignId" "Surveys:/surveyId" "SurveyResponses:/surveyId"; do
+            NAME="${CONTAINER_SPEC%%:*}"
+            PK="${CONTAINER_SPEC#*:}"
+            az cosmosdb sql container create \
+              --resource-group "$RG" \
+              --account-name "$COSMOS_NAME" \
+              --database-name "AdImpactOsDB" \
+              --name "$NAME" \
+              --partition-key-path "$PK"
+          done
+
+      # ── Phase 7: Event Hubs ──
+      - name: Create Event Hubs
+        run: |
+          EH_NAMESPACE="${PREFIX}-eh-${ENV}"
+          az eventhubs namespace create \
+            --resource-group "$RG" \
+            --name "$EH_NAMESPACE" \
+            --location "$LOCATION" \
+            --sku Standard \
+            --capacity 1 \
+            --enable-auto-inflate true \
+            --maximum-throughput-units 10 \
+            --enable-kafka true
+
+          az eventhubs eventhub create \
+            --resource-group "$RG" \
+            --namespace-name "$EH_NAMESPACE" \
+            --name "ad-impressions" \
+            --partition-count 8 \
+            --message-retention 7
+
+          for CG in "event-consumer" "monitoring" "archive"; do
+            az eventhubs eventhub consumer-group create \
+              --resource-group "$RG" \
+              --namespace-name "$EH_NAMESPACE" \
+              --eventhub-name "ad-impressions" \
+              --name "$CG"
+          done
+
+          az eventhubs namespace authorization-rule create \
+            --resource-group "$RG" \
+            --namespace-name "$EH_NAMESPACE" \
+            --name "adimpactos-rule" \
+            --rights Send Listen
+
+          echo "EH_NAMESPACE=$EH_NAMESPACE" >> $GITHUB_ENV
+
+      # ── Phase 8: Storage Account ──
+      - name: Create Storage Account
+        run: |
+          STORAGE_NAME="${PREFIX}${ENV}sa"
+          az storage account create \
+            --resource-group "$RG" \
+            --name "$STORAGE_NAME" \
+            --location "$LOCATION" \
+            --sku Standard_LRS \
+            --kind StorageV2 \
+            --min-tls-version TLS1_2 \
+            --allow-blob-public-access false
+
+          az storage container create --name "event-consumer-checkpoints" \
+            --account-name "$STORAGE_NAME" --auth-mode login
+          az storage container create --name "dead-letter-queue" \
+            --account-name "$STORAGE_NAME" --auth-mode login
+
+          echo "STORAGE_NAME=$STORAGE_NAME" >> $GITHUB_ENV
+
+      # ── Phase 9: Key Vault ──
+      - name: Create Key Vault
+        run: |
+          KV_NAME="${PREFIX}-kv-${ENV}"
+          az keyvault create \
+            --resource-group "$RG" \
+            --name "$KV_NAME" \
+            --location "$LOCATION" \
+            --sku standard \
+            --enable-soft-delete true \
+            --retention-days 90 \
+            --enable-purge-protection true
+
+          az keyvault key create \
+            --vault-name "$KV_NAME" \
+            --name "panelist-token-key" \
+            --kty RSA \
+            --size 2048 \
+            --protection software
+
+          echo "KV_NAME=$KV_NAME" >> $GITHUB_ENV
+
+      # ── Phase 10: Application Insights ──
+      - name: Create Log Analytics and Application Insights
+        run: |
+          LAW_NAME="${PREFIX}-law-${ENV}"
+          AI_NAME="${PREFIX}-ai-${ENV}"
+
+          az monitor log-analytics workspace create \
+            --resource-group "$RG" \
+            --workspace-name "$LAW_NAME" \
+            --location "$LOCATION"
+
+          LAW_ID=$(az monitor log-analytics workspace show \
+            --resource-group "$RG" \
+            --workspace-name "$LAW_NAME" \
+            --query id --output tsv)
+
+          az monitor app-insights component create \
+            --resource-group "$RG" \
+            --app "$AI_NAME" \
+            --location "$LOCATION" \
+            --kind web \
+            --workspace "$LAW_ID"
+
+      # ── Phase 11: App Service Plan ──
+      - name: Create App Service Plan
+        run: |
+          APP_PLAN="${PREFIX}-plan-${ENV}"
+          az appservice plan create \
+            --resource-group "$RG" \
+            --name "$APP_PLAN" \
+            --location "$LOCATION" \
+            --is-linux \
+            --sku B1 \
+            --number-of-workers 1
+          echo "APP_PLAN=$APP_PLAN" >> $GITHUB_ENV
+
+      # ── Phase 12: Function App ──
+      - name: Create Function App
+        run: |
+          FUNC_APP="${PREFIX}-fn-${ENV}"
+          az functionapp create \
+            --resource-group "$RG" \
+            --name "$FUNC_APP" \
+            --storage-account "$STORAGE_NAME" \
+            --consumption-plan-location "$LOCATION" \
+            --runtime dotnet-isolated \
+            --runtime-version 8 \
+            --functions-version 4 \
+            --os-type Linux
+          echo "FUNC_APP=$FUNC_APP" >> $GITHUB_ENV
+
+      # ── Phase 13: Web Apps ──
+      - name: Create Web Apps
+        run: |
+          for APP in "panelist" "campaign" "survey" "dashboard" "demoui" "consumer"; do
+            az webapp create \
+              --resource-group "$RG" \
+              --plan "$APP_PLAN" \
+              --name "${PREFIX}-${APP}-${ENV}" \
+              --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:8.0"
+          done
+
+      # ── Phase 14: Managed Identities ──
+      - name: Enable Managed Identities and grant access
+        run: |
+          ACR_ID=$(az acr show --name "$ACR_NAME" --query id --output tsv)
+
+          for APP in "panelist" "campaign" "survey" "dashboard" "demoui" "consumer"; do
+            APP_NAME="${PREFIX}-${APP}-${ENV}"
+            PRINCIPAL_ID=$(az webapp identity assign \
+              --resource-group "$RG" \
+              --name "$APP_NAME" \
+              --query principalId --output tsv)
+
+            az keyvault set-policy \
+              --name "$KV_NAME" \
+              --object-id "$PRINCIPAL_ID" \
+              --secret-permissions get list
+
+            az role assignment create \
+              --assignee "$PRINCIPAL_ID" \
+              --scope "$ACR_ID" \
+              --role AcrPull
+          done
+
+          FN_PRINCIPAL_ID=$(az functionapp identity assign \
+            --resource-group "$RG" \
+            --name "$FUNC_APP" \
+            --query principalId --output tsv)
+
+          az keyvault set-policy \
+            --name "$KV_NAME" \
+            --object-id "$FN_PRINCIPAL_ID" \
+            --secret-permissions get list
+
+      # ── Phase 15: Store Secrets ──
+      - name: Store secrets in Key Vault
+        run: |
+          COSMOS_ENDPOINT=$(az cosmosdb show \
+            --resource-group "$RG" \
+            --name "$COSMOS_NAME" \
+            --query documentEndpoint --output tsv)
+
+          COSMOS_KEY=$(az cosmosdb keys list \
+            --resource-group "$RG" \
+            --name "$COSMOS_NAME" \
+            --query primaryMasterKey --output tsv)
+
+          EH_CONNECTION_STRING=$(az eventhubs namespace authorization-rule keys list \
+            --resource-group "$RG" \
+            --namespace-name "$EH_NAMESPACE" \
+            --name "adimpactos-rule" \
+            --query primaryConnectionString --output tsv)
+
+          STORAGE_CONNECTION_STRING=$(az storage account show-connection-string \
+            --resource-group "$RG" \
+            --name "$STORAGE_NAME" \
+            --query connectionString --output tsv)
+
+          AI_CONNECTION_STRING=$(az monitor app-insights component show \
+            --resource-group "$RG" \
+            --app "${PREFIX}-ai-${ENV}" \
+            --query connectionString --output tsv)
+
+          SURVEY_TOKEN_SECRET=$(openssl rand -base64 32)
+
+          for SECRET in \
+            "CosmosDbEndpoint=$COSMOS_ENDPOINT" \
+            "CosmosDbKey=$COSMOS_KEY" \
+            "EventHubConnectionString=$EH_CONNECTION_STRING" \
+            "BlobStorageConnectionString=$STORAGE_CONNECTION_STRING" \
+            "AppInsightsConnectionString=$AI_CONNECTION_STRING" \
+            "SurveyTokenSecret=$SURVEY_TOKEN_SECRET"; do
+            NAME="${SECRET%%=*}"
+            VALUE="${SECRET#*=}"
+            az keyvault secret set --vault-name "$KV_NAME" --name "$NAME" --value "$VALUE"
+          done
+
+      - name: Print summary
+        run: |
+          echo "==========================================="
+          echo "Infrastructure provisioned successfully"
+          echo "==========================================="
+          echo "Resource Group:    $RG"
+          echo "ACR:               ${PREFIX}${ENV}acr"
+          echo "Cosmos DB:         ${PREFIX}-cosmos-${ENV}"
+          echo "Event Hubs:        ${PREFIX}-eh-${ENV}"
+          echo "Storage:           ${PREFIX}${ENV}sa"
+          echo "Key Vault:         ${PREFIX}-kv-${ENV}"
+          echo "App Service Plan:  ${PREFIX}-plan-${ENV}"
+          echo "Function App:      ${PREFIX}-fn-${ENV}"
+          echo "==========================================="

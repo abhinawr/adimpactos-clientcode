@@ -1,6 +1,12 @@
 name: CI – Build & Test
 
 on:
+  push:
+    branches:
+      - develop
+      - main
+    paths-ignore:
+      - '**.md'
   pull_request:
     types: [closed]
     branches:
@@ -9,11 +15,18 @@ on:
     paths-ignore:
       - '**.md'
 
+# Free org: prevent parallel runs to conserve the 2,000 min/month budget
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   prevent-direct-merge:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: Prevent direct merge to develop or main
+      - name: Enforce branch naming conventions
         if: >
           github.event.pull_request.merged == true &&
           (
@@ -21,60 +34,22 @@ jobs:
             (github.event.pull_request.base.ref == 'main' && !startsWith(github.event.pull_request.head.ref, 'release/'))
           )
         run: |
-          echo "Direct merges to develop or main are not allowed."
+          echo "::error::Branch naming violation: feature/* → develop, release/* → main."
           exit 1
 
   build-and-test:
     if: >
-      github.event.pull_request.merged == true &&
+      github.event_name == 'push' ||
       (
-        (github.event.pull_request.base.ref == 'develop' && startsWith(github.event.pull_request.head.ref, 'feature/')) ||
-        (github.event.pull_request.base.ref == 'main' && startsWith(github.event.pull_request.head.ref, 'release/'))
+        github.event.pull_request.merged == true &&
+        (
+          (github.event.pull_request.base.ref == 'develop' && startsWith(github.event.pull_request.head.ref, 'feature/')) ||
+          (github.event.pull_request.base.ref == 'main' && startsWith(github.event.pull_request.head.ref, 'release/'))
+        )
       )
     name: Build & Test (.NET 8)
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      actions: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-      - name: Restore dependencies
-        run: dotnet restore AdImpactOs.sln
-      - name: Build solution
-        run: dotnet build AdImpactOs.sln --no-restore --configuration Release
-      - name: Run unit tests
-        run: |
-          dotnet test AdImpactOs.sln \
-            --no-build \
-            --configuration Release \
-            --logger "trx;LogFileName=test-results.trx" \
-            --results-directory ./test-results \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=opencover \
-            /p:CoverletOutput=./coverage/
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: ./test-results/*.trx
-          retention-days: 30
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: '**/coverage/*.xml'
-          retention-days: 30
-
-jobs:
-  build-and-test:
-    name: Build & Test (.NET 8)
-    runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       actions: write
@@ -124,6 +99,7 @@ jobs:
   docker-build:
     name: Docker Build Validation
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: build-and-test
     permissions:
       contents: read

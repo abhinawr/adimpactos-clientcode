@@ -356,6 +356,7 @@ az cosmosdb create \
   --kind GlobalDocumentDB \
   --default-consistency-level Session \
   --locations regionName="$LOCATION" failoverPriority=0 isZoneRedundant=false \
+  --capabilities EnableServerless \
   --enable-automatic-failover false \
   --backup-policy-type Continuous
 
@@ -377,6 +378,8 @@ az cosmosdb sql database create \
 
 Each container requires a **partition key** (the field Cosmos DB uses to shard data).
 
+> **Note:** Serverless mode does not use provisioned throughput — omit `--throughput` from container creation.
+
 ```bash
 # Panelists – partition key: /panelistId
 az cosmosdb sql container create \
@@ -384,8 +387,7 @@ az cosmosdb sql container create \
   --account-name "$COSMOS_NAME" \
   --database-name "AdImpactOsDB" \
   --name "Panelists" \
-  --partition-key-path "/panelistId" \
-  --throughput 400
+  --partition-key-path "/panelistId"
 
 # Campaigns – partition key: /campaignId
 az cosmosdb sql container create \
@@ -393,8 +395,7 @@ az cosmosdb sql container create \
   --account-name "$COSMOS_NAME" \
   --database-name "AdImpactOsDB" \
   --name "Campaigns" \
-  --partition-key-path "/campaignId" \
-  --throughput 400
+  --partition-key-path "/campaignId"
 
 # Impressions – partition key: /campaignId
 az cosmosdb sql container create \
@@ -402,8 +403,7 @@ az cosmosdb sql container create \
   --account-name "$COSMOS_NAME" \
   --database-name "AdImpactOsDB" \
   --name "Impressions" \
-  --partition-key-path "/campaignId" \
-  --throughput 400
+  --partition-key-path "/campaignId"
 
 # Surveys – partition key: /surveyId
 az cosmosdb sql container create \
@@ -411,8 +411,7 @@ az cosmosdb sql container create \
   --account-name "$COSMOS_NAME" \
   --database-name "AdImpactOsDB" \
   --name "Surveys" \
-  --partition-key-path "/surveyId" \
-  --throughput 400
+  --partition-key-path "/surveyId"
 
 # SurveyResponses – partition key: /surveyId
 az cosmosdb sql container create \
@@ -420,8 +419,7 @@ az cosmosdb sql container create \
   --account-name "$COSMOS_NAME" \
   --database-name "AdImpactOsDB" \
   --name "SurveyResponses" \
-  --partition-key-path "/surveyId" \
-  --throughput 400
+  --partition-key-path "/surveyId"
 ```
 
 ### 6.4 Retrieve Connection Details
@@ -1327,29 +1325,30 @@ az consumption budget create \
 
 ## Phase 22 – Cost Management
 
-Estimated **monthly costs** for a production environment (East US, moderate load):
+Estimated **monthly costs** for the dev environment (East US, serverless Cosmos DB):
 
-| Service                       | Configuration           | Est. Monthly Cost    |
-| ----------------------------- | ----------------------- | -------------------- |
-| Azure Cosmos DB               | 400–1000 RU/s autoscale | $30–$80              |
-| Azure Event Hubs              | Standard, 2 TUs         | $25                  |
-| Azure Storage                 | Standard LRS, 100 GB    | $5                   |
-| Azure Functions               | Consumption plan        | $5–$20               |
-| App Service Plan              | P1V3 × 1 instance       | $75                  |
-| Azure Container Registry      | Standard                | $20                  |
-| Application Insights          | Up to 5 GB/month free   | $0–$15               |
-| Key Vault                     | Standard                | $5                   |
-| Azure Monitor (Log Analytics) | 5 GB/month free         | $0–$10               |
-| **Total estimate**            |                         | **~$165–$255/month** |
+| Service                       | Configuration               | Est. Monthly Cost  |
+| ----------------------------- | --------------------------- | ------------------ |
+| Azure Cosmos DB               | **Serverless** (pay-per-RU) | $1–$10             |
+| Azure Event Hubs              | Standard, 1 TU              | $12                |
+| Azure Storage                 | Standard LRS, < 10 GB       | $1                 |
+| Azure Functions               | Consumption plan            | $0–$5              |
+| App Service Plan              | **B1** × 1 instance         | $13                |
+| Azure Container Registry      | **Basic**                   | $5                 |
+| Application Insights          | Up to 5 GB/month free       | $0–$5              |
+| Key Vault                     | Standard                    | $1                 |
+| Azure Monitor (Log Analytics) | 5 GB/month free             | $0–$5              |
+| **Total estimate**            |                             | **~$35–$55/month** |
 
-> Costs scale with traffic. Enable **autoscale** on App Service and Cosmos DB and review monthly.
+> With the $200 free Azure credit, this configuration covers approximately **3.5–5.7 months** of dev usage.
 
 ### Cost-Saving Tips
 
 - Use `az consumption usage list` to see a breakdown by service.
-- Set Cosmos DB throughput back to 400 RU/s when traffic is low; enable autoscale for spikes.
+- Cosmos DB Serverless charges per RU consumed — no idle cost; ideal for dev/test workloads.
 - Enable **lifecycle management** on the storage account to move old blobs to cool/archive tiers.
 - Use **Azure Advisor** (Portal → Advisor) for automated cost recommendations.
+- When ready for production, consider migrating Cosmos DB to provisioned throughput with autoscale.
 
 ---
 
