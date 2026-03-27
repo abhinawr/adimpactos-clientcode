@@ -6,7 +6,7 @@ on:
       prefix:
         description: 'Project prefix for resource naming'
         required: true
-        default: 'adimpact'
+        default: 'adimpactos'
         type: string
       environment:
         description: 'Environment name'

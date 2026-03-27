@@ -17,7 +17,7 @@
 set -euo pipefail
 
 # ── Defaults ──
-PREFIX="${PREFIX:-adimpact}"
+PREFIX="${PREFIX:-adimpactos}"
 ENV="${ENV:-dev}"
 SKIP_BUILD=false
 TAG="${TAG:-latest}"

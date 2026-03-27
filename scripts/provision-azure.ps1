@@ -5,7 +5,7 @@
     Provisions all Azure resources (Phases 4-15 from the deployment guide).
     Idempotent - safe to re-run.
 .PARAMETER Prefix
-    Project prefix for resource naming (default: adimpact)
+    Project prefix for resource naming (default: adimpactos)
 .PARAMETER Env
     Environment name: dev, staging (default: dev)
 .PARAMETER Location
@@ -18,7 +18,7 @@
 #>
 
 param(
-    [string]$Prefix = "adimpact",
+    [string]$Prefix = "adimpactos",
     [string]$Env = "dev",
     [string]$Location = "eastus",
     [string]$AlertEmail = "tech@theeditorialinstitute.com"

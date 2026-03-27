@@ -65,13 +65,13 @@ the listed source.
 
 | #   | Item                                 | Recommended value                               |
 | --- | ------------------------------------ | ----------------------------------------------- |
-| 10  | **Resource group name** [YOU CHOOSE] | `adimpact-dev-rg`                               |
-| 11  | **Project prefix** [YOU CHOOSE]      | `adimpact` (max 10 chars, lowercase, no spaces) |
+| 10  | **Resource group name** [YOU CHOOSE] | `adimpactos-dev-rg`                               |
+| 11  | **Project prefix** [YOU CHOOSE]      | `adimpactos` (max 10 chars, lowercase, no spaces) |
 | 12  | **Environment tag** [YOU CHOOSE]     | `dev`                                           |
 
 > **Tip** – Use the prefix everywhere so every resource name is globally unique (Azure enforces
 > unique names for storage accounts, Key Vaults, etc.).  
-> Example pattern: `<prefix>-<service>-<env>` → `adimpact-cosmos-dev`
+> Example pattern: `<prefix>-<service>-<env>` → `adimpactos-cosmos-dev`
 
 ### Source Code
 
@@ -256,9 +256,9 @@ Record the **Subscription ID** – you will need it in later commands.
 # Save to a shell variable for convenience (all phases below reference $SUBSCRIPTION_ID)
 export SUBSCRIPTION_ID="91a6db8a-cc0c-4ae7-93e1-bd9b02291dd9"
 export LOCATION="eastus"           # Change to your chosen region
-export PREFIX="adimpact"           # Your chosen prefix (lowercase, no spaces)
+export PREFIX="adimpactos"           # Your chosen prefix (lowercase, no spaces)
 export ENV="dev"
-export RG="${PREFIX}-${ENV}-rg"    # adimpact-dev-rg
+export RG="${PREFIX}-${ENV}-rg"    # adimpactos-dev-rg
 ```
 
 > **Windows PowerShell alternative:**
@@ -266,7 +266,7 @@ export RG="${PREFIX}-${ENV}-rg"    # adimpact-dev-rg
 > ```powershell
 > $SUBSCRIPTION_ID = "91a6db8a-cc0c-4ae7-93e1-bd9b02291dd9"
 > $LOCATION        = "eastus"
-> $PREFIX          = "adimpact"
+> $PREFIX          = "adimpactos"
 > $ENV             = "dev"
 > $RG              = "$PREFIX-$ENV-rg"
 > ```
@@ -281,7 +281,7 @@ A resource group is a logical container for all Azure resources in this project.
 
 | Item                | Example value     | Notes                                     |
 | ------------------- | ----------------- | ----------------------------------------- |
-| Resource group name | `adimpact-dev-rg` | Unique within the subscription            |
+| Resource group name | `adimpactos-dev-rg` | Unique within the subscription            |
 | Location            | `eastus`          | All resources will default to this region |
 
 ```bash
@@ -305,11 +305,11 @@ from this registry.
 
 | Item          | Example value    | Notes                                                               |
 | ------------- | ---------------- | ------------------------------------------------------------------- |
-| Registry name | `adimpactdevacr` | **Globally unique**, 5–50 chars, lowercase alphanumeric only        |
+| Registry name | `adimpactosdevacr` | **Globally unique**, 5–50 chars, lowercase alphanumeric only        |
 | SKU           | `Basic`          | `Basic` (dev), `Standard` (production), `Premium` (geo-replication) |
 
 ```bash
-export ACR_NAME="${PREFIX}${ENV}acr"    # adimpactdevacr
+export ACR_NAME="${PREFIX}${ENV}acr"    # adimpactosdevacr
 
 az acr create \
   --resource-group "$RG" \
@@ -323,7 +323,7 @@ az acr update --name "$ACR_NAME" --admin-enabled true
 # Retrieve login server URL
 export ACR_LOGIN_SERVER=$(az acr show --name "$ACR_NAME" --query loginServer --output tsv)
 echo "ACR Login Server: $ACR_LOGIN_SERVER"
-# e.g. adimpactdevacr.azurecr.io
+# e.g. adimpactosdevacr.azurecr.io
 
 # Log Docker in to the registry
 az acr login --name "$ACR_NAME"
@@ -340,7 +340,7 @@ and SurveyResponses.
 
 | Item              | Example value                       | Notes                                                    |
 | ----------------- | ----------------------------------- | -------------------------------------------------------- |
-| Account name      | `adimpact-cosmos-dev`               | Globally unique, 3–44 chars, lowercase                   |
+| Account name      | `adimpactos-cosmos-dev`               | Globally unique, 3–44 chars, lowercase                   |
 | API kind          | `GlobalDocumentDB` (Core / SQL API) | Used by the .NET SDK                                     |
 | Consistency level | `Session`                           | Balance between performance and consistency              |
 | Database name     | `AdImpactOsDB`                      | Must match `appsettings.json` → `CosmosDb__DatabaseName` |
@@ -348,7 +348,7 @@ and SurveyResponses.
 ### 6.1 Create the Cosmos DB Account
 
 ```bash
-export COSMOS_NAME="${PREFIX}-cosmos-${ENV}"   # adimpact-cosmos-dev
+export COSMOS_NAME="${PREFIX}-cosmos-${ENV}"   # adimpactos-cosmos-dev
 
 az cosmosdb create \
   --resource-group "$RG" \
@@ -452,7 +452,7 @@ them to the Event Consumer worker service.
 
 | Item              | Example value     | Notes                                                        |
 | ----------------- | ----------------- | ------------------------------------------------------------ |
-| Namespace name    | `adimpact-eh-dev` | Globally unique, 6–50 chars                                  |
+| Namespace name    | `adimpactos-eh-dev` | Globally unique, 6–50 chars                                  |
 | SKU               | `Standard`        | Standard tier required for consumer groups and Kafka surface |
 | Throughput units  | `2`               | Start with 2; auto-inflate can grow to 10                    |
 | Event Hub name    | `ad-impressions`  | Must match `EventHub__Name` config                           |
@@ -462,7 +462,7 @@ them to the Event Consumer worker service.
 ### 7.1 Create the Namespace
 
 ```bash
-export EH_NAMESPACE="${PREFIX}-eh-${ENV}"   # adimpact-eh-dev
+export EH_NAMESPACE="${PREFIX}-eh-${ENV}"   # adimpactos-eh-dev
 
 az eventhubs namespace create \
   --resource-group "$RG" \
@@ -544,12 +544,12 @@ The storage account provides:
 
 | Item                 | Example value   | Notes                                                        |
 | -------------------- | --------------- | ------------------------------------------------------------ |
-| Storage account name | `adimpactdevsa` | Globally unique, 3–24 chars, lowercase alphanumeric          |
+| Storage account name | `adimpactosdevsa` | Globally unique, 3–24 chars, lowercase alphanumeric          |
 | SKU                  | `Standard_LRS`  | Locally redundant (use `Standard_GRS` for higher durability) |
 | Kind                 | `StorageV2`     | General-purpose v2                                           |
 
 ```bash
-export STORAGE_NAME="${PREFIX}${ENV}sa"   # adimpactdevsa
+export STORAGE_NAME="${PREFIX}${ENV}sa"   # adimpactosdevsa
 
 az storage account create \
   --resource-group "$RG" \
@@ -586,12 +586,12 @@ appear in application configuration files or Docker images.
 
 | Item                  | Example value     | Notes                                  |
 | --------------------- | ----------------- | -------------------------------------- |
-| Key Vault name        | `adimpact-kv-dev` | Globally unique, 3–24 chars            |
+| Key Vault name        | `adimpactos-kv-dev` | Globally unique, 3–24 chars            |
 | SKU                   | `standard`        | `premium` for HSM-backed keys          |
 | Soft-delete retention | `90` days         | Prevents accidental permanent deletion |
 
 ```bash
-export KV_NAME="${PREFIX}-kv-${ENV}"   # adimpact-kv-dev
+export KV_NAME="${PREFIX}-kv-${ENV}"   # adimpactos-kv-dev
 
 az keyvault create \
   --resource-group "$RG" \
@@ -628,8 +628,8 @@ dashboards for all services.
 
 | Item              | Example value      | Notes                                               |
 | ----------------- | ------------------ | --------------------------------------------------- |
-| Workspace name    | `adimpact-law-dev` | Log Analytics Workspace for Application Insights v2 |
-| App Insights name | `adimpact-ai-dev`  |                                                     |
+| Workspace name    | `adimpactos-law-dev` | Log Analytics Workspace for Application Insights v2 |
+| App Insights name | `adimpactos-ai-dev`  |                                                     |
 
 ```bash
 export LAW_NAME="${PREFIX}-law-${ENV}"
@@ -674,7 +674,7 @@ Demo UI).
 
 | Item         | Example value       | Notes                                                                                 |
 | ------------ | ------------------- | ------------------------------------------------------------------------------------- |
-| Plan name    | `adimpact-plan-dev` |                                                                                       |
+| Plan name    | `adimpactos-plan-dev` |                                                                                       |
 | SKU          | `B1`                | B1 = 1 vCPU, 1.75 GB RAM per instance. Ideal for dev/test. Use `P1v3` for production. |
 | OS           | `Linux`             | Required for Docker container deployment                                              |
 | Worker count | `1`                 | Scale up as load increases                                                            |
@@ -702,11 +702,11 @@ The Function App hosts the **Pixel Tracker** (returns a 1×1 GIF) and the **S2S 
 
 | Item              | Example value     | Notes                                             |
 | ----------------- | ----------------- | ------------------------------------------------- |
-| Function App name | `adimpact-fn-dev` | Globally unique, lowercase, alphanumeric, hyphens |
+| Function App name | `adimpactos-fn-dev` | Globally unique, lowercase, alphanumeric, hyphens |
 | Runtime           | `dotnet-isolated` | Must match `FUNCTIONS_WORKER_RUNTIME`             |
 | .NET version      | `10.0`            |                                                   |
 | Functions version | `4`               | Azure Functions v4                                |
-| Storage account   | `adimpactdevsa`   | Same storage account created in Phase 8           |
+| Storage account   | `adimpactosdevsa`   | Same storage account created in Phase 8           |
 
 ```bash
 export FUNC_APP="${PREFIX}-fn-${ENV}"
@@ -737,12 +737,12 @@ Create one Azure Web App (App Service) for each of the five containerised servic
 
 | Service        | App name                 | Internal port |
 | -------------- | ------------------------ | ------------- |
-| Panelist API   | `adimpact-panelist-dev`  | 8080          |
-| Campaign API   | `adimpact-campaign-dev`  | 8080          |
-| Survey API     | `adimpact-survey-dev`    | 8080          |
-| Dashboard      | `adimpact-dashboard-dev` | 8080          |
-| Demo UI        | `adimpact-demoui-dev`    | 8080          |
-| Event Consumer | `adimpact-consumer-dev`  | N/A (worker)  |
+| Panelist API   | `adimpactos-panelist-dev`  | 8080          |
+| Campaign API   | `adimpactos-campaign-dev`  | 8080          |
+| Survey API     | `adimpactos-survey-dev`    | 8080          |
+| Dashboard      | `adimpactos-dashboard-dev` | 8080          |
+| Demo UI        | `adimpactos-demoui-dev`    | 8080          |
+| Event Consumer | `adimpactos-consumer-dev`  | N/A (worker)  |
 
 **Information needed per app:**
 
@@ -750,7 +750,7 @@ Create one Azure Web App (App Service) for each of the five containerised servic
 | ---------------- | ----------------------------------------------------- |
 | App name         | Globally unique (Azure adds `.azurewebsites.net`)     |
 | Container image  | `<acr-login-server>/<image>:latest` (set in Phase 16) |
-| App Service Plan | `adimpact-plan-dev` (created in Phase 11)             |
+| App Service Plan | `adimpactos-plan-dev` (created in Phase 11)             |
 
 ```bash
 # Helper function
@@ -1250,15 +1250,15 @@ curl -X POST "${FUNCTIONS_URL}/api/s2s" \
 | Item              | Example value                    |
 | ----------------- | -------------------------------- |
 | Alert email       | `tech@theeditorialinstitute.com` |
-| Action group name | `adimpact-dev-alerts`            |
+| Action group name | `adimpactos-dev-alerts`            |
 
 ```bash
 export ALERT_EMAIL="tech@theeditorialinstitute.com"   # Replace with client's ops email
 
 az monitor action-group create \
   --resource-group "$RG" \
-  --name "adimpact-dev-alerts" \
-  --short-name "adimpact" \
+  --name "adimpactos-dev-alerts" \
+  --short-name "adimpactos" \
   --action email ops-team "$ALERT_EMAIL"
 ```
 
@@ -1267,7 +1267,7 @@ az monitor action-group create \
 ```bash
 ACTION_GROUP_ID=$(az monitor action-group show \
   --resource-group "$RG" \
-  --name "adimpact-dev-alerts" \
+  --name "adimpactos-dev-alerts" \
   --query id --output tsv)
 
 FUNC_APP_ID=$(az functionapp show \
@@ -1442,30 +1442,30 @@ A starter workflow file lives at `.github/workflows/deploy.yml` (create it if no
 ## Quick-Reference: All Resource Names
 
 After following this guide you will have created the following Azure resources (using example
-prefix `adimpact`, environment `dev`, region `eastus`):
+prefix `adimpactos`, environment `dev`, region `eastus`):
 
 | Resource                | Name                                                      | Type                     |
 | ----------------------- | --------------------------------------------------------- | ------------------------ |
 | Tenant (Root Group)     | `84d2a2d3-8846-412a-af03-932ff0b721c8`                    | Management Group         |
 | Subscription            | `AdImpactOs-Dev` (`91a6db8a-cc0c-4ae7-93e1-bd9b02291dd9`) | Subscription             |
-| Resource Group          | `adimpact-dev-rg`                                         | Resource Group           |
-| Container Registry      | `adimpactdevacr`                                          | Azure Container Registry |
-| Cosmos DB Account       | `adimpact-cosmos-dev`                                     | Cosmos DB                |
+| Resource Group          | `adimpactos-dev-rg`                                         | Resource Group           |
+| Container Registry      | `adimpactosdevacr`                                          | Azure Container Registry |
+| Cosmos DB Account       | `adimpactos-cosmos-dev`                                     | Cosmos DB                |
 | Cosmos DB Database      | `AdImpactOsDB`                                            | Database                 |
-| Event Hubs Namespace    | `adimpact-eh-dev`                                         | Event Hubs               |
+| Event Hubs Namespace    | `adimpactos-eh-dev`                                         | Event Hubs               |
 | Event Hub               | `ad-impressions`                                          | Event Hub                |
-| Storage Account         | `adimpactdevsa`                                           | Storage Account          |
-| Key Vault               | `adimpact-kv-dev`                                         | Key Vault                |
-| Log Analytics Workspace | `adimpact-law-dev`                                        | Log Analytics            |
-| Application Insights    | `adimpact-ai-dev`                                         | Application Insights     |
-| App Service Plan        | `adimpact-plan-dev`                                       | App Service Plan         |
-| Function App            | `adimpact-fn-dev`                                         | Azure Functions          |
-| Panelist API            | `adimpact-panelist-dev`                                   | App Service              |
-| Campaign API            | `adimpact-campaign-dev`                                   | App Service              |
-| Survey API              | `adimpact-survey-dev`                                     | App Service              |
-| Dashboard               | `adimpact-dashboard-dev`                                  | App Service              |
-| Demo UI                 | `adimpact-demoui-dev`                                     | App Service              |
-| Event Consumer          | `adimpact-consumer-dev`                                   | App Service              |
+| Storage Account         | `adimpactosdevsa`                                           | Storage Account          |
+| Key Vault               | `adimpactos-kv-dev`                                         | Key Vault                |
+| Log Analytics Workspace | `adimpactos-law-dev`                                        | Log Analytics            |
+| Application Insights    | `adimpactos-ai-dev`                                         | Application Insights     |
+| App Service Plan        | `adimpactos-plan-dev`                                       | App Service Plan         |
+| Function App            | `adimpactos-fn-dev`                                         | Azure Functions          |
+| Panelist API            | `adimpactos-panelist-dev`                                   | App Service              |
+| Campaign API            | `adimpactos-campaign-dev`                                   | App Service              |
+| Survey API              | `adimpactos-survey-dev`                                     | App Service              |
+| Dashboard               | `adimpactos-dashboard-dev`                                  | App Service              |
+| Demo UI                 | `adimpactos-demoui-dev`                                     | App Service              |
+| Event Consumer          | `adimpactos-consumer-dev`                                   | App Service              |
 
 ---
 
@@ -1500,7 +1500,7 @@ prefix `adimpact`, environment `dev`, region `eastus`):
 ### "Name already exists" errors during resource creation
 
 - A resource with that name already exists globally. Use a more unique prefix (e.g. add a
-  3-digit number: `adimpact42`).
+  3-digit number: `adimpactos42`).
 
 ---
 

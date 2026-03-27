@@ -14,7 +14,7 @@
 set -euo pipefail
 
 # ── Defaults (override with flags) ──
-PREFIX="${PREFIX:-adimpact}"
+PREFIX="${PREFIX:-adimpactos}"
 ENV="${ENV:-dev}"
 LOCATION="${LOCATION:-eastus}"
 ALERT_EMAIL="${ALERT_EMAIL:-tech@theeditorialinstitute.com}"
