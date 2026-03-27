@@ -51,7 +51,7 @@ $retries = 0
 $maxRetries = 36  # 3 minutes at 5s intervals
 $cosmosReady = $false
 while ($retries -lt $maxRetries -and -not $cosmosReady) {
-    $health = docker inspect --format='{{.State.Health.Status}}' adtracking-cosmosdb 2>&1
+    $health = docker inspect --format='{{.State.Health.Status}}' adimpactos-cosmosdb 2>&1
     if ($health -eq "healthy") {
         $cosmosReady = $true
         Write-Host "  Cosmos DB is healthy" -ForegroundColor Green
@@ -78,10 +78,10 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[5/5] Waiting for APIs to be ready (migrations run automatically on startup)..." -ForegroundColor Yellow
 
 $services = @(
-    @{ Name = "Panelist API"; Url = "http://localhost:5001/api/panelists"; Container = "adtracking-panelist-api" },
-    @{ Name = "Survey API";   Url = "http://localhost:5002/api/surveys";   Container = "adtracking-survey-api" },
-    @{ Name = "Campaign API"; Url = "http://localhost:5003/api/campaigns"; Container = "adtracking-campaign-api" },
-    @{ Name = "Dashboard";    Url = "http://localhost:5004";               Container = "adtracking-dashboard" }
+    @{ Name = "Panelist API"; Url = "http://localhost:5001/api/panelists"; Container = "adimpactos-panelist-api" },
+    @{ Name = "Survey API";   Url = "http://localhost:5002/api/surveys";   Container = "adimpactos-survey-api" },
+    @{ Name = "Campaign API"; Url = "http://localhost:5003/api/campaigns"; Container = "adimpactos-campaign-api" },
+    @{ Name = "Dashboard";    Url = "http://localhost:5004";               Container = "adimpactos-dashboard" }
 )
 
 foreach ($svc in $services) {

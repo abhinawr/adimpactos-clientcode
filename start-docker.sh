@@ -4,7 +4,7 @@
 
 set -e
 
-echo -e "\033[1;36m=== Ad Tracking JiangXi - Docker Startup ===\033[0m"
+echo -e "\033[1;36m=== AdImpactOs - Docker Startup ===\033[0m"
 echo ""
 
 # Check if Docker is running
@@ -107,7 +107,7 @@ echo -e "\033[1;37mPanelist API:        http://localhost:5001          Swagger: 
 echo -e "\033[1;37mSurvey API:          http://localhost:5002          Swagger: http://localhost:5002/swagger\033[0m"
 echo -e "\033[1;37mCampaign API:        http://localhost:5003          Swagger: http://localhost:5003/swagger\033[0m"
 echo ""
-echo -e "\033[0;36m--- Azure Functions (Ad Tracking) ---\033[0m"
+echo -e "\033[0;36m--- Azure Functions (AdImpactOs) ---\033[0m"
 echo -e "\033[1;37mPixel Tracker:       http://localhost:7071/api/pixel?cid=CAMPAIGN&crid=CREATIVE&uid=USER\033[0m"
 echo -e "\033[1;37mS2S Tracker:         http://localhost:7071/api/s2s/track  (POST)\033[0m"
 echo ""

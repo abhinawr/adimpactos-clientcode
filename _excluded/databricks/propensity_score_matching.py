@@ -26,9 +26,9 @@ import numpy as np
 from datetime import datetime
 
 # Configuration
-SYNAPSE_JDBC_URL = dbutils.secrets.get(scope="adtracking-kv", key="synapse-jdbc-url")
-SYNAPSE_USER = dbutils.secrets.get(scope="adtracking-kv", key="synapse-user")
-SYNAPSE_PASSWORD = dbutils.secrets.get(scope="adtracking-kv", key="synapse-password")
+SYNAPSE_JDBC_URL = dbutils.secrets.get(scope="adimpactos-kv", key="synapse-jdbc-url")
+SYNAPSE_USER = dbutils.secrets.get(scope="adimpactos-kv", key="synapse-user")
+SYNAPSE_PASSWORD = dbutils.secrets.get(scope="adimpactos-kv", key="synapse-password")
 
 # Campaign configuration
 CAMPAIGN_ID = dbutils.widgets.get("campaign_id") if dbutils.widgets.get("campaign_id") else "camp-001"

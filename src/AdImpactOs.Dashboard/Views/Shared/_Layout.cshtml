@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] - AdTracking Dashboard</title>
+    <title>@ViewData["Title"] - AdImpactOs Dashboard</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
@@ -140,12 +140,12 @@
 <body>
     <nav class="sidebar">
         <div class="sidebar-brand">
-            <span>&#9678;</span> AdTracking JiangXi
+            <span>&#9678;</span> AdImpactOs
         </div>
         <ul class="sidebar-nav">
             <li><a href="/" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"><span class="icon">&#9632;</span> Overview</a></li>
             <li><a href="/Campaigns" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Campaigns" ? "active" : "")"><span class="icon">&#9733;</span> Campaigns</a></li>
-            <li><a href="/Tracking" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Tracking" ? "active" : "")"><span class="icon">&#9881;</span> Ad Tracking</a></li>
+            <li><a href="/Tracking" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Tracking" ? "active" : ")"><span class="icon">&#9881;</span> Impressions</a></li>
             <li><a href="/Surveys" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Surveys" ? "active" : "")"><span class="icon">&#9998;</span> Surveys</a></li>
             <li><a href="/Panelists" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Panelists" ? "active" : "")"><span class="icon">&#9823;</span> Panelists</a></li>
             <li><a href="/Reports" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")"><span class="icon">&#9776;</span> Reports</a></li>
@@ -154,7 +154,7 @@
     <div class="main">
         <div class="topbar">
             <h1>@ViewData["Title"]</h1>
-            <span style="font-size:13px;color:var(--text-muted);">AdTracking JiangXi &middot; Dashboard</span>
+            <span style="font-size:13px;color:var(--text-muted);">AdImpactOs &middot; Dashboard</span>
         </div>
         <div class="content">
             @RenderBody()

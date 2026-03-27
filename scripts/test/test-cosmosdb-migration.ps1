@@ -5,7 +5,7 @@ Write-Host ""
 
 # Test 1: Check if CosmosDB container is healthy
 Write-Host "1. Checking CosmosDB container health..." -ForegroundColor Yellow
-$cosmosHealth = docker inspect --format='{{.State.Health.Status}}' adtracking-cosmosdb 2>$null
+$cosmosHealth = docker inspect --format='{{.State.Health.Status}}' adimpactos-cosmosdb 2>$null
 if ($cosmosHealth -eq "healthy") {
     Write-Host "   ? CosmosDB is healthy" -ForegroundColor Green
 } else {
@@ -15,7 +15,7 @@ if ($cosmosHealth -eq "healthy") {
 
 # Test 2: Check if Panelist API container is running
 Write-Host "2. Checking Panelist API container..." -ForegroundColor Yellow
-$apiStatus = docker inspect --format='{{.State.Status}}' adtracking-panelist-api 2>$null
+$apiStatus = docker inspect --format='{{.State.Status}}' adimpactos-panelist-api 2>$null
 if ($apiStatus -eq "running") {
     Write-Host "   ? Panelist API is running" -ForegroundColor Green
 } else {
@@ -25,13 +25,13 @@ if ($apiStatus -eq "running") {
 
 # Test 3: Check network connectivity
 Write-Host "3. Checking network connectivity..." -ForegroundColor Yellow
-$cosmosIP = docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' adtracking-cosmosdb
-$apiIP = docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' adtracking-panelist-api
+$cosmosIP = docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' adimpactos-cosmosdb
+$apiIP = docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' adimpactos-panelist-api
 Write-Host "   CosmosDB IP: $cosmosIP" -ForegroundColor Gray
 Write-Host "   API IP: $apiIP" -ForegroundColor Gray
 
-$cosmosNetwork = docker inspect --format='{{range .NetworkSettings.Networks}}{{.NetworkID}}{{end}}' adtracking-cosmosdb
-$apiNetwork = docker inspect --format='{{range .NetworkSettings.Networks}}{{.NetworkID}}{{end}}' adtracking-panelist-api
+$cosmosNetwork = docker inspect --format='{{range .NetworkSettings.Networks}}{{.NetworkID}}{{end}}' adimpactos-cosmosdb
+$apiNetwork = docker inspect --format='{{range .NetworkSettings.Networks}}{{.NetworkID}}{{end}}' adimpactos-panelist-api
 if ($cosmosNetwork -eq $apiNetwork) {
     Write-Host "   ? Both containers on same network" -ForegroundColor Green
 } else {
@@ -40,9 +40,9 @@ if ($cosmosNetwork -eq $apiNetwork) {
 
 # Test 4: Check environment variables
 Write-Host "4. Checking CosmosDB configuration..." -ForegroundColor Yellow
-$endpoint = docker exec adtracking-panelist-api printenv CosmosDb__Endpoint 2>$null
-$dbName = docker exec adtracking-panelist-api printenv CosmosDb__DatabaseName 2>$null
-$container = docker exec adtracking-panelist-api printenv CosmosDb__ContainerName 2>$null
+$endpoint = docker exec adimpactos-panelist-api printenv CosmosDb__Endpoint 2>$null
+$dbName = docker exec adimpactos-panelist-api printenv CosmosDb__DatabaseName 2>$null
+$container = docker exec adimpactos-panelist-api printenv CosmosDb__ContainerName 2>$null
 
 Write-Host "   Endpoint: $endpoint" -ForegroundColor Gray
 Write-Host "   Database: $dbName" -ForegroundColor Gray
@@ -94,7 +94,7 @@ try {
     # Get detailed error from logs
     Write-Host ""
     Write-Host "Recent logs from Panelist API:" -ForegroundColor Yellow
-    docker logs adtracking-panelist-api --tail 20 | Select-String -Pattern "error|Error|exception|Exception" | Select-Object -First 5 | ForEach-Object {
+    docker logs adimpactos-panelist-api --tail 20 | Select-String -Pattern "error|Error|exception|Exception" | Select-Object -First 5 | ForEach-Object {
         Write-Host "   $_" -ForegroundColor Red
     }
 }
@@ -104,7 +104,7 @@ Write-Host ""
 Write-Host "8. Checking for known issues..." -ForegroundColor Yellow
 
 # Check if it's a DNS resolution issue
-$logs = docker logs adtracking-panelist-api --tail 50 2>&1 | Out-String
+$logs = docker logs adimpactos-panelist-api --tail 50 2>&1 | Out-String
 if ($logs -match "Connection refused.*127\.0\.0\.1:8081") {
     Write-Host "   ? DNS Resolution Issue Detected" -ForegroundColor Yellow
     Write-Host "   The container is resolving 'cosmosdb' to 127.0.0.1 instead of the container IP" -ForegroundColor Yellow

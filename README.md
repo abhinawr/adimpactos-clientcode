@@ -5,6 +5,7 @@ A cloud-native, privacy-first ad measurement platform for capturing, processing,
 ## 🎯 Overview
 
 AdImpactOs enables advertisers to measure campaign effectiveness through:
+
 - Real-time ad impression tracking (pixel & server-to-server)
 - Campaign management with impression analytics
 - Panelist profile management with consent tracking
@@ -29,30 +30,30 @@ chmod +x start-docker.sh
 
 **Then access:**
 
-| Service | URL |
-|---------|-----|
-| **Dashboard** | http://localhost:5004 |
-| **Demo UI (External)** | http://localhost:5010 |
-| **Panelist API** | http://localhost:5001/swagger |
-| **Survey API** | http://localhost:5002/swagger |
-| **Campaign API** | http://localhost:5003/swagger |
-| **Azure Functions** | http://localhost:7071 |
-| **Cosmos DB** | https://localhost:8081/_explorer |
+| Service                | URL                               |
+| ---------------------- | --------------------------------- |
+| **Dashboard**          | http://localhost:5004             |
+| **Demo UI (External)** | http://localhost:5010             |
+| **Panelist API**       | http://localhost:5001/swagger     |
+| **Survey API**         | http://localhost:5002/swagger     |
+| **Campaign API**       | http://localhost:5003/swagger     |
+| **Azure Functions**    | http://localhost:7071             |
+| **Cosmos DB**          | https://localhost:8081/\_explorer |
 
 **Full Documentation:** See **[docs/](docs/)** folder
 
 ## 📖 Documentation
 
-| Document | Description |
-|----------|-------------|
-| **[Quick Start](docs/setup/QUICK-START.md)** | Get running in 5 minutes |
-| **[Docker Guide](docs/setup/DOCKER-GUIDE.md)** | Complete Docker setup |
-| **[Deployment Guide](docs/setup/DEPLOYMENT-GUIDE.md)** | Azure deployment |
+| Document                                                                | Description                                               |
+| ----------------------------------------------------------------------- | --------------------------------------------------------- |
+| **[Quick Start](docs/setup/QUICK-START.md)**                            | Get running in 5 minutes                                  |
+| **[Docker Guide](docs/setup/DOCKER-GUIDE.md)**                          | Complete Docker setup                                     |
+| **[Deployment Guide](docs/setup/DEPLOYMENT-GUIDE.md)**                  | Azure deployment                                          |
 | **[CI/CD & Repository Guide](docs/setup/CICD-AND-REPOSITORY-GUIDE.md)** | Branching, PR workflow, GitHub Actions pipelines, secrets |
-| **[Solution Architecture](docs/architecture/SOLUTION-ARCHITECTURE.md)** | System design & architecture |
-| **[Azure Functions](docs/components/AZURE-FUNCTIONS.md)** | Pixel & S2S tracking |
-| **[Survey Service](docs/components/SURVEY-SERVICE.md)** | Brand lift surveys |
-| **[Documentation Index](docs/README.md)** | Complete documentation index |
+| **[Solution Architecture](docs/architecture/SOLUTION-ARCHITECTURE.md)** | System design & architecture                              |
+| **[Azure Functions](docs/components/AZURE-FUNCTIONS.md)**               | Pixel & S2S tracking                                      |
+| **[Survey Service](docs/components/SURVEY-SERVICE.md)**                 | Brand lift surveys                                        |
+| **[Documentation Index](docs/README.md)**                               | Complete documentation index                              |
 
 ## 🏗️ Architecture
 
@@ -91,7 +92,7 @@ chmod +x start-docker.sh
    - Survey management and response explorer
    - Panelist directory
    - Reports with brand lift analysis, demographics breakdown, and CSV export
-   - Ad Tracking view with impression summaries
+   - Impression Tracking view with impression summaries
 
 7. **Demo UI** - External client demonstration app
    - Pixel tracking demo with ad banner preview and HTML embed code
@@ -146,18 +147,21 @@ AdImpactOs/
 ## 🔑 Key Features
 
 ### Impression Tracking
+
 - **Pixel Tracking**: 1x1 transparent GIF for browser-based tracking
 - **S2S API**: JSON endpoint for server-to-server integration
 - **High Throughput**: Auto-scaling to handle 100k+ req/sec
 - **Low Latency**: < 50ms pixel response time
 
 ### Panelist Management
+
 - Demographics and profile data
 - Consent management (GDPR/CCPA compliant)
 - Pseudonymization for privacy
 - CRUD API with Swagger docs
 
 ### Survey System
+
 - Campaign-linked survey creation
 - Multi-question types (rating, Likert scale, multiple choice)
 - Cohort tracking (exposed vs control groups)
@@ -167,6 +171,7 @@ AdImpactOs/
 - **Panelist survey-taking page** — standalone responsive UI served at `/survey/take/{token}` with question-by-question navigation, progress tracking, and automatic response time capture
 
 ### Analytics
+
 - Propensity Score Matching for cohort creation
 - Statistical lift calculation with confidence intervals
 - Power BI dashboards for visualization
@@ -220,8 +225,8 @@ docker-compose build
 
 # Deploy to Azure (requires Azure CLI)
 az functionapp deployment source config-zip \
-  --resource-group adtracking-rg \
-  --name adtracking-functions \
+  --resource-group adimpactos-rg \
+  --name adimpactos-functions \
   --src functions.zip
 ```
 
@@ -229,19 +234,20 @@ az functionapp deployment source config-zip \
 
 ### Service Endpoints
 
-| Service | Port | Endpoint |
-|---------|------|----------|
-| Panelist API | 5001 | http://localhost:5001/swagger |
-| Survey API | 5002 | http://localhost:5002/swagger |
-| Campaign API | 5003 | http://localhost:5003/swagger |
-| Dashboard | 5004 | http://localhost:5004 |
-| Azure Functions | 7071 | http://localhost:7071/api/pixel |
-| Demo UI | 5010 | http://localhost:5010 |
-| Cosmos DB | 8081 | https://localhost:8081/_explorer |
+| Service         | Port | Endpoint                          |
+| --------------- | ---- | --------------------------------- |
+| Panelist API    | 5001 | http://localhost:5001/swagger     |
+| Survey API      | 5002 | http://localhost:5002/swagger     |
+| Campaign API    | 5003 | http://localhost:5003/swagger     |
+| Dashboard       | 5004 | http://localhost:5004             |
+| Azure Functions | 7071 | http://localhost:7071/api/pixel   |
+| Demo UI         | 5010 | http://localhost:5010             |
+| Cosmos DB       | 8081 | https://localhost:8081/\_explorer |
 
 ### API Examples
 
 **Create Panelist:**
+
 ```bash
 curl -X POST http://localhost:5001/api/panelists \
   -H "Content-Type: application/json" \
@@ -255,6 +261,7 @@ curl -X POST http://localhost:5001/api/panelists \
 ```
 
 **Create Survey:**
+
 ```bash
 curl -X POST http://localhost:5002/api/surveys \
   -H "Content-Type: application/json" \
@@ -297,6 +304,7 @@ Internal use only - Proprietary
 ## 🆘 Support
 
 For issues and questions:
+
 - Check **[Documentation](docs/)** for guides and troubleshooting
 - Review [Docker Guide](docs/setup/DOCKER-GUIDE.md) troubleshooting section
 - Contact the development team
@@ -304,6 +312,7 @@ For issues and questions:
 ## 🗺️ Roadmap
 
 ### Current (v1.0)
+
 - ✅ Pixel & S2S tracking
 - ✅ Campaign management with impression analytics
 - ✅ Panelist management
@@ -316,12 +325,14 @@ For issues and questions:
 - ✅ Docker containerization (11 services)
 
 ### Next (v1.1)
+
 - 🔄 Advanced bot detection with ML
 - 🔄 Real-time dashboards with SignalR
 - 🔄 Multi-tenant support
 - 🔄 Mobile SDK
 
 ### Future (v2.0)
+
 - 📅 Cross-platform measurement
 - 📅 AI-powered insights
 - 📅 Differential privacy

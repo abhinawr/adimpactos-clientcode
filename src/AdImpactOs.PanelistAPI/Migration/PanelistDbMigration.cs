@@ -24,7 +24,7 @@ public class PanelistDbMigration
     /// </summary>
     public async Task RunMigrationAsync()
     {
-        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var containerName = _configuration["CosmosDb:ContainerName"] ?? "Panelists";
 
         try
@@ -107,7 +107,7 @@ public class PanelistDbMigration
     /// </summary>
     public async Task SeedSampleDataAsync()
     {
-        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var containerName = _configuration["CosmosDb:ContainerName"] ?? "Panelists";
         var container = _cosmosClient.GetDatabase(databaseName).GetContainer(containerName);
 

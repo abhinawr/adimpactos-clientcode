@@ -35,12 +35,12 @@ function Test-Step {
 # Step 0: Check Container Health
 Test-Step "0" "Verify all containers are running" {
     $containers = @(
-        "adtracking-cosmosdb",
-        "adtracking-panelist-api",
-        "adtracking-survey-api",
-        "adtracking-eventhub",
-        "adtracking-zookeeper",
-        "adtracking-azurite"
+        "adimpactos-cosmosdb",
+        "adimpactos-panelist-api",
+        "adimpactos-survey-api",
+        "adimpactos-eventhub",
+        "adimpactos-zookeeper",
+        "adimpactos-azurite"
     )
     
     foreach ($container in $containers) {
@@ -58,7 +58,7 @@ Test-Step "1" "Run CosmosDB migration" {
     if ($result.message -notmatch "success") {
         throw "Migration did not complete successfully"
     }
-    Write-Host "   Database: AdTrackingDB created" -ForegroundColor Gray
+    Write-Host "   Database: AdImpactOsDB created" -ForegroundColor Gray
     Write-Host "   Container: Panelists created" -ForegroundColor Gray
 }
 
@@ -277,7 +277,7 @@ Test-Step "11" "Retrieve all responses for survey" {
 
 # Step 12: Test Event Hub Connection (Kafka)
 Test-Step "12" "Verify Event Hub (Kafka) is accessible" {
-    $kafkaStatus = docker exec adtracking-eventhub kafka-topics --list --bootstrap-server localhost:9092 2>&1
+    $kafkaStatus = docker exec adimpactos-eventhub kafka-topics --list --bootstrap-server localhost:9092 2>&1
     if ($LASTEXITCODE -ne 0) {
         throw "Cannot connect to Kafka"
     }

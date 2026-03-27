@@ -5,7 +5,7 @@ services:
   # Azure Cosmos DB Emulator
   cosmosdb:
     image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
-    container_name: adtracking-cosmosdb
+    container_name: adimpactos-cosmosdb
     environment:
       - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10
       - AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=true
@@ -18,7 +18,7 @@ services:
     volumes:
       - cosmosdb-data:/data
     networks:
-      adtracking-network:
+      adimpactos-network:
         aliases:
           - cosmosdb
     healthcheck:
@@ -31,7 +31,7 @@ services:
   # Event Hub (Kafka)
   eventhub:
     image: confluentinc/cp-kafka:latest
-    container_name: adtracking-eventhub
+    container_name: adimpactos-eventhub
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -46,7 +46,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - adtracking-network
+      - adimpactos-network
     healthcheck:
       test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
       interval: 30s
@@ -56,19 +56,19 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
-    container_name: adtracking-zookeeper
+    container_name: adimpactos-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
     networks:
-      - adtracking-network
+      - adimpactos-network
 
   # Azurite Storage Emulator
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite:latest
-    container_name: adtracking-azurite
+    container_name: adimpactos-azurite
     ports:
       - "10000:10000"
       - "10001:10001"
@@ -76,11 +76,11 @@ services:
     volumes:
       - azurite-data:/data
     networks:
-      - adtracking-network
+      - adimpactos-network
     command: azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --loose
 
 networks:
-  adtracking-network:
+  adimpactos-network:
     driver: bridge
 
 volumes:

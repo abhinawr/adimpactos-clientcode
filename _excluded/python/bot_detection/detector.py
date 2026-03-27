@@ -1,5 +1,5 @@
 """
-Bot Detection Module for Ad Tracking
+Bot Detection Module for AdImpactOs
 Integrates with Azure Application Insights for logging
 """
 

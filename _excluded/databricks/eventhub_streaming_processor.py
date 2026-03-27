@@ -411,7 +411,7 @@ def main():
     
     # Initialize Spark Session with EventHubs and Delta support
     spark = (SparkSession.builder
-             .appName("AdTracking-EventHub-Processor")
+             .appName("AdImpactOs-EventHub-Processor")
              .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
              .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
              .config("spark.sql.streaming.schemaInference", "true")
@@ -419,21 +419,21 @@ def main():
              .getOrCreate())
     
     # Configuration - these should come from Databricks secrets or environment variables
-    eventhub_connection_string = dbutils.secrets.get(scope="adtracking-kv", key="eventhub-connection-string")
+    eventhub_connection_string = dbutils.secrets.get(scope="adimpactos-kv", key="eventhub-connection-string")
     consumer_group = "$Default"
     
     # Storage paths
-    adls_staging_path = "abfss://staging@adtrackingdl.dfs.core.windows.net/ad-impressions"
-    delta_staging_path = "abfss://staging@adtrackingdl.dfs.core.windows.net/delta/ad-impressions"
-    checkpoint_path = "abfss://staging@adtrackingdl.dfs.core.windows.net/checkpoints/ad-impressions"
-    synapse_checkpoint_path = "abfss://staging@adtrackingdl.dfs.core.windows.net/checkpoints/synapse-upsert"
+    adls_staging_path = "abfss://staging@adimpactosdl.dfs.core.windows.net/ad-impressions"
+    delta_staging_path = "abfss://staging@adimpactosdl.dfs.core.windows.net/delta/ad-impressions"
+    checkpoint_path = "abfss://staging@adimpactosdl.dfs.core.windows.net/checkpoints/ad-impressions"
+    synapse_checkpoint_path = "abfss://staging@adimpactosdl.dfs.core.windows.net/checkpoints/synapse-upsert"
     
     # Synapse configuration
     synapse_config = {
-        "jdbc_url": dbutils.secrets.get(scope="adtracking-kv", key="synapse-jdbc-url"),
+        "jdbc_url": dbutils.secrets.get(scope="adimpactos-kv", key="synapse-jdbc-url"),
         "table": "staging.ad_impressions",
-        "user": dbutils.secrets.get(scope="adtracking-kv", key="synapse-user"),
-        "password": dbutils.secrets.get(scope="adtracking-kv", key="synapse-password")
+        "user": dbutils.secrets.get(scope="adimpactos-kv", key="synapse-user"),
+        "password": dbutils.secrets.get(scope="adimpactos-kv", key="synapse-password")
     }
     
     # Initialize processor

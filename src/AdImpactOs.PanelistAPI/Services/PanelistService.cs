@@ -14,7 +14,7 @@ public class PanelistService
     public PanelistService(CosmosClient cosmosClient, ILogger<PanelistService> logger, IConfiguration configuration)
     {
         _logger = logger;
-        var databaseName = configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var containerName = configuration["CosmosDb:ContainerName"] ?? "Panelists";
         
         _container = cosmosClient.GetContainer(databaseName, containerName);

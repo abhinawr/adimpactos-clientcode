@@ -1,6 +1,6 @@
 # AdImpact Os - Docker Quick Start Script
 
-Write-Host "=== Ad Tracking JiangXi - Docker Startup ===" -ForegroundColor Cyan
+Write-Host "=== AdImpactOs - Docker Startup ===" -ForegroundColor Cyan
 Write-Host ""
 
 # Check if Docker is running
@@ -11,7 +11,8 @@ try {
         throw "Docker not running"
     }
     Write-Host "? Docker Desktop is running" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "ERROR: Docker Desktop is not running!" -ForegroundColor Red
     Write-Host "Please start Docker Desktop and try again." -ForegroundColor Red
     exit 1
@@ -34,10 +35,12 @@ $composeFile = ""
 if ($choice -eq "1") {
     $composeFile = "docker-compose.dev.yml"
     Write-Host "Starting Development Stack..." -ForegroundColor Cyan
-} elseif ($choice -eq "2") {
+}
+elseif ($choice -eq "2") {
     $composeFile = "docker-compose.yml"
     Write-Host "Starting Full Stack..." -ForegroundColor Cyan
-} else {
+}
+else {
     Write-Host "Invalid choice. Exiting." -ForegroundColor Red
     exit 1
 }
@@ -83,7 +86,8 @@ while ($retries -lt $maxRetries -and -not $apiReady) {
             $apiReady = $true
             Write-Host "? Panelist API is responding" -ForegroundColor Green
         }
-    } catch {
+    }
+    catch {
         $retries++
         if ($retries -lt $maxRetries) {
             Write-Host "  Waiting for API... ($retries/$maxRetries)" -ForegroundColor Gray
@@ -111,7 +115,7 @@ Write-Host "Panelist API:        http://localhost:5001          Swagger: http://
 Write-Host "Survey API:          http://localhost:5002          Swagger: http://localhost:5002/swagger" -ForegroundColor White
 Write-Host "Campaign API:        http://localhost:5003          Swagger: http://localhost:5003/swagger" -ForegroundColor White
 Write-Host ""
-Write-Host "--- Azure Functions (Ad Tracking) ---" -ForegroundColor DarkCyan
+Write-Host "--- Azure Functions (AdImpactOs) ---" -ForegroundColor DarkCyan
 Write-Host "Pixel Tracker:       http://localhost:7071/api/pixel?cid=CAMPAIGN&crid=CREATIVE&uid=USER" -ForegroundColor White
 Write-Host "S2S Tracker:         http://localhost:7071/api/s2s/track  (POST)" -ForegroundColor White
 Write-Host ""

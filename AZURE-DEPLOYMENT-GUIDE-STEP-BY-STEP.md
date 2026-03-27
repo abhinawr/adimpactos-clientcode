@@ -44,41 +44,41 @@ the listed source.
 
 ### Identity & Billing
 
-| # | Item | Where to get it |
-|---|------|-----------------|
-| 1 | Personal or company **email address** | Your own mailbox |
-| 2 | **Phone number** (SMS or call) for account verification | Your mobile |
-| 3 | **Credit or debit card** (or bank account for invoice billing) | Your finance team |
-| 4 | Company name, address, country, VAT/tax ID (if applicable) | Your finance team |
-| 5 | Desired **Azure subscription name** [YOU CHOOSE] | e.g. `AdTracking-Prod` |
-| 6 | Monthly **budget limit** in USD [YOU CHOOSE] | e.g. `$2000` |
-| 7 | **Alert email** for budget and monitoring alerts [YOU CHOOSE] | e.g. `ops@example.com` |
+| #   | Item                                                           | Where to get it                  |
+| --- | -------------------------------------------------------------- | -------------------------------- |
+| 1   | Personal or company **email address**                          | Your own mailbox                 |
+| 2   | **Phone number** (SMS or call) for account verification        | Your mobile                      |
+| 3   | **Credit or debit card** (or bank account for invoice billing) | Your finance team                |
+| 4   | Company name, address, country, VAT/tax ID (if applicable)     | Your finance team                |
+| 5   | Desired **Azure subscription name** [YOU CHOOSE]               | e.g. `AdImpactOs-Dev`            |
+| 6   | Monthly **budget limit** in USD [YOU CHOOSE]                   | e.g. `$200` (free trial credit)  |
+| 7   | **Alert email** for budget and monitoring alerts [YOU CHOOSE]  | `tech@theeditorialinstitute.com` |
 
 ### Azure Region
 
-| # | Item | Where to get it |
-|---|------|-----------------|
-| 8 | **Primary Azure region** [YOU CHOOSE] | Pick from [Azure regions](https://azure.microsoft.com/en-us/explore/global-infrastructure/geographies/). Recommendation: `eastus` (low cost, wide service availability) |
-| 9 | **Secondary region** for disaster recovery [YOU CHOOSE] | e.g. `westeurope` |
+| #   | Item                                                    | Where to get it                                                                                                                                                         |
+| --- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 8   | **Primary Azure region** [YOU CHOOSE]                   | Pick from [Azure regions](https://azure.microsoft.com/en-us/explore/global-infrastructure/geographies/). Recommendation: `eastus` (low cost, wide service availability) |
+| 9   | **Secondary region** for disaster recovery [YOU CHOOSE] | e.g. `westeurope`                                                                                                                                                       |
 
 ### Naming Conventions
 
-| # | Item | Recommended value |
-|---|------|-------------------|
-| 10 | **Resource group name** [YOU CHOOSE] | `adtracking-prod-rg` |
-| 11 | **Project prefix** [YOU CHOOSE] | `adtrack` (max 10 chars, lowercase, no spaces) |
-| 12 | **Environment tag** [YOU CHOOSE] | `prod` |
+| #   | Item                                 | Recommended value                               |
+| --- | ------------------------------------ | ----------------------------------------------- |
+| 10  | **Resource group name** [YOU CHOOSE] | `adimpact-dev-rg`                               |
+| 11  | **Project prefix** [YOU CHOOSE]      | `adimpact` (max 10 chars, lowercase, no spaces) |
+| 12  | **Environment tag** [YOU CHOOSE]     | `dev`                                           |
 
 > **Tip** – Use the prefix everywhere so every resource name is globally unique (Azure enforces
 > unique names for storage accounts, Key Vaults, etc.).  
-> Example pattern: `<prefix>-<service>-<env>` → `adtrack-cosmos-prod`
+> Example pattern: `<prefix>-<service>-<env>` → `adimpact-cosmos-dev`
 
 ### Source Code
 
-| # | Item | Where to get it |
-|---|------|-----------------|
-| 13 | Git repository URL | `https://github.com/<org>/AdImpactOs` or your fork |
-| 14 | Branch to deploy [YOU CHOOSE] | e.g. `main` |
+| #   | Item                          | Where to get it                                    |
+| --- | ----------------------------- | -------------------------------------------------- |
+| 13  | Git repository URL            | `https://github.com/<org>/AdImpactOs` or your fork |
+| 14  | Branch to deploy [YOU CHOOSE] | e.g. `main`                                        |
 
 ---
 
@@ -89,12 +89,12 @@ the listed source.
 
 ### Information needed for this phase
 
-| Item | Details |
-|------|---------|
-| Email address | Must be a valid, accessible mailbox |
-| Phone number | For identity verification (SMS or automated call) |
+| Item              | Details                                                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Email address     | Must be a valid, accessible mailbox                                                                                                               |
+| Phone number      | For identity verification (SMS or automated call)                                                                                                 |
 | Credit/debit card | Card is charged $1 temporarily to verify identity; it is refunded immediately. You will not be charged until you upgrade or exceed the free tier. |
-| Country/region | Your billing country |
+| Country/region    | Your billing country                                                                                                                              |
 
 ### Steps
 
@@ -127,10 +127,11 @@ the listed source.
 8. Wait for the account to be provisioned (~30 seconds).  
    You will be taken to the **Azure Portal** at **https://portal.azure.com**.
 
-> **Note – Free trial vs. Pay-As-You-Go**  
+> **Note – Free trial**  
 > The free trial gives you $200 credit for 30 days plus 12 months of selected free services.  
-> For a client production deployment, upgrade to **Pay-As-You-Go** immediately:  
-> Portal → **Subscriptions** → Select your subscription → **Upgrade**.
+> This is sufficient for a dev/test deployment. Stay on the free trial and monitor your credit  
+> usage in Portal → **Cost Management + Billing** → **Azure credits**. You can upgrade to  
+> **Pay-As-You-Go** later when you move to production.
 
 ---
 
@@ -145,11 +146,11 @@ Install every tool below on the **developer/ops workstation** that will run depl
 
 The Azure CLI is the primary tool used in every subsequent phase.
 
-| OS | Command |
-|----|---------|
-| Windows | Download installer from https://aka.ms/installazurecliwindows and run it |
-| macOS | `brew install azure-cli` |
-| Ubuntu/Debian | `curl -sL https://aka.ms/InstallAzureCLIDeb \| sudo bash` |
+| OS            | Command                                                                  |
+| ------------- | ------------------------------------------------------------------------ |
+| Windows       | Download installer from https://aka.ms/installazurecliwindows and run it |
+| macOS         | `brew install azure-cli`                                                 |
+| Ubuntu/Debian | `curl -sL https://aka.ms/InstallAzureCLIDeb \| sudo bash`                |
 
 Verify:
 
@@ -162,11 +163,11 @@ az version
 
 Required to build and publish the Azure Functions project and all APIs.
 
-| OS | Command / link |
-|----|---------------|
+| OS      | Command / link                                                                      |
+| ------- | ----------------------------------------------------------------------------------- |
 | Windows | https://dotnet.microsoft.com/en-us/download/dotnet/8.0 – download the SDK installer |
-| macOS | `brew install dotnet@8` |
-| Ubuntu | `sudo apt install dotnet-sdk-8.0` |
+| macOS   | `brew install dotnet@8`                                                             |
+| Ubuntu  | `sudo apt install dotnet-sdk-8.0`                                                   |
 
 Verify:
 
@@ -207,11 +208,11 @@ func --version
 
 ### 2.5 Git
 
-| OS | Command |
-|----|---------|
+| OS      | Command                          |
+| ------- | -------------------------------- |
 | Windows | https://git-scm.com/download/win |
-| macOS | `brew install git` |
-| Ubuntu | `sudo apt install git` |
+| macOS   | `brew install git`               |
+| Ubuntu  | `sudo apt install git`           |
 
 Verify:
 
@@ -225,11 +226,13 @@ git --version
 
 **Information needed:**
 
-| Item | Details |
-|------|---------|
-| Azure account email | The email used when creating the Azure account |
-| Azure account password | Set during account creation |
-| Subscription ID | Found in Portal → **Subscriptions** (a UUID like `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`) |
+| Item                   | Details                                        |
+| ---------------------- | ---------------------------------------------- |
+| Azure account email    | The email used when creating the Azure account |
+| Azure account password | Set during account creation                    |
+| Tenant (Root Group) ID | `84d2a2d3-8846-412a-af03-932ff0b721c8`         |
+| Subscription name      | `AdImpactOs-Dev`                               |
+| Subscription ID        | `91a6db8a-cc0c-4ae7-93e1-bd9b02291dd9`         |
 
 ### Steps
 
@@ -241,7 +244,7 @@ az login
 az account list --output table
 
 # 3. Set the active subscription
-az account set --subscription "<Subscription ID or Name>"
+az account set --subscription "91a6db8a-cc0c-4ae7-93e1-bd9b02291dd9"
 
 # 4. Confirm the active subscription
 az account show --query "{Name:name, ID:id, State:state}" --output table
@@ -251,19 +254,20 @@ Record the **Subscription ID** – you will need it in later commands.
 
 ```bash
 # Save to a shell variable for convenience (all phases below reference $SUBSCRIPTION_ID)
-export SUBSCRIPTION_ID="<your-subscription-id>"
+export SUBSCRIPTION_ID="91a6db8a-cc0c-4ae7-93e1-bd9b02291dd9"
 export LOCATION="eastus"           # Change to your chosen region
-export PREFIX="adtrack"            # Your chosen prefix (lowercase, no spaces)
-export ENV="prod"
-export RG="${PREFIX}-${ENV}-rg"    # adtrack-prod-rg
+export PREFIX="adimpact"           # Your chosen prefix (lowercase, no spaces)
+export ENV="dev"
+export RG="${PREFIX}-${ENV}-rg"    # adimpact-dev-rg
 ```
 
 > **Windows PowerShell alternative:**
+>
 > ```powershell
-> $SUBSCRIPTION_ID = "<your-subscription-id>"
+> $SUBSCRIPTION_ID = "91a6db8a-cc0c-4ae7-93e1-bd9b02291dd9"
 > $LOCATION        = "eastus"
-> $PREFIX          = "adtrack"
-> $ENV             = "prod"
+> $PREFIX          = "adimpact"
+> $ENV             = "dev"
 > $RG              = "$PREFIX-$ENV-rg"
 > ```
 
@@ -275,10 +279,10 @@ A resource group is a logical container for all Azure resources in this project.
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Resource group name | `adtrack-prod-rg` | Unique within the subscription |
-| Location | `eastus` | All resources will default to this region |
+| Item                | Example value     | Notes                                     |
+| ------------------- | ----------------- | ----------------------------------------- |
+| Resource group name | `adimpact-dev-rg` | Unique within the subscription            |
+| Location            | `eastus`          | All resources will default to this region |
 
 ```bash
 az group create \
@@ -299,18 +303,18 @@ from this registry.
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Registry name | `adtrackprodacr` | **Globally unique**, 5–50 chars, lowercase alphanumeric only |
-| SKU | `Standard` | `Basic` (dev), `Standard` (production), `Premium` (geo-replication) |
+| Item          | Example value    | Notes                                                               |
+| ------------- | ---------------- | ------------------------------------------------------------------- |
+| Registry name | `adimpactdevacr` | **Globally unique**, 5–50 chars, lowercase alphanumeric only        |
+| SKU           | `Basic`          | `Basic` (dev), `Standard` (production), `Premium` (geo-replication) |
 
 ```bash
-export ACR_NAME="${PREFIX}${ENV}acr"    # adtrackprodacr
+export ACR_NAME="${PREFIX}${ENV}acr"    # adimpactdevacr
 
 az acr create \
   --resource-group "$RG" \
   --name "$ACR_NAME" \
-  --sku Standard \
+  --sku Basic \
   --location "$LOCATION"
 
 # Enable admin access so App Service can pull images
@@ -319,7 +323,7 @@ az acr update --name "$ACR_NAME" --admin-enabled true
 # Retrieve login server URL
 export ACR_LOGIN_SERVER=$(az acr show --name "$ACR_NAME" --query loginServer --output tsv)
 echo "ACR Login Server: $ACR_LOGIN_SERVER"
-# e.g. adtrackprodacr.azurecr.io
+# e.g. adimpactdevacr.azurecr.io
 
 # Log Docker in to the registry
 az acr login --name "$ACR_NAME"
@@ -334,17 +338,17 @@ and SurveyResponses.
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Account name | `adtrack-cosmos-prod` | Globally unique, 3–44 chars, lowercase |
-| API kind | `GlobalDocumentDB` (Core / SQL API) | Used by the .NET SDK |
-| Consistency level | `Session` | Balance between performance and consistency |
-| Database name | `AdTrackingDB` | Must match `appsettings.json` → `CosmosDb__DatabaseName` |
+| Item              | Example value                       | Notes                                                    |
+| ----------------- | ----------------------------------- | -------------------------------------------------------- |
+| Account name      | `adimpact-cosmos-dev`               | Globally unique, 3–44 chars, lowercase                   |
+| API kind          | `GlobalDocumentDB` (Core / SQL API) | Used by the .NET SDK                                     |
+| Consistency level | `Session`                           | Balance between performance and consistency              |
+| Database name     | `AdImpactOsDB`                      | Must match `appsettings.json` → `CosmosDb__DatabaseName` |
 
 ### 6.1 Create the Cosmos DB Account
 
 ```bash
-export COSMOS_NAME="${PREFIX}-cosmos-${ENV}"   # adtrack-cosmos-prod
+export COSMOS_NAME="${PREFIX}-cosmos-${ENV}"   # adimpact-cosmos-dev
 
 az cosmosdb create \
   --resource-group "$RG" \
@@ -366,7 +370,7 @@ echo "Cosmos DB account created: $COSMOS_NAME"
 az cosmosdb sql database create \
   --resource-group "$RG" \
   --account-name "$COSMOS_NAME" \
-  --name "AdTrackingDB"
+  --name "AdImpactOsDB"
 ```
 
 ### 6.3 Create the Five Containers
@@ -378,7 +382,7 @@ Each container requires a **partition key** (the field Cosmos DB uses to shard d
 az cosmosdb sql container create \
   --resource-group "$RG" \
   --account-name "$COSMOS_NAME" \
-  --database-name "AdTrackingDB" \
+  --database-name "AdImpactOsDB" \
   --name "Panelists" \
   --partition-key-path "/panelistId" \
   --throughput 400
@@ -387,7 +391,7 @@ az cosmosdb sql container create \
 az cosmosdb sql container create \
   --resource-group "$RG" \
   --account-name "$COSMOS_NAME" \
-  --database-name "AdTrackingDB" \
+  --database-name "AdImpactOsDB" \
   --name "Campaigns" \
   --partition-key-path "/campaignId" \
   --throughput 400
@@ -396,7 +400,7 @@ az cosmosdb sql container create \
 az cosmosdb sql container create \
   --resource-group "$RG" \
   --account-name "$COSMOS_NAME" \
-  --database-name "AdTrackingDB" \
+  --database-name "AdImpactOsDB" \
   --name "Impressions" \
   --partition-key-path "/campaignId" \
   --throughput 400
@@ -405,7 +409,7 @@ az cosmosdb sql container create \
 az cosmosdb sql container create \
   --resource-group "$RG" \
   --account-name "$COSMOS_NAME" \
-  --database-name "AdTrackingDB" \
+  --database-name "AdImpactOsDB" \
   --name "Surveys" \
   --partition-key-path "/surveyId" \
   --throughput 400
@@ -414,7 +418,7 @@ az cosmosdb sql container create \
 az cosmosdb sql container create \
   --resource-group "$RG" \
   --account-name "$COSMOS_NAME" \
-  --database-name "AdTrackingDB" \
+  --database-name "AdImpactOsDB" \
   --name "SurveyResponses" \
   --partition-key-path "/surveyId" \
   --throughput 400
@@ -448,19 +452,19 @@ them to the Event Consumer worker service.
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Namespace name | `adtrack-eh-prod` | Globally unique, 6–50 chars |
-| SKU | `Standard` | Standard tier required for consumer groups and Kafka surface |
-| Throughput units | `2` | Start with 2; auto-inflate can grow to 10 |
-| Event Hub name | `ad-impressions` | Must match `EventHub__Name` config |
-| Partition count | `8` | Parallelism level for the Event Consumer |
-| Message retention | `7` | Days to retain messages |
+| Item              | Example value     | Notes                                                        |
+| ----------------- | ----------------- | ------------------------------------------------------------ |
+| Namespace name    | `adimpact-eh-dev` | Globally unique, 6–50 chars                                  |
+| SKU               | `Standard`        | Standard tier required for consumer groups and Kafka surface |
+| Throughput units  | `2`               | Start with 2; auto-inflate can grow to 10                    |
+| Event Hub name    | `ad-impressions`  | Must match `EventHub__Name` config                           |
+| Partition count   | `8`               | Parallelism level for the Event Consumer                     |
+| Message retention | `7`               | Days to retain messages                                      |
 
 ### 7.1 Create the Namespace
 
 ```bash
-export EH_NAMESPACE="${PREFIX}-eh-${ENV}"   # adtrack-eh-prod
+export EH_NAMESPACE="${PREFIX}-eh-${ENV}"   # adimpact-eh-dev
 
 az eventhubs namespace create \
   --resource-group "$RG" \
@@ -516,14 +520,14 @@ az eventhubs eventhub consumer-group create \
 az eventhubs namespace authorization-rule create \
   --resource-group "$RG" \
   --namespace-name "$EH_NAMESPACE" \
-  --name "adtracking-rule" \
+  --name "adimpactos-rule" \
   --rights Send Listen
 
 # Retrieve the primary connection string
 export EH_CONNECTION_STRING=$(az eventhubs namespace authorization-rule keys list \
   --resource-group "$RG" \
   --namespace-name "$EH_NAMESPACE" \
-  --name "adtracking-rule" \
+  --name "adimpactos-rule" \
   --query primaryConnectionString --output tsv)
 
 echo "Event Hub Connection String: $EH_CONNECTION_STRING"
@@ -534,19 +538,20 @@ echo "Event Hub Connection String: $EH_CONNECTION_STRING"
 ## Phase 8 – Create Azure Storage Account
 
 The storage account provides:
+
 - **Blob storage** – checkpoint store for the Event Consumer and dead-letter-queue (DLQ) blobs.
 - **Azure Functions host** – Functions requires a storage account for internal operations.
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Storage account name | `adtrackprodsa` | Globally unique, 3–24 chars, lowercase alphanumeric |
-| SKU | `Standard_LRS` | Locally redundant (use `Standard_GRS` for higher durability) |
-| Kind | `StorageV2` | General-purpose v2 |
+| Item                 | Example value   | Notes                                                        |
+| -------------------- | --------------- | ------------------------------------------------------------ |
+| Storage account name | `adimpactdevsa` | Globally unique, 3–24 chars, lowercase alphanumeric          |
+| SKU                  | `Standard_LRS`  | Locally redundant (use `Standard_GRS` for higher durability) |
+| Kind                 | `StorageV2`     | General-purpose v2                                           |
 
 ```bash
-export STORAGE_NAME="${PREFIX}${ENV}sa"   # adtrackprodsa
+export STORAGE_NAME="${PREFIX}${ENV}sa"   # adimpactdevsa
 
 az storage account create \
   --resource-group "$RG" \
@@ -581,14 +586,14 @@ appear in application configuration files or Docker images.
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Key Vault name | `adtrack-kv-prod` | Globally unique, 3–24 chars |
-| SKU | `standard` | `premium` for HSM-backed keys |
-| Soft-delete retention | `90` days | Prevents accidental permanent deletion |
+| Item                  | Example value     | Notes                                  |
+| --------------------- | ----------------- | -------------------------------------- |
+| Key Vault name        | `adimpact-kv-dev` | Globally unique, 3–24 chars            |
+| SKU                   | `standard`        | `premium` for HSM-backed keys          |
+| Soft-delete retention | `90` days         | Prevents accidental permanent deletion |
 
 ```bash
-export KV_NAME="${PREFIX}-kv-${ENV}"   # adtrack-kv-prod
+export KV_NAME="${PREFIX}-kv-${ENV}"   # adimpact-kv-dev
 
 az keyvault create \
   --resource-group "$RG" \
@@ -623,10 +628,10 @@ dashboards for all services.
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Workspace name | `adtrack-law-prod` | Log Analytics Workspace for Application Insights v2 |
-| App Insights name | `adtrack-ai-prod` | |
+| Item              | Example value      | Notes                                               |
+| ----------------- | ------------------ | --------------------------------------------------- |
+| Workspace name    | `adimpact-law-dev` | Log Analytics Workspace for Application Insights v2 |
+| App Insights name | `adimpact-ai-dev`  |                                                     |
 
 ```bash
 export LAW_NAME="${PREFIX}-law-${ENV}"
@@ -669,12 +674,12 @@ Demo UI).
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Plan name | `adtrack-plan-prod` | |
-| SKU | `P1v3` | P1v3 = 1 vCPU, 1.75 GB RAM per instance. Use `B1` for dev/test. |
-| OS | `Linux` | Required for Docker container deployment |
-| Worker count | `1` | Scale up as load increases |
+| Item         | Example value       | Notes                                                                                 |
+| ------------ | ------------------- | ------------------------------------------------------------------------------------- |
+| Plan name    | `adimpact-plan-dev` |                                                                                       |
+| SKU          | `B1`                | B1 = 1 vCPU, 1.75 GB RAM per instance. Ideal for dev/test. Use `P1v3` for production. |
+| OS           | `Linux`             | Required for Docker container deployment                                              |
+| Worker count | `1`                 | Scale up as load increases                                                            |
 
 ```bash
 export APP_PLAN="${PREFIX}-plan-${ENV}"
@@ -684,7 +689,7 @@ az appservice plan create \
   --name "$APP_PLAN" \
   --location "$LOCATION" \
   --is-linux \
-  --sku P1V3 \
+  --sku B1 \
   --number-of-workers 1
 ```
 
@@ -697,13 +702,13 @@ The Function App hosts the **Pixel Tracker** (returns a 1×1 GIF) and the **S2S 
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Function App name | `adtrack-fn-prod` | Globally unique, lowercase, alphanumeric, hyphens |
-| Runtime | `dotnet-isolated` | Must match `FUNCTIONS_WORKER_RUNTIME` |
-| .NET version | `8.0` | |
-| Functions version | `4` | Azure Functions v4 |
-| Storage account | `adtrackprodsa` | Same storage account created in Phase 8 |
+| Item              | Example value     | Notes                                             |
+| ----------------- | ----------------- | ------------------------------------------------- |
+| Function App name | `adimpact-fn-dev` | Globally unique, lowercase, alphanumeric, hyphens |
+| Runtime           | `dotnet-isolated` | Must match `FUNCTIONS_WORKER_RUNTIME`             |
+| .NET version      | `8.0`             |                                                   |
+| Functions version | `4`               | Azure Functions v4                                |
+| Storage account   | `adimpactdevsa`   | Same storage account created in Phase 8           |
 
 ```bash
 export FUNC_APP="${PREFIX}-fn-${ENV}"
@@ -732,22 +737,22 @@ echo "Function App created: $FUNC_APP"
 
 Create one Azure Web App (App Service) for each of the five containerised services:
 
-| Service | App name | Internal port |
-|---------|---------|--------------|
-| Panelist API | `adtrack-panelist-prod` | 8080 |
-| Campaign API | `adtrack-campaign-prod` | 8080 |
-| Survey API | `adtrack-survey-prod` | 8080 |
-| Dashboard | `adtrack-dashboard-prod` | 8080 |
-| Demo UI | `adtrack-demoui-prod` | 8080 |
-| Event Consumer | `adtrack-consumer-prod` | N/A (worker) |
+| Service        | App name                 | Internal port |
+| -------------- | ------------------------ | ------------- |
+| Panelist API   | `adimpact-panelist-dev`  | 8080          |
+| Campaign API   | `adimpact-campaign-dev`  | 8080          |
+| Survey API     | `adimpact-survey-dev`    | 8080          |
+| Dashboard      | `adimpact-dashboard-dev` | 8080          |
+| Demo UI        | `adimpact-demoui-dev`    | 8080          |
+| Event Consumer | `adimpact-consumer-dev`  | N/A (worker)  |
 
 **Information needed per app:**
 
-| Item | Details |
-|------|---------|
-| App name | Globally unique (Azure adds `.azurewebsites.net`) |
-| Container image | `<acr-login-server>/<image>:latest` (set in Phase 16) |
-| App Service Plan | `adtrack-plan-prod` (created in Phase 11) |
+| Item             | Details                                               |
+| ---------------- | ----------------------------------------------------- |
+| App name         | Globally unique (Azure adds `.azurewebsites.net`)     |
+| Container image  | `<acr-login-server>/<image>:latest` (set in Phase 16) |
+| App Service Plan | `adimpact-plan-dev` (created in Phase 11)             |
 
 ```bash
 # Helper function
@@ -843,14 +848,14 @@ Application settings reference them using the `@Microsoft.KeyVault(...)` syntax.
 
 **Information needed:**
 
-| Secret name | Value | Source |
-|-------------|-------|--------|
-| `CosmosDbEndpoint` | `$COSMOS_ENDPOINT` | Phase 6.4 |
-| `CosmosDbKey` | `$COSMOS_KEY` | Phase 6.4 |
-| `EventHubConnectionString` | `$EH_CONNECTION_STRING` | Phase 7.4 |
-| `BlobStorageConnectionString` | `$STORAGE_CONNECTION_STRING` | Phase 8 |
-| `AppInsightsConnectionString` | `$AI_CONNECTION_STRING` | Phase 10 |
-| `SurveyTokenSecret` | Any strong random string you generate | You generate |
+| Secret name                   | Value                                 | Source       |
+| ----------------------------- | ------------------------------------- | ------------ |
+| `CosmosDbEndpoint`            | `$COSMOS_ENDPOINT`                    | Phase 6.4    |
+| `CosmosDbKey`                 | `$COSMOS_KEY`                         | Phase 6.4    |
+| `EventHubConnectionString`    | `$EH_CONNECTION_STRING`               | Phase 7.4    |
+| `BlobStorageConnectionString` | `$STORAGE_CONNECTION_STRING`          | Phase 8      |
+| `AppInsightsConnectionString` | `$AI_CONNECTION_STRING`               | Phase 10     |
+| `SurveyTokenSecret`           | Any strong random string you generate | You generate |
 
 ```bash
 # Generate a strong survey token secret (32 random bytes, base64)
@@ -889,11 +894,11 @@ Build each service image and push it to the Azure Container Registry created in 
 
 **Information needed:**
 
-| Item | Details |
-|------|---------|
-| Repository root | `/path/to/AdImpactOs` (local clone) |
-| ACR login server | `$ACR_LOGIN_SERVER` (set in Phase 5) |
-| Image tag | `latest` or a semantic version, e.g. `1.0.0` |
+| Item             | Details                                      |
+| ---------------- | -------------------------------------------- |
+| Repository root  | `/path/to/AdImpactOs` (local clone)          |
+| ACR login server | `$ACR_LOGIN_SERVER` (set in Phase 5)         |
+| Image tag        | `latest` or a semantic version, e.g. `1.0.0` |
 
 ```bash
 # Navigate to repository root
@@ -997,10 +1002,10 @@ az webapp config appsettings set \
   --resource-group "$RG" \
   --name "${PREFIX}-panelist-${ENV}" \
   --settings \
-    ASPNETCORE_ENVIRONMENT="Production" \
+    ASPNETCORE_ENVIRONMENT="Development" \
     CosmosDb__Endpoint="$COSMOS_ENDPOINT_REF" \
     CosmosDb__Key="$COSMOS_KEY_REF" \
-    CosmosDb__DatabaseName="AdTrackingDB" \
+    CosmosDb__DatabaseName="AdImpactOsDB" \
     CosmosDb__ContainerName="Panelists" \
     APPLICATIONINSIGHTS_CONNECTION_STRING="$AI_REF" \
     WEBSITES_PORT=8080
@@ -1013,10 +1018,10 @@ az webapp config appsettings set \
   --resource-group "$RG" \
   --name "${PREFIX}-campaign-${ENV}" \
   --settings \
-    ASPNETCORE_ENVIRONMENT="Production" \
+    ASPNETCORE_ENVIRONMENT="Development" \
     CosmosDb__Endpoint="$COSMOS_ENDPOINT_REF" \
     CosmosDb__Key="$COSMOS_KEY_REF" \
-    CosmosDb__DatabaseName="AdTrackingDB" \
+    CosmosDb__DatabaseName="AdImpactOsDB" \
     CosmosDb__ContainerName="Campaigns" \
     CosmosDb__ImpressionContainerName="Impressions" \
     APPLICATIONINSIGHTS_CONNECTION_STRING="$AI_REF" \
@@ -1030,10 +1035,10 @@ az webapp config appsettings set \
   --resource-group "$RG" \
   --name "${PREFIX}-survey-${ENV}" \
   --settings \
-    ASPNETCORE_ENVIRONMENT="Production" \
+    ASPNETCORE_ENVIRONMENT="Development" \
     CosmosDb__Endpoint="$COSMOS_ENDPOINT_REF" \
     CosmosDb__Key="$COSMOS_KEY_REF" \
-    CosmosDb__DatabaseName="AdTrackingDB" \
+    CosmosDb__DatabaseName="AdImpactOsDB" \
     CosmosDb__SurveyContainerName="Surveys" \
     CosmosDb__SurveyResponseContainerName="SurveyResponses" \
     SurveyToken__Secret="$SURVEY_TOKEN_REF" \
@@ -1050,11 +1055,11 @@ az webapp config appsettings set \
   --resource-group "$RG" \
   --name "${PREFIX}-dashboard-${ENV}" \
   --settings \
-    ASPNETCORE_ENVIRONMENT="Production" \
+    ASPNETCORE_ENVIRONMENT="Development" \
     PanelistApiBaseUrl="https://${PREFIX}-panelist-${ENV}.azurewebsites.net" \
     CampaignApiBaseUrl="https://${PREFIX}-campaign-${ENV}.azurewebsites.net" \
     SurveyApiBaseUrl="https://${PREFIX}-survey-${ENV}.azurewebsites.net" \
-    AdTrackingFunctionsBaseUrl="https://${PREFIX}-fn-${ENV}.azurewebsites.net" \
+    AdImpactOsFunctionsBaseUrl="https://${PREFIX}-fn-${ENV}.azurewebsites.net" \
     APPLICATIONINSIGHTS_CONNECTION_STRING="$AI_REF" \
     WEBSITES_PORT=8080
 ```
@@ -1066,8 +1071,8 @@ az webapp config appsettings set \
   --resource-group "$RG" \
   --name "${PREFIX}-demoui-${ENV}" \
   --settings \
-    ASPNETCORE_ENVIRONMENT="Production" \
-    AdTrackingFunctionsBaseUrl="https://${PREFIX}-fn-${ENV}.azurewebsites.net" \
+    ASPNETCORE_ENVIRONMENT="Development" \
+    AdImpactOsFunctionsBaseUrl="https://${PREFIX}-fn-${ENV}.azurewebsites.net" \
     APPLICATIONINSIGHTS_CONNECTION_STRING="$AI_REF" \
     WEBSITES_PORT=8080
 ```
@@ -1079,7 +1084,7 @@ az webapp config appsettings set \
   --resource-group "$RG" \
   --name "${PREFIX}-consumer-${ENV}" \
   --settings \
-    DOTNET_ENVIRONMENT="Production" \
+    DOTNET_ENVIRONMENT="Development" \
     EventHub__ConnectionString="$EH_REF" \
     EventHub__Name="ad-impressions" \
     EventHub__ConsumerGroup="event-consumer" \
@@ -1087,7 +1092,7 @@ az webapp config appsettings set \
     BlobStorage__CheckpointContainerName="event-consumer-checkpoints" \
     CosmosDb__Endpoint="$COSMOS_ENDPOINT_REF" \
     CosmosDb__Key="$COSMOS_KEY_REF" \
-    CosmosDb__DatabaseName="AdTrackingDB" \
+    CosmosDb__DatabaseName="AdImpactOsDB" \
     CosmosDb__ImpressionContainerName="Impressions" \
     KeyVault__Url="$KV_URI" \
     KeyVault__EncryptionKeyName="panelist-token-key" \
@@ -1118,10 +1123,10 @@ The Functions project is deployed directly using the Azure Functions Core Tools 
 
 **Information needed:**
 
-| Item | Details |
-|------|---------|
-| Function App name | `$FUNC_APP` |
-| Source directory | `src/AdImpactOs` in the repository |
+| Item              | Details                            |
+| ----------------- | ---------------------------------- |
+| Function App name | `$FUNC_APP`                        |
+| Source directory  | `src/AdImpactOs` in the repository |
 
 ```bash
 cd /path/to/AdImpactOs/src/AdImpactOs
@@ -1228,13 +1233,13 @@ curl -X POST "${FUNCTIONS_URL}/api/s2s" \
 
 ### 20.4 Open the Swagger UIs
 
-| Service | URL |
-|---------|-----|
+| Service      | URL                                                           |
+| ------------ | ------------------------------------------------------------- |
 | Panelist API | `https://${PREFIX}-panelist-${ENV}.azurewebsites.net/swagger` |
 | Campaign API | `https://${PREFIX}-campaign-${ENV}.azurewebsites.net/swagger` |
-| Survey API | `https://${PREFIX}-survey-${ENV}.azurewebsites.net/swagger` |
-| Dashboard | `https://${PREFIX}-dashboard-${ENV}.azurewebsites.net` |
-| Demo UI | `https://${PREFIX}-demoui-${ENV}.azurewebsites.net` |
+| Survey API   | `https://${PREFIX}-survey-${ENV}.azurewebsites.net/swagger`   |
+| Dashboard    | `https://${PREFIX}-dashboard-${ENV}.azurewebsites.net`        |
+| Demo UI      | `https://${PREFIX}-demoui-${ENV}.azurewebsites.net`           |
 
 ---
 
@@ -1244,18 +1249,18 @@ curl -X POST "${FUNCTIONS_URL}/api/s2s" \
 
 **Information needed:**
 
-| Item | Example value |
-|------|--------------|
-| Alert email | `ops@example.com` |
-| Action group name | `adtrack-prod-alerts` |
+| Item              | Example value                    |
+| ----------------- | -------------------------------- |
+| Alert email       | `tech@theeditorialinstitute.com` |
+| Action group name | `adimpact-dev-alerts`            |
 
 ```bash
-export ALERT_EMAIL="ops@example.com"   # Replace with client's ops email
+export ALERT_EMAIL="tech@theeditorialinstitute.com"   # Replace with client's ops email
 
 az monitor action-group create \
   --resource-group "$RG" \
-  --name "adtrack-prod-alerts" \
-  --short-name "adtrack" \
+  --name "adimpact-dev-alerts" \
+  --short-name "adimpact" \
   --action email ops-team "$ALERT_EMAIL"
 ```
 
@@ -1264,7 +1269,7 @@ az monitor action-group create \
 ```bash
 ACTION_GROUP_ID=$(az monitor action-group show \
   --resource-group "$RG" \
-  --name "adtrack-prod-alerts" \
+  --name "adimpact-dev-alerts" \
   --query id --output tsv)
 
 FUNC_APP_ID=$(az functionapp show \
@@ -1301,20 +1306,20 @@ az monitor metrics alert create \
 
 **Information needed:**
 
-| Item | Example value | Notes |
-|------|--------------|-------|
-| Monthly budget (USD) | `2000` | Your agreed budget with the client |
-| Alert thresholds | `80`, `100` | Percent of budget |
+| Item                 | Example value | Notes                   |
+| -------------------- | ------------- | ----------------------- |
+| Monthly budget (USD) | `200`         | Free trial credit limit |
+| Alert thresholds     | `50`, `80`    | Percent of budget       |
 
 ```bash
 az consumption budget create \
-  --budget-name "adtracking-monthly-budget" \
-  --amount 2000 \
+  --budget-name "adimpactos-monthly-budget" \
+  --amount 200 \
   --time-grain Monthly \
   --start-date "$(date +%Y-%m-01)" \
   --end-date "$(date -d '+3 years' +%Y-%m-01)" \
   --resource-group "$RG" \
-  --notification-threshold-percentage 80 \
+  --notification-threshold-percentage 50 \
   --contact-emails "$ALERT_EMAIL"
 ```
 
@@ -1324,18 +1329,18 @@ az consumption budget create \
 
 Estimated **monthly costs** for a production environment (East US, moderate load):
 
-| Service | Configuration | Est. Monthly Cost |
-|---------|--------------|-------------------|
-| Azure Cosmos DB | 400–1000 RU/s autoscale | $30–$80 |
-| Azure Event Hubs | Standard, 2 TUs | $25 |
-| Azure Storage | Standard LRS, 100 GB | $5 |
-| Azure Functions | Consumption plan | $5–$20 |
-| App Service Plan | P1V3 × 1 instance | $75 |
-| Azure Container Registry | Standard | $20 |
-| Application Insights | Up to 5 GB/month free | $0–$15 |
-| Key Vault | Standard | $5 |
-| Azure Monitor (Log Analytics) | 5 GB/month free | $0–$10 |
-| **Total estimate** | | **~$165–$255/month** |
+| Service                       | Configuration           | Est. Monthly Cost    |
+| ----------------------------- | ----------------------- | -------------------- |
+| Azure Cosmos DB               | 400–1000 RU/s autoscale | $30–$80              |
+| Azure Event Hubs              | Standard, 2 TUs         | $25                  |
+| Azure Storage                 | Standard LRS, 100 GB    | $5                   |
+| Azure Functions               | Consumption plan        | $5–$20               |
+| App Service Plan              | P1V3 × 1 instance       | $75                  |
+| Azure Container Registry      | Standard                | $20                  |
+| Application Insights          | Up to 5 GB/month free   | $0–$15               |
+| Key Vault                     | Standard                | $5                   |
+| Azure Monitor (Log Analytics) | 5 GB/month free         | $0–$10               |
+| **Total estimate**            |                         | **~$165–$255/month** |
 
 > Costs scale with traffic. Enable **autoscale** on App Service and Cosmos DB and review monthly.
 
@@ -1354,24 +1359,24 @@ Estimated **monthly costs** for a production environment (East US, moderate load
 
 **Information needed:**
 
-| Item | Example value |
-|------|--------------|
-| Custom domain | `adtracking.example.com` |
-| DNS provider access | Access to DNS records for `example.com` |
-| TLS certificate | Managed (free) via Azure App Service, or upload your own |
+| Item                | Example value                                            |
+| ------------------- | -------------------------------------------------------- |
+| Custom domain       | `adimpactos.example.com`                                 |
+| DNS provider access | Access to DNS records for `example.com`                  |
+| TLS certificate     | Managed (free) via Azure App Service, or upload your own |
 
 ```bash
 # Add custom domain to the Dashboard web app
 az webapp config hostname add \
   --resource-group "$RG" \
   --webapp-name "${PREFIX}-dashboard-${ENV}" \
-  --hostname "adtracking.example.com"
+  --hostname "adimpactos.example.com"
 
 # Create a free managed certificate
 az webapp config ssl create \
   --resource-group "$RG" \
   --name "${PREFIX}-dashboard-${ENV}" \
-  --hostname "adtracking.example.com"
+  --hostname "adimpactos.example.com"
 
 # Bind the certificate
 CERT_THUMBPRINT=$(az webapp config ssl show \
@@ -1392,11 +1397,11 @@ Required before enabling authentication on the APIs and Dashboard.
 
 **Information needed:**
 
-| Item | Details |
-|------|---------|
-| Azure AD B2C tenant name | e.g. `adtrackingb2c.onmicrosoft.com` |
-| Application (client) ID | Created in the B2C app registration |
-| Sign-up/sign-in policy | e.g. `B2C_1_susi` |
+| Item                     | Details                              |
+| ------------------------ | ------------------------------------ |
+| Azure AD B2C tenant name | e.g. `adimpactosb2c.onmicrosoft.com` |
+| Application (client) ID  | Created in the B2C app registration  |
+| Sign-up/sign-in policy   | e.g. `B2C_1_susi`                    |
 
 Follow the [official B2C quickstart](https://learn.microsoft.com/azure/active-directory-b2c/tutorial-create-tenant)
 then update `appsettings.json` / App Service settings with `AzureAdB2C__*` values.
@@ -1423,13 +1428,13 @@ deploy on every push to `main`.
 
 **Information needed:**
 
-| Secret name | Value |
-|-------------|-------|
+| Secret name         | Value                                                          |
+| ------------------- | -------------------------------------------------------------- |
 | `AZURE_CREDENTIALS` | Service principal JSON (`az ad sp create-for-rbac --sdk-auth`) |
-| `ACR_LOGIN_SERVER` | `$ACR_LOGIN_SERVER` |
-| `ACR_USERNAME` | ACR admin username |
-| `ACR_PASSWORD` | ACR admin password |
-| `FUNC_APP_NAME` | `$FUNC_APP` |
+| `ACR_LOGIN_SERVER`  | `$ACR_LOGIN_SERVER`                                            |
+| `ACR_USERNAME`      | ACR admin username                                             |
+| `ACR_PASSWORD`      | ACR admin password                                             |
+| `FUNC_APP_NAME`     | `$FUNC_APP`                                                    |
 
 A starter workflow file lives at `.github/workflows/deploy.yml` (create it if not present).
 
@@ -1438,28 +1443,30 @@ A starter workflow file lives at `.github/workflows/deploy.yml` (create it if no
 ## Quick-Reference: All Resource Names
 
 After following this guide you will have created the following Azure resources (using example
-prefix `adtrack`, environment `prod`, region `eastus`):
+prefix `adimpact`, environment `dev`, region `eastus`):
 
-| Resource | Name | Type |
-|----------|------|------|
-| Resource Group | `adtrack-prod-rg` | Resource Group |
-| Container Registry | `adtrackprodacr` | Azure Container Registry |
-| Cosmos DB Account | `adtrack-cosmos-prod` | Cosmos DB |
-| Cosmos DB Database | `AdTrackingDB` | Database |
-| Event Hubs Namespace | `adtrack-eh-prod` | Event Hubs |
-| Event Hub | `ad-impressions` | Event Hub |
-| Storage Account | `adtrackprodsa` | Storage Account |
-| Key Vault | `adtrack-kv-prod` | Key Vault |
-| Log Analytics Workspace | `adtrack-law-prod` | Log Analytics |
-| Application Insights | `adtrack-ai-prod` | Application Insights |
-| App Service Plan | `adtrack-plan-prod` | App Service Plan |
-| Function App | `adtrack-fn-prod` | Azure Functions |
-| Panelist API | `adtrack-panelist-prod` | App Service |
-| Campaign API | `adtrack-campaign-prod` | App Service |
-| Survey API | `adtrack-survey-prod` | App Service |
-| Dashboard | `adtrack-dashboard-prod` | App Service |
-| Demo UI | `adtrack-demoui-prod` | App Service |
-| Event Consumer | `adtrack-consumer-prod` | App Service |
+| Resource                | Name                                                      | Type                     |
+| ----------------------- | --------------------------------------------------------- | ------------------------ |
+| Tenant (Root Group)     | `84d2a2d3-8846-412a-af03-932ff0b721c8`                    | Management Group         |
+| Subscription            | `AdImpactOs-Dev` (`91a6db8a-cc0c-4ae7-93e1-bd9b02291dd9`) | Subscription             |
+| Resource Group          | `adimpact-dev-rg`                                         | Resource Group           |
+| Container Registry      | `adimpactdevacr`                                          | Azure Container Registry |
+| Cosmos DB Account       | `adimpact-cosmos-dev`                                     | Cosmos DB                |
+| Cosmos DB Database      | `AdImpactOsDB`                                            | Database                 |
+| Event Hubs Namespace    | `adimpact-eh-dev`                                         | Event Hubs               |
+| Event Hub               | `ad-impressions`                                          | Event Hub                |
+| Storage Account         | `adimpactdevsa`                                           | Storage Account          |
+| Key Vault               | `adimpact-kv-dev`                                         | Key Vault                |
+| Log Analytics Workspace | `adimpact-law-dev`                                        | Log Analytics            |
+| Application Insights    | `adimpact-ai-dev`                                         | Application Insights     |
+| App Service Plan        | `adimpact-plan-dev`                                       | App Service Plan         |
+| Function App            | `adimpact-fn-dev`                                         | Azure Functions          |
+| Panelist API            | `adimpact-panelist-dev`                                   | App Service              |
+| Campaign API            | `adimpact-campaign-dev`                                   | App Service              |
+| Survey API              | `adimpact-survey-dev`                                     | App Service              |
+| Dashboard               | `adimpact-dashboard-dev`                                  | App Service              |
+| Demo UI                 | `adimpact-demoui-dev`                                     | App Service              |
+| Event Consumer          | `adimpact-consumer-dev`                                   | App Service              |
 
 ---
 
@@ -1494,8 +1501,8 @@ prefix `adtrack`, environment `prod`, region `eastus`):
 ### "Name already exists" errors during resource creation
 
 - A resource with that name already exists globally. Use a more unique prefix (e.g. add a
-  3-digit number: `adtrack42`).
+  3-digit number: `adimpact42`).
 
 ---
 
-*Last updated: 2026-03-07 | Guide version: 1.0 | Maintained by: Operations Team*
+_Last updated: 2026-03-07 | Guide version: 1.0 | Maintained by: Operations Team_

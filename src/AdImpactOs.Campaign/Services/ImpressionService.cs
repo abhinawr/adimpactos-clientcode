@@ -14,7 +14,7 @@ public class ImpressionService
         ILogger<ImpressionService> logger,
         IConfiguration configuration)
     {
-        var databaseName = configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var containerName = configuration["CosmosDb:ImpressionContainerName"] ?? "Impressions";
 
         _container = cosmosClient.GetContainer(databaseName, containerName);

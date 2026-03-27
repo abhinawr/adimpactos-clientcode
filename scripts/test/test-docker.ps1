@@ -1,4 +1,4 @@
-# Ad Tracking JiangXi - Docker Test Script (PowerShell)
+# AdImpactOs - Docker Test Script (PowerShell)
 # This script tests the containerized environment
 
 param(
@@ -8,7 +8,7 @@ param(
 $ErrorActionPreference = "Continue"
 
 Write-Host "==================================" -ForegroundColor Cyan
-Write-Host "Ad Tracking JiangXi - Docker Tests" -ForegroundColor Cyan
+Write-Host "AdImpactOs - Docker Tests" -ForegroundColor Cyan
 Write-Host "==================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -63,11 +63,11 @@ Write-Host ""
 
 # Check running containers
 Write-Host "Checking Services..." -ForegroundColor Yellow
-Test-Service "adtracking-cosmosdb"
-Test-Service "adtracking-zookeeper"
-Test-Service "adtracking-eventhub"
-Test-Service "adtracking-azurite"
-Test-Service "adtracking-panelist-api"
+Test-Service "adimpactos-cosmosdb"
+Test-Service "adimpactos-zookeeper"
+Test-Service "adimpactos-eventhub"
+Test-Service "adimpactos-azurite"
+Test-Service "adimpactos-panelist-api"
 Write-Host ""
 
 # Test endpoints
@@ -116,12 +116,12 @@ Write-Host ""
 
 # Check if full stack is running
 Write-Host "Checking Full Stack Services (if running)..." -ForegroundColor Yellow
-$isFullStack = docker ps --format "{{.Names}}" | Select-String "adtracking-functions"
+$isFullStack = docker ps --format "{{.Names}}" | Select-String "adimpactos-functions"
 if ($isFullStack) {
-    Test-Service "adtracking-functions"
-    Test-Service "adtracking-incentives-api"
-    Test-Service "adtracking-event-consumer"
-    Test-Service "adtracking-spark-master"
+    Test-Service "adimpactos-functions"
+    Test-Service "adimpactos-incentives-api"
+    Test-Service "adimpactos-event-consumer"
+    Test-Service "adimpactos-spark-master"
     
     # Test additional endpoints
     Write-Host ""

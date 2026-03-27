@@ -18,7 +18,7 @@ public class CampaignDbMigration
 
     public async Task RunMigrationAsync()
     {
-        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var containerName = _configuration["CosmosDb:ContainerName"] ?? "Campaigns";
         var impressionContainerName = _configuration["CosmosDb:ImpressionContainerName"] ?? "Impressions";
 
@@ -48,7 +48,7 @@ public class CampaignDbMigration
 
     public async Task SeedSampleDataAsync()
     {
-        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var containerName = _configuration["CosmosDb:ContainerName"] ?? "Campaigns";
         var container = _cosmosClient.GetDatabase(databaseName).GetContainer(containerName);
 
@@ -351,7 +351,7 @@ public class CampaignDbMigration
 
     public async Task SeedImpressionDataAsync()
     {
-        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var impressionContainerName = _configuration["CosmosDb:ImpressionContainerName"] ?? "Impressions";
         var container = _cosmosClient.GetDatabase(databaseName).GetContainer(impressionContainerName);
 

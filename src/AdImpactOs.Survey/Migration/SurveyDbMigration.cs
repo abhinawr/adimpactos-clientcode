@@ -18,7 +18,7 @@ public class SurveyDbMigration
 
     public async Task RunMigrationAsync()
     {
-        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var surveyContainerName = _configuration["CosmosDb:SurveyContainerName"] ?? "Surveys";
         var responseContainerName = _configuration["CosmosDb:SurveyResponseContainerName"] ?? "SurveyResponses";
 
@@ -41,7 +41,7 @@ public class SurveyDbMigration
 
     public async Task SeedSampleDataAsync()
     {
-        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = _configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var surveyContainerName = _configuration["CosmosDb:SurveyContainerName"] ?? "Surveys";
         var responseContainerName = _configuration["CosmosDb:SurveyResponseContainerName"] ?? "SurveyResponses";
         var container = _cosmosClient.GetDatabase(databaseName).GetContainer(surveyContainerName);

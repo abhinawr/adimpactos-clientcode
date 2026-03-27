@@ -23,7 +23,7 @@ public class PanelistServiceTests
         _mockLogger = new Mock<ILogger<PanelistService>>();
         _mockConfiguration = new Mock<IConfiguration>();
 
-        _mockConfiguration.Setup(c => c["CosmosDb:DatabaseName"]).Returns("AdTrackingDB");
+        _mockConfiguration.Setup(c => c["CosmosDb:DatabaseName"]).Returns("AdImpactOsDB");
         _mockConfiguration.Setup(c => c["CosmosDb:ContainerName"]).Returns("Panelists");
 
         _mockCosmosClient
@@ -39,7 +39,7 @@ public class PanelistServiceTests
 
         // Assert
         service.Should().NotBeNull();
-        _mockCosmosClient.Verify(c => c.GetContainer("AdTrackingDB", "Panelists"), Times.Once);
+        _mockCosmosClient.Verify(c => c.GetContainer("AdImpactOsDB", "Panelists"), Times.Once);
     }
 
     [Fact]

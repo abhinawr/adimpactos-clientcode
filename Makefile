@@ -2,7 +2,7 @@
 
 # Default target
 help:
-	@echo "Ad Tracking JiangXi - Docker Commands"
+	@echo "AdImpactOs - Docker Commands"
 	@echo "======================================"
 	@echo ""
 	@echo "Setup Commands:"
@@ -105,10 +105,10 @@ logs-cosmos:
 
 # Shell access
 shell-api:
-	docker exec -it adtracking-panelist-api /bin/bash
+	docker exec -it adimpactos-panelist-api /bin/bash
 
 shell-kafka:
-	docker exec -it adtracking-eventhub /bin/bash
+	docker exec -it adimpactos-eventhub /bin/bash
 
 # Database operations
 db-reset:

@@ -18,7 +18,7 @@ public class SurveyService
         IConfiguration configuration,
         SurveyTokenService tokenService)
     {
-        var databaseName = configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var surveyContainerName = configuration["CosmosDb:SurveyContainerName"] ?? "Surveys";
         var responseContainerName = configuration["CosmosDb:SurveyResponseContainerName"] ?? "SurveyResponses";
 

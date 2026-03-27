@@ -14,7 +14,7 @@ public class CampaignService
         ILogger<CampaignService> logger,
         IConfiguration configuration)
     {
-        var databaseName = configuration["CosmosDb:DatabaseName"] ?? "AdTrackingDB";
+        var databaseName = configuration["CosmosDb:DatabaseName"] ?? "AdImpactOsDB";
         var containerName = configuration["CosmosDb:ContainerName"] ?? "Campaigns";
 
         _container = cosmosClient.GetContainer(databaseName, containerName);

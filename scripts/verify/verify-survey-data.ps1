@@ -41,7 +41,7 @@ Write-Host ""
 Write-Host "Option 1: CosmosDB Data Explorer (Recommended)" -ForegroundColor Yellow
 Write-Host "  1. Open: https://localhost:8081/_explorer/index.html" -ForegroundColor White
 Write-Host "  2. Accept the certificate warning" -ForegroundColor Gray
-Write-Host "  3. Navigate to: AdTrackingDB ? Surveys ? Items" -ForegroundColor White
+Write-Host "  3. Navigate to: AdImpactOsDB ? Surveys ? Items" -ForegroundColor White
 Write-Host "  4. You should see 3 survey documents" -ForegroundColor Gray
 Write-Host ""
 

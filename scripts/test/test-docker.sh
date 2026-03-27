@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Ad Tracking JiangXi - Docker Test Script
+# AdImpactOs - Docker Test Script
 # This script tests the containerized environment
 
 set -e
 
 echo "=================================="
-echo "Ad Tracking JiangXi - Docker Tests"
+echo "AdImpactOs - Docker Tests"
 echo "=================================="
 echo ""
 
@@ -54,11 +54,11 @@ echo ""
 
 # Check running containers
 echo "Checking Services..."
-check_service "adtracking-cosmosdb"
-check_service "adtracking-zookeeper"
-check_service "adtracking-eventhub"
-check_service "adtracking-azurite"
-check_service "adtracking-panelist-api"
+check_service "adimpactos-cosmosdb"
+check_service "adimpactos-zookeeper"
+check_service "adimpactos-eventhub"
+check_service "adimpactos-azurite"
+check_service "adimpactos-panelist-api"
 echo ""
 
 # Test endpoints
@@ -101,11 +101,11 @@ echo ""
 
 # Check if full stack is running
 echo "Checking Full Stack Services (if running)..."
-if docker ps --format '{{.Names}}' | grep -q "adtracking-functions"; then
-    check_service "adtracking-functions"
-    check_service "adtracking-incentives-api"
-    check_service "adtracking-event-consumer"
-    check_service "adtracking-spark-master"
+if docker ps --format '{{.Names}}' | grep -q "adimpactos-functions"; then
+    check_service "adimpactos-functions"
+    check_service "adimpactos-incentives-api"
+    check_service "adimpactos-event-consumer"
+    check_service "adimpactos-spark-master"
     
     # Test additional endpoints
     echo ""
@@ -169,7 +169,7 @@ echo "  Cosmos DB Explorer: https://localhost:8081/_explorer/index.html"
 echo "  Azurite (Blob):     http://localhost:10000"
 echo ""
 
-if docker ps --format '{{.Names}}' | grep -q "adtracking-functions"; then
+if docker ps --format '{{.Names}}' | grep -q "adimpactos-functions"; then
     echo "Full Stack Endpoints:"
     echo "  Azure Functions:    http://localhost:7071"
     echo "  Incentives API:     http://localhost:5002"

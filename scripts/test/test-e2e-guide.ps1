@@ -12,11 +12,12 @@ Write-Host ""
 # Check all containers
 Write-Host "Step 1: Verify Container Status" -ForegroundColor Yellow
 Write-Host "----------------------------------------" -ForegroundColor Gray
-$containers = docker ps --format "table {{.Names}}\t{{.Status}}" | Select-String -Pattern "adtracking"
+$containers = docker ps --format "table {{.Names}}\t{{.Status}}" | Select-String -Pattern "adimpactos"
 $containers | ForEach-Object {
     if ($_ -match "Up.*healthy|Up") {
         Write-Host "  ? $_" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "  ? $_" -ForegroundColor Red
     }
 }
@@ -30,7 +31,8 @@ Write-Host "  Running Panelist API migration..." -ForegroundColor White
 try {
     $result = Invoke-RestMethod -Uri "http://localhost:5001/api/migration/run" -Method Post -TimeoutSec 30
     Write-Host "  ? Panelist DB initialized: $($result.message)" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "  ? Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 
@@ -38,7 +40,8 @@ Write-Host "  Running Survey API migration..." -ForegroundColor White
 try {
     $result = Invoke-RestMethod -Uri "http://localhost:5002/api/migration/run" -Method Post -TimeoutSec 30
     Write-Host "  ? Survey DB initialized: $($result.message)" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "  ? Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 
@@ -46,7 +49,8 @@ Write-Host "  Seeding sample data..." -ForegroundColor White
 try {
     $result = Invoke-RestMethod -Uri "http://localhost:5001/api/migration/seed" -Method Post
     Write-Host "  ? Sample data seeded: $($result.message)" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "  ? Failed: $($_.Exception.Message)" -ForegroundColor Red
 }
 
@@ -192,13 +196,13 @@ Write-Host "1. Open CosmosDB Data Explorer" -ForegroundColor White
 Write-Host "   ? https://localhost:8081/_explorer/index.html" -ForegroundColor Cyan
 Write-Host "   (Accept the certificate warning)" -ForegroundColor DarkGray
 Write-Host ""
-Write-Host "2. Navigate to: AdTrackingDB ? Panelists ? Items" -ForegroundColor White
+Write-Host "2. Navigate to: AdImpactOsDB ? Panelists ? Items" -ForegroundColor White
 Write-Host "   ? View panelist documents" -ForegroundColor Gray
 Write-Host ""
-Write-Host "3. Navigate to: AdTrackingDB ? Surveys ? Items" -ForegroundColor White
+Write-Host "3. Navigate to: AdImpactOsDB ? Surveys ? Items" -ForegroundColor White
 Write-Host "   ? View survey documents" -ForegroundColor Gray
 Write-Host ""
-Write-Host "4. Navigate to: AdTrackingDB ? SurveyResponses ? Items" -ForegroundColor White
+Write-Host "4. Navigate to: AdImpactOsDB ? SurveyResponses ? Items" -ForegroundColor White
 Write-Host "   ? View survey response documents" -ForegroundColor Gray
 Write-Host ""
 Write-Host "5. Try running SQL queries:" -ForegroundColor White
@@ -211,13 +215,15 @@ Write-Host "?? FLOW 4: Event Hub & Storage" -ForegroundColor Yellow
 Write-Host "----------------------------------------" -ForegroundColor Gray
 Write-Host "1. Verify Kafka (Event Hub) is running:" -ForegroundColor White
 try {
-    $kafkaStatus = docker exec adtracking-eventhub kafka-topics --list --bootstrap-server localhost:9092 2>&1
+    $kafkaStatus = docker exec adimpactos-eventhub kafka-topics --list --bootstrap-server localhost:9092 2>&1
     if ($LASTEXITCODE -eq 0) {
         Write-Host "   ? Kafka is accessible" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "   ? Kafka is not accessible" -ForegroundColor Red
     }
-} catch {
+}
+catch {
     Write-Host "   ? Error checking Kafka" -ForegroundColor Red
 }
 Write-Host ""
@@ -225,7 +231,8 @@ Write-Host "2. Verify Azurite (Storage) is running:" -ForegroundColor White
 try {
     $response = Invoke-WebRequest -Uri "http://localhost:10000" -UseBasicParsing -ErrorAction SilentlyContinue
     Write-Host "   ? Azurite Blob Storage is accessible" -ForegroundColor Green
-} catch {
+}
+catch {
     Write-Host "   ? Azurite is running (403 is expected for root)" -ForegroundColor Green
 }
 Write-Host ""
@@ -235,10 +242,10 @@ Write-Host "         Monitoring & Logs" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "View logs for debugging:" -ForegroundColor White
-Write-Host "  docker logs adtracking-panelist-api -f" -ForegroundColor Gray
-Write-Host "  docker logs adtracking-survey-api -f" -ForegroundColor Gray
-Write-Host "  docker logs adtracking-cosmosdb --tail 50" -ForegroundColor Gray
-Write-Host "  docker logs adtracking-eventhub --tail 50" -ForegroundColor Gray
+Write-Host "  docker logs adimpactos-panelist-api -f" -ForegroundColor Gray
+Write-Host "  docker logs adimpactos-survey-api -f" -ForegroundColor Gray
+Write-Host "  docker logs adimpactos-cosmosdb --tail 50" -ForegroundColor Gray
+Write-Host "  docker logs adimpactos-eventhub --tail 50" -ForegroundColor Gray
 Write-Host ""
 
 Write-Host "View all container stats:" -ForegroundColor White

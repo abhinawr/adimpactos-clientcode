@@ -1,4 +1,4 @@
-# Terraform Configuration for Azure Ad Tracking Infrastructure
+# Terraform Configuration for AdImpactOs Azure Infrastructure
 # Provider: Azure (azurerm)
 # Target: Microsoft Azure resources
 
@@ -16,7 +16,7 @@ terraform {
     resource_group_name  = "tfstate-rg"
     storage_account_name = "tfstatestorage"
     container_name       = "tfstate"
-    key                  = "adtracking.terraform.tfstate"
+    key                  = "adimpactos.terraform.tfstate"
   }
 }
 
@@ -44,7 +44,7 @@ variable "location" {
 variable "project_prefix" {
   description = "Project prefix for resource naming"
   type        = string
-  default     = "adtrack"
+  default     = "adimpact"
 }
 
 variable "alert_email" {
@@ -63,7 +63,7 @@ variable "monthly_budget" {
 locals {
   resource_name = "${var.project_prefix}-${var.environment}"
   tags = {
-    Project     = "AdTracking"
+    Project     = "AdImpactOs"
     Environment = var.environment
     ManagedBy   = "Terraform"
   }
@@ -167,7 +167,7 @@ resource "azurerm_cosmosdb_account" "main" {
 
 # Cosmos DB SQL Database
 resource "azurerm_cosmosdb_sql_database" "panelists" {
-  name                = "AdTrackingDB"
+  name                = "AdImpactOsDB"
   resource_group_name = azurerm_resource_group.main.name
   account_name        = azurerm_cosmosdb_account.main.name
   throughput          = 400
@@ -368,7 +368,7 @@ resource "random_password" "synapse_admin" {
 resource "azurerm_monitor_action_group" "main" {
   name                = "${local.resource_name}-action-group"
   resource_group_name = azurerm_resource_group.main.name
-  short_name          = "adtrack"
+  short_name          = "adimpact"
   
   email_receiver {
     name          = "ops-team"

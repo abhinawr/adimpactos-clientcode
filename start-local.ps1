@@ -133,7 +133,7 @@ $cosmosMaxAttempts = 60  # 60 * 5s = 5 minutes max
 while (-not $cosmosReady -and $cosmosAttempts -lt $cosmosMaxAttempts) {
     $cosmosAttempts++
     try {
-        $health = (docker inspect --format='{{.State.Health.Status}}' adtracking-cosmosdb 2>&1) | Out-String
+        $health = (docker inspect --format='{{.State.Health.Status}}' adimpactos-cosmosdb 2>&1) | Out-String
         $health = $health.Trim()
         if ($health -eq "healthy") {
             $cosmosReady = $true
@@ -151,7 +151,7 @@ while (-not $cosmosReady -and $cosmosAttempts -lt $cosmosMaxAttempts) {
 
 if (-not $cosmosReady) {
     Write-Err "Cosmos DB did not become healthy within 5 minutes."
-    Write-Info "Check: docker logs adtracking-cosmosdb"
+    Write-Info "Check: docker logs adimpactos-cosmosdb"
     Stop-Everything
     exit 1
 }
@@ -163,7 +163,7 @@ Write-Info "Checking Kafka..."
 $kafkaReady = $false
 for ($i = 0; $i -lt 12; $i++) {
     try {
-        $kh = (docker inspect --format='{{.State.Health.Status}}' adtracking-eventhub 2>&1) | Out-String
+        $kh = (docker inspect --format='{{.State.Health.Status}}' adimpactos-eventhub 2>&1) | Out-String
         $kh = $kh.Trim()
         if ($kh -eq "healthy") { $kafkaReady = $true; break }
     } catch {}
@@ -205,7 +205,7 @@ for ($apiIdx = 0; $apiIdx -lt $apiProjects.Count; $apiIdx++) {
     $projectDir = Join-Path $solutionRoot $api.Path
     Write-Info "Starting $($api.Name) on port $($api.Port)..."
 
-    $logFile = Join-Path $env:TEMP "adtracking-$($api.Name).log"
+    $logFile = Join-Path $env:TEMP "adimpactos-$($api.Name).log"
 
     $job = Start-Job -ScriptBlock {
         param($dir, $log)
@@ -260,7 +260,7 @@ Write-Ok "All APIs started and migrations complete!"
 Write-Step "Starting Azure Functions (Ad Tracker)"
 
 $funcDir = Join-Path $solutionRoot "src\AdImpactOs"
-$funcLogFile = Join-Path $env:TEMP "adtracking-Functions.log"
+$funcLogFile = Join-Path $env:TEMP "adimpactos-Functions.log"
 $funcBinDir = Join-Path $funcDir "bin\Debug\net8.0"
 
 # Check Azure Functions Core Tools
@@ -311,7 +311,7 @@ if ($funcAvailable -and (Test-Path (Join-Path $funcBinDir "host.json"))) {
 Write-Step "Starting Event Consumer..."
 
 $ecDir = Join-Path $solutionRoot "src\AdImpactOs.EventConsumer"
-$ecLogFile = Join-Path $env:TEMP "adtracking-EventConsumer.log"
+$ecLogFile = Join-Path $env:TEMP "adimpactos-EventConsumer.log"
 
 $ecJob = Start-Job -ScriptBlock {
     param($dir, $log)
@@ -334,7 +334,7 @@ foreach ($ui in $uiProjects) {
     $projectDir = Join-Path $solutionRoot $ui.Path
     Write-Info "Starting $($ui.Name) on port $($ui.Port)..."
 
-    $logFile = Join-Path $env:TEMP "adtracking-$($ui.Name).log"
+    $logFile = Join-Path $env:TEMP "adimpactos-$($ui.Name).log"
 
     $job = Start-Job -ScriptBlock {
         param($dir, $log)
@@ -387,14 +387,14 @@ Write-Host ""
 Write-Host "  --- Azure Functions (Local) ---" -ForegroundColor DarkCyan
 Write-Host "  Pixel Tracker:        http://localhost:7071/api/pixel?cid=CAMP&crid=CRE&uid=USER" -ForegroundColor White
 Write-Host "  S2S Tracker:          http://localhost:7071/api/s2s/track  (POST)" -ForegroundColor White
-Write-Host "  Event Consumer:       Running (logs: $env:TEMP\adtracking-EventConsumer.log)" -ForegroundColor White
+Write-Host "  Event Consumer:       Running (logs: $env:TEMP\adimpactos-EventConsumer.log)" -ForegroundColor White
 Write-Host ""
 Write-Host "  --- UIs (Local) ---" -ForegroundColor DarkCyan
 Write-Host "  Dashboard:            http://localhost:5004" -ForegroundColor White
 Write-Host "  Demo UI:              http://localhost:5010" -ForegroundColor White
 Write-Host ""
 Write-Host "  --- Logs ---" -ForegroundColor DarkCyan
-Write-Host "  API/UI logs:          $env:TEMP\adtracking-*.log" -ForegroundColor White
+Write-Host "  API/UI logs:          $env:TEMP\adimpactos-*.log" -ForegroundColor White
 Write-Host "  Infra logs:           docker-compose -f docker-compose.infra.yml logs -f" -ForegroundColor White
 Write-Host ""
 Write-Host "  Press Ctrl+C to stop everything." -ForegroundColor Yellow

@@ -2,7 +2,7 @@
 param location string = resourceGroup().location
 
 @description('Project prefix for resource naming')
-param projectPrefix string = 'adtrack'
+param projectPrefix string = 'adimpact'
 
 @description('Environment name (dev, staging, prod)')
 param environment string = 'prod'

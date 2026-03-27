@@ -19,9 +19,9 @@ from datetime import datetime
 import json
 
 # Configuration
-SYNAPSE_JDBC_URL = dbutils.secrets.get(scope="adtracking-kv", key="synapse-jdbc-url")
-SYNAPSE_USER = dbutils.secrets.get(scope="adtracking-kv", key="synapse-user")
-SYNAPSE_PASSWORD = dbutils.secrets.get(scope="adtracking-kv", key="synapse-password")
+SYNAPSE_JDBC_URL = dbutils.secrets.get(scope="adimpactos-kv", key="synapse-jdbc-url")
+SYNAPSE_USER = dbutils.secrets.get(scope="adimpactos-kv", key="synapse-user")
+SYNAPSE_PASSWORD = dbutils.secrets.get(scope="adimpactos-kv", key="synapse-password")
 
 CAMPAIGN_ID = dbutils.widgets.get("campaign_id") if dbutils.widgets.get("campaign_id") else "camp-001"
 BATCH_ID = dbutils.widgets.get("batch_id")  # From PSM job

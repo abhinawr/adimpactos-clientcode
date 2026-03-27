@@ -13,7 +13,7 @@ public class TrackingController : Controller
     [HttpGet("")]
     public IActionResult Index()
     {
-        ViewData["Title"] = "Ad Tracking";
+        ViewData["Title"] = "Impressions";
         return View();
     }
 

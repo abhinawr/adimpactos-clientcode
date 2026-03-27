@@ -85,7 +85,7 @@ public class DockerConfigurationTests
     {
         // Arrange
         var filePath = Path.Combine("..", "..", "..", "..", "..", "docker-compose.dev.yml");
-        
+
         // Act
         var content = File.ReadAllText(filePath);
 
@@ -99,7 +99,7 @@ public class DockerConfigurationTests
     {
         // Arrange
         var filePath = Path.Combine("..", "..", "..", "..", "..", "docker-compose.dev.yml");
-        
+
         // Act
         var content = File.ReadAllText(filePath);
 
@@ -113,14 +113,14 @@ public class DockerConfigurationTests
     {
         // Arrange
         var filePath = Path.Combine("..", "..", "..", "..", "..", "docker-compose.yml");
-        
+
         // Act
         var content = File.ReadAllText(filePath);
 
         // Assert
         content.Should().Contain("panelist-api", "Full compose should include Panelist API");
         content.Should().Contain("survey-api", "Full compose should include Survey API");
-        content.Should().Contain("ad-tracking-functions", "Full compose should include Azure Functions");
+        content.Should().Contain("adimpactos-functions", "Full compose should include Azure Functions");
         content.Should().Contain("event-consumer", "Full compose should include Event Consumer");
     }
 
@@ -129,12 +129,12 @@ public class DockerConfigurationTests
     {
         // Arrange
         var filePath = Path.Combine("..", "..", "..", "..", "..", "src", "AdImpactOs", "Dockerfile");
-        
+
         // Act
         var content = File.ReadAllText(filePath);
 
         // Assert
-        content.Should().Contain("mcr.microsoft.com/azure-functions/dotnet-isolated:4-dotnet-isolated8.0", 
+        content.Should().Contain("mcr.microsoft.com/azure-functions/dotnet-isolated:4-dotnet-isolated8.0",
             "Functions Dockerfile should use Azure Functions base image for .NET 8");
     }
 
@@ -143,12 +143,12 @@ public class DockerConfigurationTests
     {
         // Arrange
         var filePath = Path.Combine("..", "..", "..", "..", "..", "src", "AdImpactOs.PanelistAPI", "Dockerfile");
-        
+
         // Act
         var content = File.ReadAllText(filePath);
 
         // Assert
-        content.Should().Contain("mcr.microsoft.com/dotnet/aspnet:8.0", 
+        content.Should().Contain("mcr.microsoft.com/dotnet/aspnet:8.0",
             "Panelist API Dockerfile should use ASP.NET Core 8.0 runtime");
     }
 
@@ -157,7 +157,7 @@ public class DockerConfigurationTests
     {
         // Arrange
         var filePath = Path.Combine("..", "..", "..", "..", "..", ".dockerignore");
-        
+
         // Act
         var content = File.ReadAllText(filePath);
 

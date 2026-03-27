@@ -20,7 +20,7 @@ using var loggerFactory = LoggerFactory.Create(builder =>
 
 var logger = loggerFactory.CreateLogger<Program>();
 
-logger.LogInformation("AdTracking EventHub Consumer starting...");
+logger.LogInformation("AdImpactOs EventHub Consumer starting...");
 
 try
 {
