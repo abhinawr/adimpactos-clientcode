@@ -176,7 +176,7 @@ az functionapp create `
     --resource-group $RG --name $FUNC_APP `
     --storage-account $STORAGE_NAME `
     --consumption-plan-location $Location `
-    --runtime dotnet-isolated --runtime-version 8 `
+    --runtime dotnet-isolated --runtime-version 10 `
     --functions-version 4 --os-type Linux --output none
 
 # Phase 13: Web Apps
@@ -186,7 +186,7 @@ foreach ($app in $webApps) {
     $appName = "$Prefix-$app-$Env"
     az webapp create `
         --resource-group $RG --plan $APP_PLAN --name $appName `
-        --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:8.0" --output none
+        --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:10.0" --output none
     Write-Host "  + $appName"
 }
 

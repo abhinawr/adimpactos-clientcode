@@ -134,8 +134,8 @@ public class DockerConfigurationTests
         var content = File.ReadAllText(filePath);
 
         // Assert
-        content.Should().Contain("mcr.microsoft.com/azure-functions/dotnet-isolated:4-dotnet-isolated8.0",
-            "Functions Dockerfile should use Azure Functions base image for .NET 8");
+        content.Should().Contain("mcr.microsoft.com/azure-functions/dotnet-isolated:4-dotnet-isolated10.0",
+            "Functions Dockerfile should use Azure Functions base image for .NET 10");
     }
 
     [Fact]
@@ -148,8 +148,8 @@ public class DockerConfigurationTests
         var content = File.ReadAllText(filePath);
 
         // Assert
-        content.Should().Contain("mcr.microsoft.com/dotnet/aspnet:8.0",
-            "Panelist API Dockerfile should use ASP.NET Core 8.0 runtime");
+        content.Should().Contain("mcr.microsoft.com/dotnet/aspnet:10.0",
+            "Panelist API Dockerfile should use ASP.NET Core 10.0 runtime");
     }
 
     [Fact]

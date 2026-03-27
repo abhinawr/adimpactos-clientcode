@@ -234,7 +234,7 @@ az functionapp create \
   --storage-account "$STORAGE_NAME" \
   --consumption-plan-location "$LOCATION" \
   --runtime dotnet-isolated \
-  --runtime-version 8 \
+  --runtime-version 10 \
   --functions-version 4 \
   --os-type Linux \
   --output none
@@ -248,7 +248,7 @@ for APP in "${APPS[@]}"; do
     --resource-group "$RG" \
     --plan "$APP_PLAN" \
     --name "$APP_NAME" \
-    --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:8.0" \
+    --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:10.0" \
     --output none
   echo "  ✓ $APP_NAME"
 done

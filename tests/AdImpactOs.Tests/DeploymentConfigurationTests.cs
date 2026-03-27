@@ -74,12 +74,12 @@ public class DeploymentConfigurationTests
     }
 
     [Fact]
-    public void CiWorkflow_UsesNet8()
+    public void CiWorkflow_UsesNet10()
     {
         var filePath = Path.Combine(RepoRoot, ".github", "workflows", "ci.yml");
         var content = File.ReadAllText(filePath);
 
-        content.Should().Contain("8.0", "CI workflow should use .NET 8");
+        content.Should().Contain("10.0", "CI workflow should use .NET 10");
     }
 
     // ───────────────────────────────────────────────────

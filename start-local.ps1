@@ -62,7 +62,7 @@ $null = Register-EngineEvent -SourceIdentifier PowerShell.Exiting -Action { Stop
 trap { Stop-Everything; break }
 
 # ================================================================
-#  STEP 1 — Validate prerequisites
+#  STEP 1 ï¿½ Validate prerequisites
 # ================================================================
 Write-Host ""
 Write-Host "=============================================" -ForegroundColor Cyan
@@ -103,7 +103,7 @@ try {
 }
 
 # ================================================================
-#  STEP 2 — Start infrastructure (Docker)
+#  STEP 2 ï¿½ Start infrastructure (Docker)
 # ================================================================
 Write-Step "Starting infrastructure containers..."
 Write-Info "Using $composeFile"
@@ -178,7 +178,7 @@ Write-Host "   Kafka:               localhost:29092" -ForegroundColor White
 Write-Host "   Azurite Blob:        http://localhost:10000" -ForegroundColor White
 
 # ================================================================
-#  STEP 3 — Build solution
+#  STEP 3 ï¿½ Build solution
 # ================================================================
 Write-Step "Building solution..."
 
@@ -194,7 +194,7 @@ Pop-Location
 Write-Ok "Solution built successfully"
 
 # ================================================================
-#  STEP 4 — Start API projects (background, staggered)
+#  STEP 4 ï¿½ Start API projects (background, staggered)
 # ================================================================
 Write-Step "Starting API services locally (staggered to avoid migration conflicts)..."
 
@@ -245,7 +245,7 @@ for ($apiIdx = 0; $apiIdx -lt $apiProjects.Count; $apiIdx++) {
     } else {
         Write-Err "$($api.Name) did not respond within 4 minutes."
         Write-Info "Check log: $logFile"
-        Write-Err "Aborting — later APIs depend on the shared database."
+        Write-Err "Aborting ï¿½ later APIs depend on the shared database."
         Stop-Everything
         exit 1
     }
@@ -255,13 +255,13 @@ Write-Host ""
 Write-Ok "All APIs started and migrations complete!"
 
 # ================================================================
-#  STEP 5 — Start Azure Functions (background)
+#  STEP 5 ï¿½ Start Azure Functions (background)
 # ================================================================
 Write-Step "Starting Azure Functions (Ad Tracker)"
 
 $funcDir = Join-Path $solutionRoot "src\AdImpactOs"
 $funcLogFile = Join-Path $env:TEMP "adimpactos-Functions.log"
-$funcBinDir = Join-Path $funcDir "bin\Debug\net8.0"
+$funcBinDir = Join-Path $funcDir "bin\Debug\net10.0"
 
 # Check Azure Functions Core Tools
 $oldEAP = $ErrorActionPreference
@@ -306,7 +306,7 @@ if ($funcAvailable -and (Test-Path (Join-Path $funcBinDir "host.json"))) {
 }
 
 # ================================================================
-#  STEP 5b — Start Event Consumer (background)
+#  STEP 5b ï¿½ Start Event Consumer (background)
 # ================================================================
 Write-Step "Starting Event Consumer..."
 
@@ -326,7 +326,7 @@ Write-Warn "Event Consumer connects to Azure Event Hubs (AMQP). It will log erro
 Write-Info "  This is expected for local dev - the consumer will work when pointed at a real Event Hub."
 
 # ================================================================
-#  STEP 6 — Start UI projects (background)
+#  STEP 6 ï¿½ Start UI projects (background)
 # ================================================================
 Write-Step "Starting UI projects..."
 
@@ -367,7 +367,7 @@ foreach ($ui in $uiProjects) {
 }
 
 # ================================================================
-#  STEP 7 — Summary
+#  STEP 7 ï¿½ Summary
 # ================================================================
 Write-Host ""
 Write-Host "=============================================" -ForegroundColor Green
@@ -406,7 +406,7 @@ try {
 } catch {}
 
 # ================================================================
-#  Keep alive — stream API logs until Ctrl+C
+#  Keep alive ï¿½ stream API logs until Ctrl+C
 # ================================================================
 try {
     while ($true) {

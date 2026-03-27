@@ -1,8 +1,8 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY ["src/AdImpactOs.Campaign/AdImpactOs.Campaign.csproj", "src/AdImpactOs.Campaign/"]
 RUN dotnet restore "src/AdImpactOs.Campaign/AdImpactOs.Campaign.csproj"

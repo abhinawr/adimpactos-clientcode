@@ -225,7 +225,7 @@ jobs:
             --storage-account "$STORAGE_NAME" \
             --consumption-plan-location "$LOCATION" \
             --runtime dotnet-isolated \
-            --runtime-version 8 \
+            --runtime-version 10 \
             --functions-version 4 \
             --os-type Linux
           echo "FUNC_APP=$FUNC_APP" >> $GITHUB_ENV
@@ -238,7 +238,7 @@ jobs:
               --resource-group "$RG" \
               --plan "$APP_PLAN" \
               --name "${PREFIX}-${APP}-${ENV}" \
-              --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:8.0"
+              --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:10.0"
           done
 
       # ── Phase 14: Managed Identities ──

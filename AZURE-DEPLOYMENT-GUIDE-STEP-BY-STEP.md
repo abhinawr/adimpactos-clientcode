@@ -159,15 +159,15 @@ az version
 # Expected: "azure-cli": "2.50.0" or higher
 ```
 
-### 2.2 .NET 8 SDK
+### 2.2 .NET 10 SDK
 
 Required to build and publish the Azure Functions project and all APIs.
 
-| OS      | Command / link                                                                      |
-| ------- | ----------------------------------------------------------------------------------- |
-| Windows | https://dotnet.microsoft.com/en-us/download/dotnet/8.0 – download the SDK installer |
-| macOS   | `brew install dotnet@8`                                                             |
-| Ubuntu  | `sudo apt install dotnet-sdk-8.0`                                                   |
+| OS      | Command / link                                                                       |
+| ------- | ------------------------------------------------------------------------------------ |
+| Windows | https://dotnet.microsoft.com/en-us/download/dotnet/10.0 – download the SDK installer |
+| macOS   | `brew install dotnet@10`                                                             |
+| Ubuntu  | `sudo apt install dotnet-sdk-10.0`                                                   |
 
 Verify:
 
@@ -704,7 +704,7 @@ The Function App hosts the **Pixel Tracker** (returns a 1×1 GIF) and the **S2S 
 | ----------------- | ----------------- | ------------------------------------------------- |
 | Function App name | `adimpact-fn-dev` | Globally unique, lowercase, alphanumeric, hyphens |
 | Runtime           | `dotnet-isolated` | Must match `FUNCTIONS_WORKER_RUNTIME`             |
-| .NET version      | `8.0`             |                                                   |
+| .NET version      | `10.0`            |                                                   |
 | Functions version | `4`               | Azure Functions v4                                |
 | Storage account   | `adimpactdevsa`   | Same storage account created in Phase 8           |
 
@@ -717,7 +717,7 @@ az functionapp create \
   --storage-account "$STORAGE_NAME" \
   --consumption-plan-location "$LOCATION" \
   --runtime dotnet-isolated \
-  --runtime-version 8 \
+  --runtime-version 10 \
   --functions-version 4 \
   --os-type Linux
 
@@ -760,7 +760,7 @@ create_webapp() {
     --resource-group "$RG" \
     --plan "$APP_PLAN" \
     --name "$APP_NAME" \
-    --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:8.0"
+    --deployment-container-image-name "mcr.microsoft.com/dotnet/aspnet:10.0"
   # Container image is updated in Phase 16 after Docker build
 }
 

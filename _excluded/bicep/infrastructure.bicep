@@ -153,7 +153,7 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
       ftpsState: 'FtpsOnly'
       minTlsVersion: '1.2'
       http20Enabled: true
-      linuxFxVersion: 'DOTNET-ISOLATED|8.0'
+      linuxFxVersion: 'DOTNET-ISOLATED|10.0'
     }
     httpsOnly: true
   }
