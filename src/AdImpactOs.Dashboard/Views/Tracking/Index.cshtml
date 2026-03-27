@@ -1,0 +1,473 @@
+@{
+    ViewData["Title"] = "Ad Tracking";
+}
+
+<div id="alert-success" class="alert alert-success"></div>
+<div id="alert-error" class="alert alert-error"></div>
+
+<!-- Stats Row -->
+<div class="stats-row" id="stats-row">
+    <div class="stat-card">
+        <div class="stat-label">Total Impressions</div>
+        <div class="stat-value" id="stat-total">--</div>
+        <div class="stat-sub">All campaigns</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Valid Impressions</div>
+        <div class="stat-value" id="stat-valid" style="color:var(--success)">--</div>
+        <div class="stat-sub">Non-bot traffic</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Bot Filtered</div>
+        <div class="stat-value" id="stat-bots" style="color:var(--danger)">--</div>
+        <div class="stat-sub">Detected &amp; excluded</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Unique Panelists</div>
+        <div class="stat-value" id="stat-panelists" style="color:var(--primary)">--</div>
+        <div class="stat-sub">Across all campaigns</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Campaigns Tracked</div>
+        <div class="stat-value" id="stat-campaigns">--</div>
+        <div class="stat-sub">With impression data</div>
+    </div>
+</div>
+
+<!-- Campaign Selector + Summary -->
+<div class="card" style="margin-bottom:24px">
+    <div class="card-header">
+        <h2>&#9733; Campaign Impression Breakdown</h2>
+        <select class="form-control" id="campaign-select" style="width:320px" onchange="loadCampaignSummary()">
+            <option value="">Select a campaign&hellip;</option>
+        </select>
+    </div>
+    <div class="card-body" id="campaign-summary-body">
+        <p style="color:var(--text-muted);text-align:center;padding:20px;">Select a campaign above to see its impression breakdown.</p>
+    </div>
+</div>
+
+<!-- Device & Source Breakdown side-by-side -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px" id="breakdown-row">
+    <div class="card">
+        <div class="card-header"><h2>&#128187; Device Breakdown</h2></div>
+        <div class="card-body" id="device-chart">
+            <p style="color:var(--text-muted);text-align:center">No data yet</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><h2>&#127760; Ingest Source</h2></div>
+        <div class="card-body" id="source-chart">
+            <p style="color:var(--text-muted);text-align:center">No data yet</p>
+        </div>
+    </div>
+</div>
+
+<!-- All Campaigns Table -->
+<div class="card" style="margin-bottom:24px">
+    <div class="card-header">
+        <h2>&#128200; Per-Campaign Tracking Summary</h2>
+        <button class="btn btn-outline btn-sm" onclick="loadData()">&#8635; Refresh</button>
+    </div>
+    <div class="card-body">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campaign</th>
+                        <th>Total</th>
+                        <th>Valid</th>
+                        <th>Bots</th>
+                        <th>Unique Panelists</th>
+                        <th>Top Creative</th>
+                        <th>Pixel / S2S</th>
+                    </tr>
+                </thead>
+                <tbody id="campaign-table-body">
+                    <tr><td colspan="7" class="loading-state"><div class="spinner"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination" id="campaign-pagination"></div>
+    </div>
+</div>
+
+<!-- Recent Impressions -->
+<div class="card">
+    <div class="card-header">
+        <h2>&#128337; Recent Impressions</h2>
+        <button class="btn btn-outline btn-sm" onclick="clearRecentFilters()">Clear Filters</button>
+    </div>
+    <div class="card-body">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+            <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:3px;">Campaign</label>
+                <select class="form-control" id="filter-campaign" style="width:200px" onchange="recentPageNum=1;renderRecentPage()">
+                    <option value="">All Campaigns</option>
+                </select>
+            </div>
+            <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:3px;">Source</label>
+                <select class="form-control" id="filter-source" style="width:120px" onchange="recentPageNum=1;renderRecentPage()">
+                    <option value="">All</option>
+                    <option value="Pixel">Pixel</option>
+                    <option value="S2S">S2S</option>
+                </select>
+            </div>
+            <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:3px;">Device</label>
+                <select class="form-control" id="filter-device" style="width:120px" onchange="recentPageNum=1;renderRecentPage()">
+                    <option value="">All</option>
+                    <option value="Desktop">Desktop</option>
+                    <option value="Mobile">Mobile</option>
+                    <option value="Tablet">Tablet</option>
+                </select>
+            </div>
+            <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:3px;">Status</label>
+                <select class="form-control" id="filter-status" style="width:120px" onchange="recentPageNum=1;renderRecentPage()">
+                    <option value="">All</option>
+                    <option value="valid">Valid</option>
+                    <option value="bot">Bot</option>
+                </select>
+            </div>
+            <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:3px;">Panelist</label>
+                <input type="text" class="form-control" id="filter-panelist" style="width:160px" placeholder="Search..." oninput="recentPageNum=1;renderRecentPage()" />
+            </div>
+        </div>
+        <div id="filter-summary" style="font-size:12px;color:var(--text-muted);margin-bottom:8px;"></div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Campaign</th>
+                        <th>Creative</th>
+                        <th>Panelist</th>
+                        <th>Device</th>
+                        <th>Country</th>
+                        <th>Source</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="recent-table-body">
+                    <tr><td colspan="8" class="loading-state"><div class="spinner"></div></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination" id="recent-pagination"></div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    let allSummaries = {};
+    let allCampaigns = [];
+    let allRecentImpressions = [];
+    let campaignPageNum = 1;
+    const campaignPageSize = 10;
+    let recentPageNum = 1;
+    const recentPageSize = 20;
+
+    async function loadData() {
+        try {
+            const [summariesRes, campaignsRes, impressionsRes] = await Promise.all([
+                fetch('/Tracking/api/impressions/summaries'),
+                fetch('/Tracking/api/campaigns'),
+                fetch('/Tracking/api/impressions?limit=200')
+            ]);
+
+            allSummaries = summariesRes.ok ? await summariesRes.json() : {};
+            allCampaigns = campaignsRes.ok ? await campaignsRes.json() : [];
+            allRecentImpressions = impressionsRes.ok ? await impressionsRes.json() : [];
+
+            renderStats();
+            renderCampaignSelect();
+            campaignPageNum = 1;
+            recentPageNum = 1;
+            renderCampaignPage();
+            renderRecentPage();
+            renderGlobalBreakdowns();
+        } catch (e) {
+            showAlert('error', 'Failed to load tracking data: ' + e.message);
+        }
+    }
+
+    function renderStats() {
+        let totalAll = 0, validAll = 0, botsAll = 0, panelistSet = new Set();
+        for (const [cid, s] of Object.entries(allSummaries)) {
+            totalAll += s.totalImpressions || 0;
+            validAll += s.validImpressions || 0;
+            botsAll += s.botImpressions || 0;
+        }
+        document.getElementById('stat-total').textContent = totalAll.toLocaleString();
+        document.getElementById('stat-valid').textContent = validAll.toLocaleString();
+        document.getElementById('stat-bots').textContent = botsAll.toLocaleString();
+        document.getElementById('stat-campaigns').textContent = Object.keys(allSummaries).length;
+
+        // Unique panelists across all campaigns (approximate from summaries)
+        let pTotal = 0;
+        for (const s of Object.values(allSummaries)) pTotal += s.uniquePanelists || 0;
+        document.getElementById('stat-panelists').textContent = pTotal.toLocaleString();
+    }
+
+    function renderCampaignSelect() {
+        const sel = document.getElementById('campaign-select');
+        const existing = sel.value;
+        sel.innerHTML = '<option value="">Select a campaign\u2026</option>';
+        for (const c of allCampaigns) {
+            const opt = document.createElement('option');
+            opt.value = c.campaignId;
+            opt.textContent = c.campaignName + ' (' + c.campaignId + ')';
+            sel.appendChild(opt);
+        }
+        if (existing) sel.value = existing;
+
+        // Also populate the recent impressions campaign filter
+        const filterSel = document.getElementById('filter-campaign');
+        const existingFilter = filterSel.value;
+        filterSel.innerHTML = '<option value="">All Campaigns</option>';
+        for (const c of allCampaigns) {
+            const opt = document.createElement('option');
+            opt.value = c.campaignId;
+            opt.textContent = c.campaignName;
+            filterSel.appendChild(opt);
+        }
+        if (existingFilter) filterSel.value = existingFilter;
+    }
+
+    function renderCampaignPage() {
+        const entries = Object.entries(allSummaries);
+        const totalPages = Math.ceil(entries.length / campaignPageSize) || 1;
+        if(campaignPageNum > totalPages) campaignPageNum = totalPages;
+        const start = (campaignPageNum - 1) * campaignPageSize;
+        const pageEntries = entries.slice(start, start + campaignPageSize);
+        renderCampaignTable(pageEntries);
+        renderTrackingPagination('campaign-pagination', campaignPageNum, totalPages, entries.length, 'campaign', 'goTrackCampaignPage');
+    }
+
+    function renderCampaignTable(entries) {
+        const tbody = document.getElementById('campaign-table-body');
+        if (!entries.length) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted)">No impression data found. Trigger some pixel/S2S events or seed sample data.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = entries.map(([cid, s]) => {
+            const campaign = allCampaigns.find(c => c.campaignId === cid);
+            const name = campaign ? campaign.campaignName : cid;
+            const topCreative = s.byCreative && s.byCreative.length ? s.byCreative[0].creativeId : '-';
+            const pixel = (s.bySource && s.bySource['Pixel']) || 0;
+            const s2s = (s.bySource && s.bySource['S2S']) || 0;
+            return `<tr>
+                <td><strong>${escHtml(name)}</strong><br><small style="color:var(--text-muted)">${escHtml(cid)}</small></td>
+                <td>${(s.totalImpressions||0).toLocaleString()}</td>
+                <td style="color:var(--success)">${(s.validImpressions||0).toLocaleString()}</td>
+                <td style="color:var(--danger)">${(s.botImpressions||0).toLocaleString()}</td>
+                <td>${(s.uniquePanelists||0).toLocaleString()}</td>
+                <td><small>${escHtml(topCreative)}</small></td>
+                <td>${pixel} / ${s2s}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    function getFilteredImpressions() {
+        const campFilter = document.getElementById('filter-campaign').value;
+        const srcFilter = document.getElementById('filter-source').value;
+        const devFilter = document.getElementById('filter-device').value;
+        const statusFilter = document.getElementById('filter-status').value;
+        const panelistFilter = document.getElementById('filter-panelist').value.trim().toLowerCase();
+
+        return allRecentImpressions.filter(i => {
+            if (campFilter && i.campaignId !== campFilter) return false;
+            if (srcFilter && i.ingestSource !== srcFilter) return false;
+            if (devFilter && i.deviceType !== devFilter) return false;
+            if (statusFilter === 'bot' && !i.isBot) return false;
+            if (statusFilter === 'valid' && i.isBot) return false;
+            if (panelistFilter && !(i.panelistId || '').toLowerCase().includes(panelistFilter)) return false;
+            return true;
+        });
+    }
+
+    function clearRecentFilters() {
+        document.getElementById('filter-campaign').value = '';
+        document.getElementById('filter-source').value = '';
+        document.getElementById('filter-device').value = '';
+        document.getElementById('filter-status').value = '';
+        document.getElementById('filter-panelist').value = '';
+        recentPageNum = 1;
+        renderRecentPage();
+    }
+
+    function renderRecentPage() {
+        const filtered = getFilteredImpressions();
+        const totalPages = Math.ceil(filtered.length / recentPageSize) || 1;
+        if(recentPageNum > totalPages) recentPageNum = totalPages;
+        const start = (recentPageNum - 1) * recentPageSize;
+        const pageData = filtered.slice(start, start + recentPageSize);
+        renderRecentImpressions(pageData);
+        renderTrackingPagination('recent-pagination', recentPageNum, totalPages, filtered.length, 'impression', 'goRecentPage');
+
+        // Show filter summary
+        const summaryEl = document.getElementById('filter-summary');
+        if (filtered.length !== allRecentImpressions.length) {
+            summaryEl.textContent = `Showing ${filtered.length} of ${allRecentImpressions.length} impressions (filtered)`;
+        } else {
+            summaryEl.textContent = '';
+        }
+    }
+
+    function renderRecentImpressions(impressions) {
+        const tbody = document.getElementById('recent-table-body');
+        if (!impressions.length) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-muted)">No recent impressions</td></tr>';
+            return;
+        }
+        tbody.innerHTML = impressions.map(i => {
+            const ts = new Date(i.timestampUtc).toLocaleString();
+            const statusBadge = i.isBot
+                ? '<span class="badge badge-paused">Bot</span>'
+                : '<span class="badge badge-active">Valid</span>';
+            return `<tr>
+                <td><small>${escHtml(ts)}</small></td>
+                <td><small>${escHtml(i.campaignId)}</small></td>
+                <td><small>${escHtml(i.creativeId)}</small></td>
+                <td>${escHtml(i.panelistId)}</td>
+                <td>${escHtml(i.deviceType)}</td>
+                <td>${escHtml(i.country)}</td>
+                <td><span class="badge ${i.ingestSource==='Pixel'?'badge-draft':'badge-scheduled'}">${escHtml(i.ingestSource)}</span></td>
+                <td>${statusBadge}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    function renderTrackingPagination(elId, page, totalPages, totalItems, itemLabel, fnName) {
+        const el = document.getElementById(elId);
+        if(totalPages <= 1){ el.innerHTML = `<span style="color:var(--text-muted);font-size:13px">Showing ${totalItems} ${itemLabel}(s)</span>`; return; }
+        let html = `<span style="color:var(--text-muted);font-size:13px;margin-right:12px">Page ${page} of ${totalPages} (${totalItems} total)</span>`;
+        html += `<button class="btn btn-outline btn-sm" ${page<=1?'disabled':''} onclick="${fnName}(1)">&laquo;</button> `;
+        html += `<button class="btn btn-outline btn-sm" ${page<=1?'disabled':''} onclick="${fnName}(${page-1})">&lsaquo;</button> `;
+        const startP = Math.max(1, page - 2);
+        const endP = Math.min(totalPages, page + 2);
+        for(let i=startP;i<=endP;i++){
+            html += `<button class="btn btn-sm ${i===page?'btn-primary':'btn-outline'}" onclick="${fnName}(${i})">${i}</button> `;
+        }
+        html += `<button class="btn btn-outline btn-sm" ${page>=totalPages?'disabled':''} onclick="${fnName}(${page+1})">&rsaquo;</button> `;
+        html += `<button class="btn btn-outline btn-sm" ${page>=totalPages?'disabled':''} onclick="${fnName}(${totalPages})">&raquo;</button>`;
+        el.innerHTML = html;
+    }
+
+    function goTrackCampaignPage(p){ campaignPageNum=p; renderCampaignPage(); }
+    function goRecentPage(p){ recentPageNum=p; renderRecentPage(); }
+
+    function renderGlobalBreakdowns() {
+        const deviceTotals = {};
+        const sourceTotals = {};
+        for (const s of Object.values(allSummaries)) {
+            for (const [d, c] of Object.entries(s.byDevice || {})) deviceTotals[d] = (deviceTotals[d]||0) + c;
+            for (const [src, c] of Object.entries(s.bySource || {})) sourceTotals[src] = (sourceTotals[src]||0) + c;
+        }
+        renderBarChart('device-chart', deviceTotals, ['#1a73e8','#34a853','#f9ab00','#ea4335']);
+        renderBarChart('source-chart', sourceTotals, ['#1a73e8','#f9ab00']);
+    }
+
+    async function loadCampaignSummary() {
+        const cid = document.getElementById('campaign-select').value;
+        const body = document.getElementById('campaign-summary-body');
+        if (!cid) {
+            body.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;">Select a campaign above to see its impression breakdown.</p>';
+            return;
+        }
+
+        body.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+
+        try {
+            const res = await fetch(`/Tracking/api/impressions/campaign/${cid}/summary`);
+            if (!res.ok) throw new Error('Failed to load');
+            const s = await res.json();
+            const campaign = allCampaigns.find(c => c.campaignId === cid);
+
+            let creativesHtml = '';
+            if (s.byCreative && s.byCreative.length) {
+                const maxC = Math.max(...s.byCreative.map(c => c.count));
+                creativesHtml = s.byCreative.map(c => {
+                    const pct = maxC > 0 ? (c.count / maxC * 100) : 0;
+                    return `<div style="margin-bottom:8px">
+                        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:2px">
+                            <span>${escHtml(c.creativeId)}</span>
+                            <strong>${c.count.toLocaleString()}</strong>
+                        </div>
+                        <div style="background:#e8eaed;border-radius:4px;height:8px;overflow:hidden">
+                            <div style="background:var(--primary);height:100%;width:${pct}%;border-radius:4px"></div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            let kpiHtml = '';
+            if (campaign && campaign.kpis) {
+                const pctImp = campaign.kpis.targetImpressions > 0
+                    ? ((s.validImpressions / campaign.kpis.targetImpressions) * 100).toFixed(1)
+                    : 0;
+                const pctReach = campaign.kpis.targetReach > 0
+                    ? ((s.uniquePanelists / campaign.kpis.targetReach) * 100).toFixed(1)
+                    : 0;
+                kpiHtml = `<div class="stats-row" style="margin-top:16px">
+                    <div class="stat-card">
+                        <div class="stat-label">Impressions vs Target</div>
+                        <div class="stat-value" style="font-size:20px">${s.validImpressions.toLocaleString()} / ${campaign.kpis.targetImpressions.toLocaleString()}</div>
+                        <div class="stat-sub">${pctImp}% of target</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Reach vs Target</div>
+                        <div class="stat-value" style="font-size:20px">${s.uniquePanelists.toLocaleString()} / ${campaign.kpis.targetReach.toLocaleString()}</div>
+                        <div class="stat-sub">${pctReach}% of target</div>
+                    </div>
+                </div>`;
+            }
+
+            body.innerHTML = `
+                <div class="stats-row">
+                    <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" style="font-size:22px">${(s.totalImpressions||0).toLocaleString()}</div></div>
+                    <div class="stat-card"><div class="stat-label">Valid</div><div class="stat-value" style="font-size:22px;color:var(--success)">${(s.validImpressions||0).toLocaleString()}</div></div>
+                    <div class="stat-card"><div class="stat-label">Bots</div><div class="stat-value" style="font-size:22px;color:var(--danger)">${(s.botImpressions||0).toLocaleString()}</div></div>
+                    <div class="stat-card"><div class="stat-label">Unique Panelists</div><div class="stat-value" style="font-size:22px;color:var(--primary)">${(s.uniquePanelists||0).toLocaleString()}</div></div>
+                </div>
+                ${kpiHtml}
+                <h3 style="margin:16px 0 8px;font-size:14px;font-weight:600;">Creative Performance</h3>
+                ${creativesHtml || '<p style="color:var(--text-muted)">No creative data</p>'}
+            `;
+        } catch (e) {
+            body.innerHTML = '<p style="color:var(--danger);text-align:center">Failed to load campaign summary.</p>';
+        }
+    }
+
+    function renderBarChart(containerId, data, colors) {
+        const el = document.getElementById(containerId);
+        const entries = Object.entries(data);
+        if (!entries.length) { el.innerHTML = '<p style="color:var(--text-muted);text-align:center">No data yet</p>'; return; }
+        const max = Math.max(...entries.map(e => e[1]));
+        el.innerHTML = `<div class="chart-bar">${entries.map(([label, val], i) => {
+            const h = max > 0 ? (val / max * 150) : 2;
+            const color = colors[i % colors.length];
+            return `<div class="chart-bar-item">
+                <div class="bar-value">${val.toLocaleString()}</div>
+                <div class="bar" style="height:${h}px;background:${color}"></div>
+                <div class="bar-label">${escHtml(label)}</div>
+            </div>`;
+        }).join('')}</div>`;
+    }
+
+    function escHtml(s) { if (!s) return ''; const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+    function showAlert(type, msg) {
+        const el = document.getElementById('alert-' + type);
+        el.textContent = msg;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 5000);
+    }
+
+    loadData();
+</script>
+}

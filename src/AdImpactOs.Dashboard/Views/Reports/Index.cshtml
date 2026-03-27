@@ -1,0 +1,493 @@
+@{ ViewData["Title"] = "Reports"; }
+
+<div id="alert" class="alert"></div>
+
+<div class="tabs">
+    <div class="tab active" onclick="switchTab('overview')">Overview</div>
+    <div class="tab" onclick="switchTab('responses')">Response Explorer</div>
+    <div class="tab" onclick="switchTab('lift')">Brand Lift Analysis</div>
+    <div class="tab" onclick="switchTab('demographics')">Demographics Breakdown</div>
+</div>
+
+<!-- OVERVIEW TAB -->
+<div class="tab-content active" id="tab-overview">
+    <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Campaigns</div><div class="stat-value" id="rCampaigns"><span class="spinner"></span></div></div>
+        <div class="stat-card"><div class="stat-label">Surveys</div><div class="stat-value" id="rSurveys">-</div></div>
+        <div class="stat-card"><div class="stat-label">Panelists</div><div class="stat-value" id="rPanelists">-</div></div>
+        <div class="stat-card"><div class="stat-label">Responses</div><div class="stat-value" id="rResponses">-</div></div>
+        <div class="stat-card"><div class="stat-label">Completion Rate</div><div class="stat-value" id="rCompRate">-</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="card">
+            <div class="card-header"><h2>Responses by Survey</h2></div>
+            <div class="card-body"><div class="chart-bar" id="chartBySurvey" style="height:220px"></div></div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h2>Cohort Distribution</h2></div>
+            <div class="card-body"><div class="chart-bar" id="chartByCohort" style="height:220px"></div></div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+        <div class="card-header"><h2>Responses by Status</h2></div>
+        <div class="card-body"><div class="chart-bar" id="chartByStatus" style="height:180px"></div></div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+        <div class="card-header"><h2>Respondent Demographics (Linked to Survey Responses)</h2></div>
+        <div class="card-body" id="respondentDemoSection">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+                <div><strong style="font-size:13px">Respondents by Age Range</strong><div class="chart-bar" id="chartRespAge" style="height:160px"></div></div>
+                <div><strong style="font-size:13px">Respondents by Gender</strong><div class="chart-bar" id="chartRespGender" style="height:160px"></div></div>
+                <div><strong style="font-size:13px">Respondents by Country</strong><div class="chart-bar" id="chartRespCountry" style="height:160px"></div></div>
+            </div>
+            <p style="margin-top:12px;font-size:12px;color:var(--text-muted)">Only panelists who have submitted survey responses are shown above.</p>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+        <div class="card-header"><h2>All Panelist Demographics</h2></div>
+        <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+                <div><strong style="font-size:13px">By Age Range</strong><div class="chart-bar" id="chartAge" style="height:160px"></div></div>
+                <div><strong style="font-size:13px">By Gender</strong><div class="chart-bar" id="chartGender" style="height:160px"></div></div>
+                <div><strong style="font-size:13px">By Country</strong><div class="chart-bar" id="chartCountry" style="height:160px"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- RESPONSE EXPLORER TAB -->
+<div class="tab-content" id="tab-responses">
+    <div class="card">
+        <div class="card-header">
+            <h2>Response Explorer</h2>
+            <div class="btn-group">
+                <select id="filterSurvey" class="form-control" style="width:260px" onchange="loadFilteredResponses()">
+                    <option value="">All Surveys</option>
+                </select>
+                <select id="filterCohort" class="form-control" style="width:130px" onchange="loadFilteredResponses()">
+                    <option value="">All Cohorts</option>
+                    <option value="exposed">Exposed</option>
+                    <option value="control">Control</option>
+                </select>
+                <select id="filterRStatus" class="form-control" style="width:130px" onchange="loadFilteredResponses()">
+                    <option value="">All Status</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Pending">Pending</option>
+                </select>
+                <select id="filterDemoAge" class="form-control" style="width:110px" onchange="loadFilteredResponses()">
+                    <option value="">All Ages</option>
+                </select>
+                <select id="filterDemoGender" class="form-control" style="width:100px" onchange="loadFilteredResponses()">
+                    <option value="">All Gender</option>
+                </select>
+                <select id="filterDemoCountry" class="form-control" style="width:100px" onchange="loadFilteredResponses()">
+                    <option value="">All Countries</option>
+                </select>
+                <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Response ID</th><th>Survey</th><th>Panelist</th><th>Name</th><th>Age</th><th>Gender</th><th>Country</th><th>Cohort</th><th>Status</th><th>Answers</th><th>Date</th></tr></thead>
+                    <tbody id="responseTable"></tbody>
+                </table>
+            </div>
+            <div style="margin-top:12px;font-size:13px;color:var(--text-muted)">Showing <span id="responseCount">0</span> responses</div>
+        </div>
+    </div>
+</div>
+
+<!-- LIFT ANALYSIS TAB -->
+<div class="tab-content" id="tab-lift">
+    <div class="card">
+        <div class="card-header">
+            <h2>Brand Lift Analysis</h2>
+            <select id="liftSurvey" class="form-control" style="width:320px" onchange="loadLift()">
+                <option value="">Select a survey...</option>
+            </select>
+        </div>
+        <div class="card-body" id="liftBody">
+            <div class="loading-state">Select a survey to view brand lift analysis</div>
+        </div>
+    </div>
+</div>
+
+<!-- DEMOGRAPHICS BREAKDOWN TAB -->
+<div class="tab-content" id="tab-demographics">
+    <div class="card">
+        <div class="card-header">
+            <h2>Survey Results by Demographics</h2>
+            <select id="demoSurvey" class="form-control" style="width:320px" onchange="loadDemographics()">
+                <option value="">Select a survey...</option>
+            </select>
+        </div>
+        <div class="card-body" id="demoBody">
+            <div class="loading-state">Select a survey to view demographic breakdown of results</div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const RAPI = '/Reports/api';
+let campaigns=[], surveys=[], panelists=[], allResp=[], filteredResp=[], panelistMap={};
+
+const barColors = ['#1a73e8','#34a853','#f9ab00','#ea4335','#9334e6','#e8710a','#185abc','#0d652d'];
+const statusColors = { Active:'#34a853', Completed:'#9aa0a6', Scheduled:'#f9ab00', Pending:'#e65100', Draft:'#1a73e8', Paused:'#ea4335' };
+
+async function init(){
+    try{
+        const safeFetch = async (url) => {
+            try {
+                const r = await fetch(url);
+                if (!r.ok) return [];
+                return await r.json();
+            } catch { return []; }
+        };
+        [campaigns, surveys, panelists, allResp] = await Promise.all([
+            safeFetch(RAPI+'/campaigns'),
+            safeFetch(RAPI+'/surveys'),
+            safeFetch(RAPI+'/panelists'),
+            safeFetch(RAPI+'/responses')
+        ]);
+        // Build panelist lookup
+        panelistMap = {};
+        panelists.forEach(p => { panelistMap[p.id || p.panelistId] = p; });
+        renderOverview();
+        populateDropdowns();
+        populateDemographicFilters();
+        filteredResp = allResp;
+        renderResponseTable(allResp);
+    }catch(e){ showAlert('Error loading report data: '+e.message,true); }
+}
+
+function getPanelist(panelistId) { return panelistMap[panelistId] || null; }
+
+function renderOverview(){
+    document.getElementById('rCampaigns').textContent = campaigns.length;
+    document.getElementById('rSurveys').textContent = surveys.length;
+    document.getElementById('rPanelists').textContent = panelists.length;
+    document.getElementById('rResponses').textContent = allResp.length;
+    const completed = allResp.filter(r=>r.status==='Completed').length;
+    document.getElementById('rCompRate').textContent = allResp.length ? Math.round(completed/allResp.length*100)+'%' : '-';
+
+    // Chart: responses by survey
+    const bySurvey = {};
+    allResp.forEach(r=>{ const name = surveys.find(s=>s.surveyId===r.surveyId)?.surveyName || r.surveyId; bySurvey[name]=(bySurvey[name]||0)+1; });
+    renderBar('chartBySurvey', bySurvey, barColors);
+
+    // Chart: cohort distribution
+    const byCohort = {};
+    allResp.forEach(r=>{ const c=r.cohortType||'unknown'; byCohort[c]=(byCohort[c]||0)+1; });
+    renderBar('chartByCohort', byCohort, ['#1a73e8','#34a853','#9aa0a6']);
+
+    // Chart: by status
+    const byStatus = {};
+    allResp.forEach(r=>{ byStatus[r.status]=(byStatus[r.status]||0)+1; });
+    renderBar('chartByStatus', byStatus, null, statusColors);
+
+    // Respondent demographics — only panelists who actually responded
+    const respondentIds = [...new Set(allResp.map(r=>r.panelistId))];
+    const respondents = respondentIds.map(id=>getPanelist(id)).filter(Boolean);
+
+    const respByAge={}, respByGender={}, respByCountry={};
+    respondents.forEach(p=>{
+        const a=p.ageRange||'Unknown'; respByAge[a]=(respByAge[a]||0)+1;
+        const g=p.gender||'Unknown'; respByGender[g]=(respByGender[g]||0)+1;
+        const c=p.country||'Unknown'; respByCountry[c]=(respByCountry[c]||0)+1;
+    });
+    renderBar('chartRespAge', respByAge, barColors);
+    renderBar('chartRespGender', respByGender, ['#1a73e8','#e8710a','#9334e6']);
+    renderBar('chartRespCountry', respByCountry, barColors);
+
+    // All panelist demographics
+    const byAge={}, byGender={}, byCountry={};
+    panelists.forEach(p=>{
+        const a=p.ageRange||'Unknown'; byAge[a]=(byAge[a]||0)+1;
+        const g=p.gender||'Unknown'; byGender[g]=(byGender[g]||0)+1;
+        const c=p.country||'Unknown'; byCountry[c]=(byCountry[c]||0)+1;
+    });
+    renderBar('chartAge', byAge, barColors);
+    renderBar('chartGender', byGender, ['#1a73e8','#e8710a','#9334e6']);
+    renderBar('chartCountry', byCountry, barColors);
+}
+
+function renderBar(id, data, colors, colorMap){
+    const el = document.getElementById(id);
+    const entries = Object.entries(data);
+    if(!entries.length){ el.innerHTML='<div style="color:var(--text-muted);font-size:13px;padding:20px">No data</div>'; return; }
+    const max = Math.max(...entries.map(e=>e[1]),1);
+    const h = parseInt(getComputedStyle(el).height)||180;
+    el.innerHTML = entries.map(([k,v],i)=>{
+        const c = colorMap ? (colorMap[k]||'#1a73e8') : (colors ? colors[i%colors.length] : '#1a73e8');
+        return `<div class="chart-bar-item">
+            <div class="bar-value">${v}</div>
+            <div class="bar" style="height:${(v/max)*(h-50)}px;background:${c}"></div>
+            <div class="bar-label">${esc(k.length>18?k.substring(0,16)+'...':k)}</div>
+        </div>`;
+    }).join('');
+}
+
+function populateDropdowns(){
+    const opts = surveys.map(s=>`<option value="${s.surveyId}">${esc(s.surveyName)}</option>`).join('');
+    document.getElementById('filterSurvey').innerHTML = '<option value="">All Surveys</option>'+opts;
+    document.getElementById('liftSurvey').innerHTML = '<option value="">Select a survey...</option>'+opts;
+    document.getElementById('demoSurvey').innerHTML = '<option value="">Select a survey...</option>'+opts;
+}
+
+function populateDemographicFilters(){
+    const ages = [...new Set(panelists.map(p=>p.ageRange).filter(Boolean))].sort();
+    const genders = [...new Set(panelists.map(p=>p.gender).filter(Boolean))].sort();
+    const countries = [...new Set(panelists.map(p=>p.country).filter(Boolean))].sort();
+    document.getElementById('filterDemoAge').innerHTML = '<option value="">All Ages</option>'+ages.map(a=>`<option value="${a}">${a}</option>`).join('');
+    document.getElementById('filterDemoGender').innerHTML = '<option value="">All Gender</option>'+genders.map(g=>`<option value="${g}">${g}</option>`).join('');
+    document.getElementById('filterDemoCountry').innerHTML = '<option value="">All Countries</option>'+countries.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+
+// ---- Response Explorer ----
+function loadFilteredResponses(){
+    const sid = document.getElementById('filterSurvey').value;
+    const cohort = document.getElementById('filterCohort').value;
+    const status = document.getElementById('filterRStatus').value;
+    const ageFilter = document.getElementById('filterDemoAge').value;
+    const genderFilter = document.getElementById('filterDemoGender').value;
+    const countryFilter = document.getElementById('filterDemoCountry').value;
+    filteredResp = allResp.filter(r=>{
+        if(sid && r.surveyId!==sid) return false;
+        if(cohort && r.cohortType!==cohort) return false;
+        if(status && r.status!==status) return false;
+        if(ageFilter || genderFilter || countryFilter){
+            const p = getPanelist(r.panelistId);
+            if(!p) return false;
+            if(ageFilter && p.ageRange!==ageFilter) return false;
+            if(genderFilter && p.gender!==genderFilter) return false;
+            if(countryFilter && p.country!==countryFilter) return false;
+        }
+        return true;
+    });
+    renderResponseTable(filteredResp);
+}
+
+function renderResponseTable(data){
+    document.getElementById('responseCount').textContent = data.length;
+    const t = document.getElementById('responseTable');
+    if(!data.length){ t.innerHTML='<tr><td colspan="11" style="text-align:center;color:var(--text-muted)">No responses</td></tr>'; return; }
+    t.innerHTML = data.slice(0,200).map(r=>{
+        const p = getPanelist(r.panelistId);
+        const name = p ? `${p.firstName||''} ${p.lastName||''}`.trim() : '-';
+        return `<tr>
+        <td style="font-size:11px">${esc(r.responseId)}</td>
+        <td style="font-size:12px">${esc(surveys.find(s=>s.surveyId===r.surveyId)?.surveyName||r.surveyId)}</td>
+        <td style="font-size:12px">${esc(r.panelistId)}</td>
+        <td>${esc(name)}</td>
+        <td>${esc(p?.ageRange||'-')}</td>
+        <td>${esc(p?.gender||'-')}</td>
+        <td>${esc(p?.country||'-')}</td>
+        <td>${badge(r.cohortType||'-')}</td>
+        <td>${badge(r.status)}</td>
+        <td>${r.answers?.length||0}</td>
+        <td>${fmtDate(r.createdAt)}</td>
+    </tr>`;
+    }).join('');
+}
+
+function exportCSV(){
+    const header = 'Response ID,Survey ID,Survey Name,Panelist ID,Name,Age Range,Gender,Country,Cohort,Status,Answers,Device,Date\n';
+    const rows = filteredResp.map(r=>{
+        const sn = surveys.find(s=>s.surveyId===r.surveyId)?.surveyName||'';
+        const p = getPanelist(r.panelistId);
+        const name = p ? `${p.firstName||''} ${p.lastName||''}`.trim() : '';
+        return [r.responseId,r.surveyId,'"'+sn+'"',r.panelistId,'"'+name+'"',p?.ageRange||'',p?.gender||'',p?.country||'',r.cohortType||'',r.status,r.answers?.length||0,r.deviceType||'',r.createdAt||''].join(',');
+    }).join('\n');
+    const blob = new Blob([header+rows], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'survey_responses_'+new Date().toISOString().slice(0,10)+'.csv';
+    a.click();
+}
+
+// ---- Lift Analysis ----
+async function loadLift(){
+    const sid = document.getElementById('liftSurvey').value;
+    const body = document.getElementById('liftBody');
+    if(!sid){ body.innerHTML='<div class="loading-state">Select a survey</div>'; return; }
+    body.innerHTML='<div class="loading-state"><span class="spinner"></span> Loading...</div>';
+    try{
+        const data = await (await fetch(RAPI+'/surveys/'+sid+'/results')).json();
+        const survey = surveys.find(s=>s.surveyId===sid);
+        let html=`<div style="margin-bottom:16px;font-size:14px"><strong>${esc(survey?.surveyName||sid)}</strong> &middot; Campaign: ${esc(data.campaignId)}</div>`;
+        html+=`<div class="stats-row" style="margin-bottom:20px">
+            <div class="stat-card"><div class="stat-label">Total Responses</div><div class="stat-value">${data.totalResponses}</div></div>
+            <div class="stat-card"><div class="stat-label">Exposed</div><div class="stat-value" style="color:#1a73e8">${data.exposedResponses}</div></div>
+            <div class="stat-card"><div class="stat-label">Control</div><div class="stat-value" style="color:#9aa0a6">${data.controlResponses}</div></div>
+        </div>`;
+
+        if(data.questionResults?.length){
+            // Lift chart
+            html+='<div class="card" style="margin-bottom:20px"><div class="card-header"><h2>Lift by Metric</h2></div><div class="card-body"><div class="chart-bar" style="height:200px">';
+            const maxLift = Math.max(...data.questionResults.map(q=>Math.abs(q.liftPercent||0)),1);
+            data.questionResults.forEach((q,i)=>{
+                const lift = q.liftPercent||0;
+                const color = lift>=0?'#34a853':'#ea4335';
+                const h = Math.max((Math.abs(lift)/maxLift)*150, 4);
+                const sign = lift >= 0 ? '+' : '';
+                html+=`<div class="chart-bar-item">
+                    <div class="bar-value" style="color:${color}">${sign}${lift.toFixed(1)}%</div>
+                    <div class="bar" style="height:${h}px;background:${color}"></div>
+                    <div class="bar-label">${esc(q.metric||'Q'+(i+1))}</div>
+                </div>`;
+            });
+            html+='</div></div></div>';
+
+            // Detailed table
+            html+='<table><thead><tr><th>Question</th><th>Metric</th><th>Exposed Mean</th><th>Control Mean</th><th>Lift %</th><th>Responses</th></tr></thead><tbody>';
+            data.questionResults.forEach(q=>{
+                const lift = q.liftPercent!=null ? q.liftPercent.toFixed(1)+'%' : '-';
+                const cls = q.liftPercent>0?'lift-positive':q.liftPercent<0?'lift-negative':'lift-neutral';
+                const respCount = q.responseCounts ? Object.values(q.responseCounts).reduce((a,b)=>a+b,0) : '-';
+                const liftDisplay = q.liftPercent != null ? (q.liftPercent >= 0 ? '+' : '') + lift : '-';
+                html+=`<tr>
+                    <td>${esc(q.questionText)}</td>
+                    <td><span class="badge badge-draft">${esc(q.metric||'-')}</span></td>
+                    <td style="font-weight:600">${q.exposedMean!=null?q.exposedMean.toFixed(2):'-'}</td>
+                    <td>${q.controlMean!=null?q.controlMean.toFixed(2):'-'}</td>
+                    <td class="${cls}" style="font-weight:700;font-size:16px">${liftDisplay}</td>
+                    <td>${respCount}</td>
+                </tr>`;
+            });
+            html+='</tbody></table>';
+
+            // Response distribution per question
+            data.questionResults.forEach(q=>{
+                if(q.responseCounts && Object.keys(q.responseCounts).length){
+                    html+=`<div style="margin-top:16px"><strong style="font-size:13px">${esc(q.questionText)} — Response Distribution</strong><div class="chart-bar" style="height:100px;margin-top:8px">`;
+                    const rMax = Math.max(...Object.values(q.responseCounts),1);
+                    Object.entries(q.responseCounts).forEach(([k,v],i)=>{
+                        html+=`<div class="chart-bar-item"><div class="bar-value">${v}</div><div class="bar" style="height:${(v/rMax)*70}px;background:${barColors[i%barColors.length]}"></div><div class="bar-label">${esc(k)}</div></div>`;
+                    });
+                    html+='</div></div>';
+                }
+            });
+        } else {
+            html+='<p style="color:var(--text-muted);margin-top:16px">No results data available for this survey.</p>';
+        }
+        body.innerHTML = html;
+    }catch(e){ body.innerHTML='<div class="alert alert-error" style="display:block">Error: '+e.message+'</div>'; }
+}
+
+// ---- Demographics Breakdown ----
+async function loadDemographics(){
+    const sid = document.getElementById('demoSurvey').value;
+    const body = document.getElementById('demoBody');
+    if(!sid){ body.innerHTML='<div class="loading-state">Select a survey to view demographic breakdown</div>'; return; }
+    body.innerHTML='<div class="loading-state"><span class="spinner"></span> Loading demographics...</div>';
+    try{
+        const data = await (await fetch(RAPI+'/surveys/'+sid+'/demographics')).json();
+        const survey = surveys.find(s=>s.surveyId===sid);
+        let html=`<div style="margin-bottom:16px;font-size:14px"><strong>${esc(data.surveyName||survey?.surveyName||sid)}</strong> &middot; Campaign: ${esc(data.campaignId||'')} &middot; ${data.totalResponses} completed responses</div>`;
+
+        const sections = [
+            { key:'byAgeRange', label:'Age Range' },
+            { key:'byGender', label:'Gender' },
+            { key:'byCountry', label:'Country' },
+            { key:'byIncome', label:'Income Bracket' }
+        ];
+
+        for(const sec of sections){
+            const segments = data.demographicBreakdown?.[sec.key];
+            if(!segments || !segments.length) continue;
+
+            html+=`<div class="card" style="margin-bottom:20px">
+                <div class="card-header"><h2>Lift by ${sec.label}</h2></div>
+                <div class="card-body">`;
+
+            // Summary bar chart: responses per segment
+            html+=`<div style="margin-bottom:16px"><strong style="font-size:13px">Response Count by ${sec.label}</strong><div class="chart-bar" style="height:120px;margin-top:8px">`;
+            const maxCount = Math.max(...segments.map(s=>s.totalResponses),1);
+            segments.forEach((seg,i)=>{
+                html+=`<div class="chart-bar-item">
+                    <div class="bar-value">${seg.totalResponses} <span style="font-weight:400;font-size:10px">(E:${seg.exposedCount} C:${seg.controlCount})</span></div>
+                    <div class="bar" style="height:${(seg.totalResponses/maxCount)*80}px;background:${barColors[i%barColors.length]}"></div>
+                    <div class="bar-label">${esc(seg.segment)}</div>
+                </div>`;
+            });
+            html+='</div></div>';
+
+            // Lift comparison per metric across segments
+            const allMetrics = segments[0]?.questionMetrics?.map(q=>q.metric||q.questionId) || [];
+            if(allMetrics.length && segments.some(s=>s.questionMetrics?.some(q=>q.liftPercent!=null))){
+                html+=`<table><thead><tr><th>${sec.label}</th><th>Responses</th>`;
+                allMetrics.forEach(m=>{ html+=`<th>Lift: ${esc(m)}</th>`; });
+                html+=`</tr></thead><tbody>`;
+                segments.forEach(seg=>{
+                    html+=`<tr><td><strong>${esc(seg.segment)}</strong></td><td>${seg.totalResponses} (E:${seg.exposedCount} / C:${seg.controlCount})</td>`;
+                    (seg.questionMetrics||[]).forEach(q=>{
+                        const lift = q.liftPercent;
+                        if(lift!=null){
+                            const cls = lift>0?'lift-positive':lift<0?'lift-negative':'lift-neutral';
+                            const sign = lift >= 0 ? '+' : '';
+                            html+=`<td class="${cls}" style="font-weight:700">${sign}${lift.toFixed(1)}%</td>`;
+                        } else {
+                            html+=`<td style="color:var(--text-muted)">-</td>`;
+                        }
+                    });
+                    html+=`</tr>`;
+                });
+                html+=`</tbody></table>`;
+            }
+
+            html+=`</div></div>`;
+        }
+
+        // Enriched response table
+        if(data.enrichedResponses?.length){
+            html+=`<div class="card" style="margin-top:20px"><div class="card-header"><h2>All Responses with Demographics</h2></div><div class="card-body"><div class="table-wrapper">
+                <table><thead><tr><th>Panelist</th><th>Name</th><th>Age</th><th>Gender</th><th>Country</th><th>Income</th><th>Cohort</th><th>Status</th><th>Date</th></tr></thead><tbody>`;
+            data.enrichedResponses.forEach(r=>{
+                html+=`<tr>
+                    <td style="font-size:12px">${esc(r.panelistId)}</td>
+                    <td>${esc(r.panelistName||'-')}</td>
+                    <td>${esc(r.ageRange||'-')}</td>
+                    <td>${esc(r.gender||'-')}</td>
+                    <td>${esc(r.country||'-')}</td>
+                    <td>${esc(r.hhIncomeBucket||'-')}</td>
+                    <td>${badge(r.cohortType||'-')}</td>
+                    <td>${badge(r.status)}</td>
+                    <td>${fmtDate(r.completedAt||r.createdAt)}</td>
+                </tr>`;
+            });
+            html+=`</tbody></table></div></div></div>`;
+        }
+
+        if(!data.demographicBreakdown?.byAgeRange?.length && !data.demographicBreakdown?.byGender?.length){
+            html+='<p style="color:var(--text-muted)">No demographic data available. Ensure panelists have demographic fields populated.</p>';
+        }
+
+        body.innerHTML = html;
+    }catch(e){ body.innerHTML='<div class="alert alert-error" style="display:block">Error loading demographics: '+e.message+'</div>'; }
+}
+
+// ---- Tabs ----
+function switchTab(name){
+    document.querySelectorAll('.tab').forEach(t=>{
+        const n = t.textContent.toLowerCase().replace(/\s/g,'');
+        const mapped = n==='responseexplorer'?'responses':n==='brandliftanalysis'?'lift':n==='demographicsbreakdown'?'demographics':n;
+        t.classList.toggle('active', mapped===name);
+    });
+    document.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
+    document.getElementById('tab-'+name).classList.add('active');
+}
+
+function badge(s){ return `<span class="badge badge-${(s||'draft').toLowerCase()}">${esc(s)}</span>`; }
+function fmtDate(d){ return d?new Date(d).toLocaleDateString():'-'; }
+function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function showAlert(msg,err){ const a=document.getElementById('alert'); a.className='alert '+(err?'alert-error':'alert-success'); a.textContent=msg; a.style.display='block'; setTimeout(()=>a.style.display='none',4000); }
+
+init();
+</script>
+}

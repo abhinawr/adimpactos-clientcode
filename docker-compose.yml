@@ -1,0 +1,242 @@
+version: '3.8'
+
+services:
+  # Azure Cosmos DB Emulator
+  cosmosdb:
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    container_name: adtracking-cosmosdb
+    environment:
+      - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=10
+      - AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=true
+    ports:
+      - "8081:8081"
+      - "10251:10251"
+      - "10252:10252"
+      - "10253:10253"
+      - "10254:10254"
+    volumes:
+      - cosmosdb-data:/data
+    networks:
+      adtracking-network:
+        aliases:
+          - cosmosdb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-k", "https://localhost:8081/_explorer/emulator.pem"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # Azure Event Hub (using Kafka-compatible mode)
+  eventhub:
+    image: confluentinc/cp-kafka:latest
+    container_name: adtracking-eventhub
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://eventhub:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    depends_on:
+      - zookeeper
+    networks:
+      - adtracking-network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # Zookeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: adtracking-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - adtracking-network
+
+  # Azure Storage Emulator (Azurite)
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: adtracking-azurite
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - azurite-data:/data
+    networks:
+      - adtracking-network
+    command: azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0 --loose
+
+  # Panelist API
+  panelist-api:
+    build:
+      context: .
+      dockerfile: src/AdImpactOs.PanelistAPI/Dockerfile
+    container_name: adtracking-panelist-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - CosmosDb__Endpoint=https://cosmosdb:8081
+      - CosmosDb__Key=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+      - CosmosDb__DatabaseName=AdTrackingDB
+      - CosmosDb__ContainerName=Panelists
+    ports:
+      - "5001:80"
+    depends_on:
+      cosmosdb:
+        condition: service_healthy
+    networks:
+      - adtracking-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Survey API
+  survey-api:
+    build:
+      context: .
+      dockerfile: src/AdImpactOs.Survey/Dockerfile
+    container_name: adtracking-survey-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - CosmosDb__Endpoint=https://cosmosdb:8081
+      - CosmosDb__Key=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+      - CosmosDb__DatabaseName=AdTrackingDB
+      - CosmosDb__SurveyContainerName=Surveys
+      - CosmosDb__SurveyResponseContainerName=SurveyResponses
+      - SurveyToken__Secret=AdImpactOs-Survey-Token-Secret-Key-2024!
+      - SurveyToken__BaseUrl=http://localhost:5002
+      - SurveyToken__ExpiryHours=168
+    ports:
+      - "5002:80"
+    depends_on:
+      cosmosdb:
+        condition: service_healthy
+    networks:
+      - adtracking-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Campaign API
+  campaign-api:
+    build:
+      context: .
+      dockerfile: src/AdImpactOs.Campaign/Dockerfile
+    container_name: adtracking-campaign-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - CosmosDb__ConnectionString=AccountEndpoint=https://cosmosdb:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+      - CosmosDb__DatabaseName=AdTrackingDB
+      - CosmosDb__ContainerName=Campaigns
+      - CosmosDb__ImpressionContainerName=Impressions
+    ports:
+      - "5003:80"
+    depends_on:
+      cosmosdb:
+        condition: service_healthy
+    networks:
+      - adtracking-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Azure Functions (Ad Tracking - Pixel & S2S)
+  ad-tracking-functions:
+    build:
+      context: .
+      dockerfile: src/AdImpactOs/Dockerfile
+    container_name: adtracking-functions
+    environment:
+      - AzureWebJobsStorage=UseDevelopmentStorage=true
+      - FUNCTIONS_WORKER_RUNTIME=dotnet-isolated
+      - EventHubConnection=Endpoint=sb://eventhub:9092;EntityPath=ad-impressions
+    ports:
+      - "7071:80"
+    depends_on:
+      eventhub:
+        condition: service_healthy
+    networks:
+      - adtracking-network
+    restart: unless-stopped
+
+  # Event Consumer
+  event-consumer:
+    build:
+      context: .
+      dockerfile: src/AdImpactOs.EventConsumer/Dockerfile
+    container_name: adtracking-event-consumer
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - EventHub__ConnectionString=Endpoint=sb://eventhub:9092;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=key
+      - EventHub__Name=ad-impressions
+      - EventHub__ConsumerGroup=$$Default
+      - BlobStorage__ConnectionString=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1
+      - BlobStorage__ContainerName=eventhub-checkpoints
+      - CampaignApi__BaseUrl=http://campaign-api
+    depends_on:
+      - eventhub
+      - azurite
+      - campaign-api
+    networks:
+      - adtracking-network
+    restart: unless-stopped
+
+  # Dashboard (BFF + UI)
+  dashboard:
+    build:
+      context: .
+      dockerfile: src/AdImpactOs.Dashboard/Dockerfile
+    container_name: adtracking-dashboard
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ApiEndpoints__PanelistApi=http://panelist-api
+      - ApiEndpoints__SurveyApi=http://survey-api
+      - ApiEndpoints__CampaignApi=http://campaign-api
+    ports:
+      - "5004:80"
+    depends_on:
+      - panelist-api
+      - survey-api
+      - campaign-api
+    networks:
+      - adtracking-network
+    restart: unless-stopped
+
+  # External Demo UI - Ad Impression Tracker Demo
+  demo-ui:
+    build:
+      context: .
+      dockerfile: src/AdImpactOs.DemoUI/Dockerfile
+    container_name: adtracking-demo-ui
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5010:80"
+    networks:
+      - adtracking-network
+    restart: unless-stopped
+
+networks:
+  adtracking-network:
+    driver: bridge
+
+volumes:
+  cosmosdb-data:
+  azurite-data:

@@ -1,0 +1,419 @@
+[
+  {
+    "id": "campaign_summer_beverage_2024",
+    "campaignId": "campaign_summer_beverage_2024",
+    "campaignName": "Summer Refresh - Energy Drink Launch",
+    "advertiser": "FreshBurst Beverages Inc.",
+    "industry": "CPG",
+    "startDate": "2024-06-01T00:00:00Z",
+    "endDate": "2024-08-31T23:59:59Z",
+    "budget": 500000,
+    "status": "Active",
+    "targetAudience": {
+      "ageRange": ["18-24", "25-34"],
+      "gender": ["M", "F"],
+      "interests": ["sports", "fitness", "gaming"],
+      "countries": ["US", "CA"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_banner_728x90_v1",
+        "format": "banner",
+        "size": "728x90",
+        "message": "Fuel Your Summer Adventures",
+        "variantName": "Lifestyle"
+      },
+      {
+        "creativeId": "creative_banner_728x90_v2",
+        "format": "banner",
+        "size": "728x90",
+        "message": "Unleash Your Energy",
+        "variantName": "Action"
+      },
+      {
+        "creativeId": "creative_banner_300x250_v1",
+        "format": "banner",
+        "size": "300x250",
+        "message": "Summer Energy Boost",
+        "variantName": "Compact"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 5000000,
+      "targetReach": 1000000,
+      "targetLift": 15
+    },
+    "createdAt": "2024-05-15T10:00:00Z",
+    "updatedAt": "2024-06-01T08:00:00Z"
+  },
+  {
+    "id": "campaign_auto_suv_fall_2024",
+    "campaignId": "campaign_auto_suv_fall_2024",
+    "campaignName": "Adventure Awaits - SUV Launch",
+    "advertiser": "DriveMax Automotive",
+    "industry": "Automotive",
+    "startDate": "2024-09-01T00:00:00Z",
+    "endDate": "2024-11-30T23:59:59Z",
+    "budget": 1200000,
+    "status": "Scheduled",
+    "targetAudience": {
+      "ageRange": ["25-34", "35-44", "45-54"],
+      "gender": ["M", "F"],
+      "interests": ["automotive", "outdoor", "family"],
+      "countries": ["US", "CA", "UK"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_video_pre_roll_v1",
+        "format": "video",
+        "size": "1920x1080",
+        "message": "Your Family's Next Adventure",
+        "variantName": "Family Focus"
+      },
+      {
+        "creativeId": "creative_banner_970x250_v1",
+        "format": "banner",
+        "size": "970x250",
+        "message": "Power Meets Luxury",
+        "variantName": "Premium"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 8000000,
+      "targetReach": 2000000,
+      "targetLift": 20
+    },
+    "createdAt": "2024-08-01T10:00:00Z",
+    "updatedAt": "2024-08-15T14:30:00Z"
+  },
+  {
+    "id": "campaign_retail_back_to_school_2024",
+    "campaignId": "campaign_retail_back_to_school_2024",
+    "campaignName": "Back to School Blowout",
+    "advertiser": "SmartShop Retail",
+    "industry": "Retail",
+    "startDate": "2024-07-15T00:00:00Z",
+    "endDate": "2024-09-15T23:59:59Z",
+    "budget": 350000,
+    "status": "Active",
+    "targetAudience": {
+      "ageRange": ["25-34", "35-44"],
+      "gender": ["F"],
+      "interests": ["shopping", "family", "education"],
+      "countries": ["US"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_banner_300x600_v1",
+        "format": "banner",
+        "size": "300x600",
+        "message": "Save Big on Back to School",
+        "variantName": "Value"
+      },
+      {
+        "creativeId": "creative_banner_728x90_bts_v1",
+        "format": "banner",
+        "size": "728x90",
+        "message": "Everything Your Kids Need",
+        "variantName": "Comprehensive"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 3000000,
+      "targetReach": 750000,
+      "targetLift": 18
+    },
+    "createdAt": "2024-06-20T09:00:00Z",
+    "updatedAt": "2024-07-15T07:00:00Z"
+  },
+  {
+    "id": "campaign_pharma_allergy_spring_2024",
+    "campaignId": "campaign_pharma_allergy_spring_2024",
+    "campaignName": "Spring Relief - Allergy Medication",
+    "advertiser": "HealthFirst Pharmaceuticals",
+    "industry": "Pharmaceutical",
+    "startDate": "2024-03-01T00:00:00Z",
+    "endDate": "2024-05-31T23:59:59Z",
+    "budget": 800000,
+    "status": "Completed",
+    "targetAudience": {
+      "ageRange": ["25-34", "35-44", "45-54", "55-64"],
+      "gender": ["M", "F"],
+      "interests": ["health", "outdoors"],
+      "countries": ["US", "UK"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_banner_728x90_relief_v1",
+        "format": "banner",
+        "size": "728x90",
+        "message": "Breathe Easy This Spring",
+        "variantName": "Symptom Relief"
+      },
+      {
+        "creativeId": "creative_video_15sec_v1",
+        "format": "video",
+        "size": "1280x720",
+        "message": "24-Hour Allergy Relief",
+        "variantName": "Duration Focus"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 6000000,
+      "targetReach": 1500000,
+      "targetLift": 22
+    },
+    "actualMetrics": {
+      "impressions": 6234567,
+      "reach": 1587234,
+      "averageLift": 24.5
+    },
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-05-31T23:59:59Z"
+  },
+  {
+    "id": "campaign_tech_smartphone_holiday_2024",
+    "campaignId": "campaign_tech_smartphone_holiday_2024",
+    "campaignName": "Holiday Tech - Flagship Smartphone",
+    "advertiser": "TechNova Electronics",
+    "industry": "Technology",
+    "startDate": "2024-11-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "budget": 1500000,
+    "status": "Scheduled",
+    "targetAudience": {
+      "ageRange": ["18-24", "25-34", "35-44"],
+      "gender": ["M", "F"],
+      "interests": ["technology", "gaming", "photography"],
+      "countries": ["US", "CA", "UK", "AU"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_video_30sec_tech_v1",
+        "format": "video",
+        "size": "1920x1080",
+        "message": "Photography Perfected",
+        "variantName": "Camera Focus"
+      },
+      {
+        "creativeId": "creative_banner_970x90_tech_v1",
+        "format": "banner",
+        "size": "970x90",
+        "message": "Power in Your Pocket",
+        "variantName": "Performance"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 10000000,
+      "targetReach": 3000000,
+      "targetLift": 25
+    },
+    "createdAt": "2024-09-15T10:00:00Z",
+    "updatedAt": "2024-10-01T12:00:00Z"
+  },
+  {
+    "id": "campaign_finance_credit_card_q2_2024",
+    "campaignId": "campaign_finance_credit_card_q2_2024",
+    "campaignName": "Rewards Plus - Premium Credit Card",
+    "advertiser": "GlobalBank Financial",
+    "industry": "Financial Services",
+    "startDate": "2024-04-01T00:00:00Z",
+    "endDate": "2024-06-30T23:59:59Z",
+    "budget": 600000,
+    "status": "Completed",
+    "targetAudience": {
+      "ageRange": ["25-34", "35-44", "45-54"],
+      "gender": ["M", "F"],
+      "interests": ["finance", "travel", "shopping"],
+      "countries": ["US", "CA"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_banner_300x250_rewards_v1",
+        "format": "banner",
+        "size": "300x250",
+        "message": "5% Cash Back on Everything",
+        "variantName": "Rewards"
+      },
+      {
+        "creativeId": "creative_banner_728x90_travel_v1",
+        "format": "banner",
+        "size": "728x90",
+        "message": "Travel Rewards Reimagined",
+        "variantName": "Travel"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 4000000,
+      "targetReach": 1000000,
+      "targetLift": 16
+    },
+    "actualMetrics": {
+      "impressions": 4156789,
+      "reach": 1034567,
+      "averageLift": 17.8
+    },
+    "createdAt": "2024-02-20T10:00:00Z",
+    "updatedAt": "2024-06-30T23:59:59Z"
+  },
+  {
+    "id": "campaign_travel_cruise_summer_2024",
+    "campaignId": "campaign_travel_cruise_summer_2024",
+    "campaignName": "Mediterranean Dreams - Luxury Cruise",
+    "advertiser": "OceanVoyage Cruises",
+    "industry": "Travel & Hospitality",
+    "startDate": "2024-05-01T00:00:00Z",
+    "endDate": "2024-07-31T23:59:59Z",
+    "budget": 450000,
+    "status": "Active",
+    "targetAudience": {
+      "ageRange": ["35-44", "45-54", "55-64", "65+"],
+      "gender": ["M", "F"],
+      "interests": ["travel", "luxury", "culture"],
+      "countries": ["US", "UK", "AU"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_video_30sec_cruise_v1",
+        "format": "video",
+        "size": "1920x1080",
+        "message": "Discover the Mediterranean in Style",
+        "variantName": "Destination"
+      },
+      {
+        "creativeId": "creative_banner_728x90_luxury_v1",
+        "format": "banner",
+        "size": "728x90",
+        "message": "All-Inclusive Luxury Awaits",
+        "variantName": "Luxury"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 2500000,
+      "targetReach": 600000,
+      "targetLift": 20
+    },
+    "createdAt": "2024-03-15T10:00:00Z",
+    "updatedAt": "2024-05-01T08:00:00Z"
+  },
+  {
+    "id": "campaign_food_delivery_q3_2024",
+    "campaignId": "campaign_food_delivery_q3_2024",
+    "campaignName": "Quick Eats - Food Delivery App",
+    "advertiser": "QuickBite Technologies",
+    "industry": "Food & Beverage",
+    "startDate": "2024-07-01T00:00:00Z",
+    "endDate": "2024-09-30T23:59:59Z",
+    "budget": 400000,
+    "status": "Active",
+    "targetAudience": {
+      "ageRange": ["18-24", "25-34", "35-44"],
+      "gender": ["M", "F"],
+      "interests": ["food", "convenience", "technology"],
+      "countries": ["US", "CA"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_banner_300x250_food_v1",
+        "format": "banner",
+        "size": "300x250",
+        "message": "Food Delivered in 30 Minutes",
+        "variantName": "Speed"
+      },
+      {
+        "creativeId": "creative_banner_320x50_mobile_v1",
+        "format": "banner",
+        "size": "320x50",
+        "message": "Get $15 Off Your First Order",
+        "variantName": "Promotion"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 3500000,
+      "targetReach": 900000,
+      "targetLift": 19
+    },
+    "createdAt": "2024-06-01T10:00:00Z",
+    "updatedAt": "2024-07-01T07:00:00Z"
+  },
+  {
+    "id": "campaign_insurance_home_q4_2024",
+    "campaignId": "campaign_insurance_home_q4_2024",
+    "campaignName": "Protect Your Home - Insurance Bundle",
+    "advertiser": "SecureLife Insurance",
+    "industry": "Insurance",
+    "startDate": "2024-10-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "budget": 550000,
+    "status": "Scheduled",
+    "targetAudience": {
+      "ageRange": ["25-34", "35-44", "45-54"],
+      "gender": ["M", "F"],
+      "interests": ["homeownership", "family", "finance"],
+      "countries": ["US"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_banner_728x90_home_v1",
+        "format": "banner",
+        "size": "728x90",
+        "message": "Bundle and Save 20%",
+        "variantName": "Savings"
+      },
+      {
+        "creativeId": "creative_banner_300x600_family_v1",
+        "format": "banner",
+        "size": "300x600",
+        "message": "Protection for What Matters Most",
+        "variantName": "Family"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 3000000,
+      "targetReach": 800000,
+      "targetLift": 17
+    },
+    "createdAt": "2024-08-20T10:00:00Z",
+    "updatedAt": "2024-09-15T14:00:00Z"
+  },
+  {
+    "id": "campaign_fitness_gym_new_year_2025",
+    "campaignId": "campaign_fitness_gym_new_year_2025",
+    "campaignName": "New Year, New You - Gym Membership",
+    "advertiser": "FitLife Gyms",
+    "industry": "Health & Fitness",
+    "startDate": "2024-12-15T00:00:00Z",
+    "endDate": "2025-02-15T23:59:59Z",
+    "budget": 300000,
+    "status": "Scheduled",
+    "targetAudience": {
+      "ageRange": ["18-24", "25-34", "35-44"],
+      "gender": ["M", "F"],
+      "interests": ["fitness", "health", "wellness"],
+      "countries": ["US", "CA"]
+    },
+    "creatives": [
+      {
+        "creativeId": "creative_video_15sec_fitness_v1",
+        "format": "video",
+        "size": "1280x720",
+        "message": "Transform Your Life in 2025",
+        "variantName": "Motivation"
+      },
+      {
+        "creativeId": "creative_banner_300x250_promo_v1",
+        "format": "banner",
+        "size": "300x250",
+        "message": "50% Off First 3 Months",
+        "variantName": "Offer"
+      }
+    ],
+    "kpis": {
+      "targetImpressions": 2000000,
+      "targetReach": 500000,
+      "targetLift": 21
+    },
+    "createdAt": "2024-11-01T10:00:00Z",
+    "updatedAt": "2024-11-15T12:00:00Z"
+  }
+]

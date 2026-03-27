@@ -1,0 +1,6 @@
+azure-eventhubs-spark==2.3.22
+delta-spark==2.4.0
+pyodbc==4.0.39
+requests==2.31.0
+geoip2==4.7.0
+pyspark==3.4.1

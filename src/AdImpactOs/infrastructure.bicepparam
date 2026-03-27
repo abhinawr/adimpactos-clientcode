@@ -1,0 +1,10 @@
+using './infrastructure.bicep'
+
+param location = 'eastus'
+param projectPrefix = 'adtrack'
+param environment = 'prod'
+param eventHubNamespace = 'adtrack-prod-eh-ns'
+param eventHubName = 'ad-impressions'
+param functionAppName = 'adtrack-prod-func'
+param keyVaultName = 'adtrackprodkv'
+param storageAccountName = 'adtrackprodst'

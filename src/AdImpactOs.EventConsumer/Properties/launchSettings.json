@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AdImpactOs.EventConsumer": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

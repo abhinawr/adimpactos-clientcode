@@ -1,0 +1,124 @@
+@{ ViewData["Title"] = "Overview"; }
+
+<div id="alert" class="alert"></div>
+
+<div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="stat-label">Total Campaigns</div><div class="stat-value" id="statCampaigns"><span class="spinner"></span></div><div class="stat-sub" id="statCampaignsActive"></div></div>
+    <div class="stat-card"><div class="stat-label">Total Surveys</div><div class="stat-value" id="statSurveys"><span class="spinner"></span></div><div class="stat-sub" id="statSurveysActive"></div></div>
+    <div class="stat-card"><div class="stat-label">Total Panelists</div><div class="stat-value" id="statPanelists"><span class="spinner"></span></div><div class="stat-sub" id="statPanelistsConsent"></div></div>
+    <div class="stat-card"><div class="stat-label">Survey Responses</div><div class="stat-value" id="statResponses"><span class="spinner"></span></div><div class="stat-sub" id="statResponsesCompleted"></div></div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+    <div class="card">
+        <div class="card-header"><h2>Campaigns by Status</h2></div>
+        <div class="card-body">
+            <div class="chart-bar" id="campaignChart"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><h2>Surveys by Status</h2></div>
+        <div class="card-body">
+            <div class="chart-bar" id="surveyChart"></div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+    <div class="card">
+        <div class="card-header"><h2>Recent Campaigns</h2></div>
+        <div class="card-body">
+            <div class="table-wrapper">
+                <table><thead><tr><th>Name</th><th>Advertiser</th><th>Status</th></tr></thead><tbody id="recentCampaigns"></tbody></table>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header"><h2>Recent Surveys</h2></div>
+        <div class="card-body">
+            <div class="table-wrapper">
+                <table><thead><tr><th>Name</th><th>Campaign</th><th>Status</th></tr></thead><tbody id="recentSurveys"></tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const CAMPAIGN_API = '/Campaigns/api';
+const SURVEY_API   = '/Surveys/api';
+const PANELIST_API = '/Panelists/api';
+
+const statusColors = { Active:'#34a853', Completed:'#9aa0a6', Scheduled:'#f9ab00', Draft:'#1a73e8', Paused:'#ea4335', Pending:'#e65100' };
+
+async function load() {
+    try {
+        const [campaigns, surveys, panelists, responses] = await Promise.all([
+            fetch(CAMPAIGN_API+'/list').then(r=>r.json()),
+            fetch(SURVEY_API+'/list').then(r=>r.json()),
+            fetch(PANELIST_API+'/list').then(r=>r.json()),
+            fetch(SURVEY_API+'/responses/all').then(r=>r.json())
+        ]);
+
+        // Stats
+        document.getElementById('statCampaigns').textContent = campaigns.length;
+        document.getElementById('statCampaignsActive').textContent = campaigns.filter(c=>c.status==='Active').length + ' active';
+        document.getElementById('statSurveys').textContent = surveys.length;
+        document.getElementById('statSurveysActive').textContent = surveys.filter(s=>s.status==='Active').length + ' active';
+        document.getElementById('statPanelists').textContent = panelists.length;
+        document.getElementById('statPanelistsConsent').textContent = panelists.filter(p=>p.consentGiven).length + ' with consent';
+        document.getElementById('statResponses').textContent = responses.length;
+        document.getElementById('statResponsesCompleted').textContent = responses.filter(r=>r.status==='Completed').length + ' completed';
+
+        // Charts
+        renderBarChart('campaignChart', countByStatus(campaigns));
+        renderBarChart('surveyChart', countByStatus(surveys));
+
+        // Recent tables
+        renderRecent('recentCampaigns', campaigns.slice(0,5), c =>
+            `<tr><td>${esc(c.campaignName)}</td><td>${esc(c.advertiser)}</td><td>${badge(c.status)}</td></tr>`);
+        renderRecent('recentSurveys', surveys.slice(0,5), s =>
+            `<tr><td>${esc(s.surveyName)}</td><td style="font-size:12px">${esc(s.campaignId)}</td><td>${badge(s.status)}</td></tr>`);
+    } catch(e) {
+        showAlert('Failed to load dashboard data: '+e.message, true);
+    }
+}
+
+function countByStatus(items) {
+    const m = {};
+    items.forEach(i => { m[i.status] = (m[i.status]||0)+1; });
+    return m;
+}
+
+function renderBarChart(id, data) {
+    const el = document.getElementById(id);
+    const max = Math.max(...Object.values(data), 1);
+    el.innerHTML = Object.entries(data).map(([k,v]) =>
+        `<div class="chart-bar-item">
+            <div class="bar-value">${v}</div>
+            <div class="bar" style="height:${(v/max)*140}px;background:${statusColors[k]||'#1a73e8'}"></div>
+            <div class="bar-label">${k}</div>
+        </div>`).join('');
+}
+
+function renderRecent(id, items, fn) {
+    document.getElementById(id).innerHTML = items.length ? items.map(fn).join('') : '<tr><td colspan="3" style="text-align:center;color:var(--text-muted)">No data</td></tr>';
+}
+
+function badge(status) {
+    const cls = 'badge badge-'+(status||'draft').toLowerCase();
+    return `<span class="${cls}">${esc(status)}</span>`;
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
+
+function showAlert(msg, isError) {
+    const a = document.getElementById('alert');
+    a.className = 'alert '+(isError?'alert-error':'alert-success');
+    a.textContent = msg; a.style.display = 'block';
+    setTimeout(()=>a.style.display='none', 5000);
+}
+
+load();
+</script>
+}

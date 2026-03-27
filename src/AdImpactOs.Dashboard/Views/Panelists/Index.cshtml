@@ -1,0 +1,254 @@
+@{ ViewData["Title"] = "Panelists"; }
+
+<div id="alert" class="alert"></div>
+
+<div class="stats-row">
+    <div class="stat-card"><div class="stat-label">Total Panelists</div><div class="stat-value" id="statTotal"><span class="spinner"></span></div></div>
+    <div class="stat-card"><div class="stat-label">With Consent</div><div class="stat-value" id="statConsent">-</div></div>
+    <div class="stat-card"><div class="stat-label">Countries</div><div class="stat-value" id="statCountries">-</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Points</div><div class="stat-value" id="statPoints">-</div></div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>All Panelists</h2>
+        <div class="btn-group">
+            <input id="searchInput" class="form-control" style="width:200px" placeholder="Search..." oninput="filterTable()" />
+            <button class="btn btn-primary" onclick="openCreate()">+ New Panelist</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Age</th><th>Gender</th><th>Country</th><th>Consent</th><th>Points</th><th>Actions</th></tr></thead>
+                <tbody id="tBody"></tbody>
+            </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+</div>
+
+<!-- Create / Edit modal -->
+<div class="modal-overlay" id="modal">
+    <div class="modal">
+        <div class="modal-header"><h3 id="modalTitle">New Panelist</h3><button class="close-btn" onclick="closeModal()">&times;</button></div>
+        <div class="modal-body">
+            <input type="hidden" id="editId" />
+            <div class="form-row">
+                <div class="form-group"><label>Email *</label><input id="fEmail" type="email" class="form-control" /></div>
+                <div class="form-group"><label>Phone</label><input id="fPhone" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>First Name</label><input id="fFirst" class="form-control" /></div>
+                <div class="form-group"><label>Last Name</label><input id="fLast" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Age</label><input id="fAge" type="number" class="form-control" /></div>
+                <div class="form-group"><label>Gender</label>
+                    <select id="fGender" class="form-control"><option value="">-</option><option>M</option><option>F</option><option>Other</option></select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Country</label><input id="fCountry" class="form-control" placeholder="US" /></div>
+                <div class="form-group"><label>Income Bucket</label>
+                    <select id="fIncome" class="form-control"><option value="">-</option><option>&lt;25K</option><option>25K-50K</option><option>50K-75K</option><option>75K-100K</option><option>100K-150K</option><option>150K+</option></select>
+                </div>
+            </div>
+            <div class="form-group"><label>Interests</label><input id="fInterests" class="form-control" placeholder="sports, technology" /></div>
+            <div class="form-row">
+                <div class="form-group"><label><input type="checkbox" id="fGdpr" /> GDPR Consent</label></div>
+                <div class="form-group"><label><input type="checkbox" id="fCcpa" /> CCPA Consent</label></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" id="saveBtn" onclick="save()">Create</button>
+        </div>
+    </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal" style="width:640px">
+        <div class="modal-header"><h3 id="detailTitle">Panelist</h3><button class="close-btn" onclick="closeDetail()">&times;</button></div>
+        <div class="modal-body" id="detailBody"></div>
+        <div class="modal-footer"><button class="btn btn-outline" onclick="closeDetail()">Close</button></div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const API = '/Panelists/api';
+let allPanelists = [];
+let filteredPanelists = [];
+let currentPage = 1;
+const pageSize = 15;
+
+async function load(){
+    try{
+        allPanelists = await (await fetch(API+'/list')).json();
+        document.getElementById('statTotal').textContent = allPanelists.length;
+        document.getElementById('statConsent').textContent = allPanelists.filter(p=>p.consentGiven).length;
+        const countries = [...new Set(allPanelists.map(p=>p.country).filter(Boolean))];
+        document.getElementById('statCountries').textContent = countries.length;
+        const avg = allPanelists.length ? Math.round(allPanelists.reduce((s,p)=>s+(p.pointsBalance||0),0)/allPanelists.length) : 0;
+        document.getElementById('statPoints').textContent = avg;
+        filteredPanelists = allPanelists;
+        currentPage = 1;
+        renderPage();
+    } catch(e){ showAlert('Error: '+e.message,true); }
+}
+
+function filterTable(){
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    filteredPanelists = allPanelists.filter(p=> (p.id+' '+p.firstName+' '+p.lastName+' '+p.email+' '+p.country).toLowerCase().includes(q));
+    currentPage = 1;
+    renderPage();
+}
+
+function renderPage(){
+    const totalPages = Math.ceil(filteredPanelists.length / pageSize) || 1;
+    if(currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * pageSize;
+    const pageData = filteredPanelists.slice(start, start + pageSize);
+    renderTable(pageData);
+    renderPagination(totalPages);
+}
+
+function renderTable(data){
+    const t = document.getElementById('tBody');
+    if(!data.length){ t.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text-muted)">No panelists</td></tr>'; return; }
+    t.innerHTML = data.map(p=>`<tr>
+        <td><a href="#" onclick="viewDetail('${p.id}');return false" style="font-size:12px">${esc(p.id)}</a></td>
+        <td>${esc(p.firstName||'')} ${esc(p.lastName||'')}</td>
+        <td style="font-size:12px">${esc(p.email||'-')}</td>
+        <td>${p.ageRange||p.age||'-'}</td>
+        <td>${esc(p.gender||'-')}</td>
+        <td>${esc(p.country||'-')}</td>
+        <td>${p.consentGiven?'<span class="badge badge-active">Yes</span>':'<span class="badge badge-paused">No</span>'}</td>
+        <td>${p.pointsBalance||0}</td>
+        <td class="btn-group">
+            <button class="btn btn-outline btn-sm" onclick="openEdit('${p.id}')">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="del('${p.id}')">Del</button>
+        </td>
+    </tr>`).join('');
+}
+
+function renderPagination(totalPages){
+    const el = document.getElementById('pagination');
+    if(totalPages <= 1){ el.innerHTML = `<span style="color:var(--text-muted);font-size:13px">Showing ${filteredPanelists.length} panelist(s)</span>`; return; }
+    let html = `<span style="color:var(--text-muted);font-size:13px;margin-right:12px">Page ${currentPage} of ${totalPages} (${filteredPanelists.length} total)</span>`;
+    html += `<button class="btn btn-outline btn-sm" ${currentPage<=1?'disabled':''} onclick="goPage(1)">&laquo;</button> `;
+    html += `<button class="btn btn-outline btn-sm" ${currentPage<=1?'disabled':''} onclick="goPage(${currentPage-1})">&lsaquo;</button> `;
+    const startP = Math.max(1, currentPage - 2);
+    const endP = Math.min(totalPages, currentPage + 2);
+    for(let i=startP;i<=endP;i++){
+        html += `<button class="btn btn-sm ${i===currentPage?'btn-primary':'btn-outline'}" onclick="goPage(${i})">${i}</button> `;
+    }
+    html += `<button class="btn btn-outline btn-sm" ${currentPage>=totalPages?'disabled':''} onclick="goPage(${currentPage+1})">&rsaquo;</button> `;
+    html += `<button class="btn btn-outline btn-sm" ${currentPage>=totalPages?'disabled':''} onclick="goPage(${totalPages})">&raquo;</button>`;
+    el.innerHTML = html;
+}
+
+function goPage(p){ currentPage=p; renderPage(); }
+
+function openCreate(){
+    document.getElementById('editId').value='';
+    document.getElementById('modalTitle').textContent='New Panelist';
+    document.getElementById('saveBtn').textContent='Create';
+    ['fEmail','fPhone','fFirst','fLast','fAge','fCountry','fInterests'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('fGender').value='';
+    document.getElementById('fIncome').value='';
+    document.getElementById('fGdpr').checked=false;
+    document.getElementById('fCcpa').checked=false;
+    document.getElementById('modal').classList.add('active');
+}
+
+async function openEdit(id){
+    const p = await (await fetch(API+'/'+id)).json();
+    document.getElementById('editId').value=p.id;
+    document.getElementById('modalTitle').textContent='Edit Panelist';
+    document.getElementById('saveBtn').textContent='Update';
+    document.getElementById('fEmail').value=p.email||'';
+    document.getElementById('fPhone').value='';
+    document.getElementById('fFirst').value=p.firstName||'';
+    document.getElementById('fLast').value=p.lastName||'';
+    document.getElementById('fAge').value=p.age||'';
+    document.getElementById('fGender').value=p.gender||'';
+    document.getElementById('fCountry').value=p.country||'';
+    document.getElementById('fIncome').value=p.hhIncomeBucket||'';
+    document.getElementById('fInterests').value=p.interests||'';
+    document.getElementById('fGdpr').checked=p.consentGdpr||false;
+    document.getElementById('fCcpa').checked=p.consentCcpa||false;
+    document.getElementById('modal').classList.add('active');
+}
+
+async function save(){
+    const id = document.getElementById('editId').value;
+    const body = {
+        email: document.getElementById('fEmail').value,
+        phone: document.getElementById('fPhone').value||null,
+        firstName: document.getElementById('fFirst').value,
+        lastName: document.getElementById('fLast').value,
+        age: parseInt(document.getElementById('fAge').value)||null,
+        gender: document.getElementById('fGender').value||null,
+        country: document.getElementById('fCountry').value,
+        hhIncomeBucket: document.getElementById('fIncome').value||null,
+        interests: document.getElementById('fInterests').value||null,
+        consentGdpr: document.getElementById('fGdpr').checked,
+        consentCcpa: document.getElementById('fCcpa').checked,
+        consentGiven: document.getElementById('fGdpr').checked||document.getElementById('fCcpa').checked
+    };
+    const url = id ? API+'/'+id : API+'/create';
+    const method = id ? 'PUT' : 'POST';
+    const res = await fetch(url, { method, headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if(res.ok){ closeModal(); showAlert(id?'Updated':'Created'); load(); }
+    else showAlert('Error: '+(await res.text()),true);
+}
+
+async function del(id){
+    if(!confirm('Delete panelist?')) return;
+    const res = await fetch(API+'/'+id, {method:'DELETE'});
+    if(res.ok||res.status===204){ showAlert('Deleted'); load(); }
+    else showAlert('Error',true);
+}
+
+async function viewDetail(id){
+    const p = await (await fetch(API+'/'+id)).json();
+    let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px">
+        <div><strong>ID:</strong><br/>${esc(p.id)}</div>
+        <div><strong>Name:</strong><br/>${esc(p.firstName||'')} ${esc(p.lastName||'')}</div>
+        <div><strong>Email:</strong><br/>${esc(p.email||'-')}</div>
+        <div><strong>Age:</strong><br/>${p.ageRange||p.age||'-'}</div>
+        <div><strong>Gender:</strong><br/>${esc(p.gender||'-')}</div>
+        <div><strong>Country:</strong><br/>${esc(p.country||'-')}</div>
+        <div><strong>Income:</strong><br/>${esc(p.hhIncomeBucket||'-')}</div>
+        <div><strong>Device:</strong><br/>${esc(p.deviceType||'-')} / ${esc(p.browser||'-')}</div>
+        <div><strong>Consent:</strong><br/>GDPR: ${p.consentGdpr?'Yes':'No'} &middot; CCPA: ${p.consentCcpa?'Yes':'No'}</div>
+        <div><strong>Points:</strong><br/>${p.pointsBalance||0}</div>
+    </div>`;
+    // Load responses
+    try{
+        const resp = await (await fetch(API+'/'+id+'/responses')).json();
+        if(resp.length){
+            html+=`<div style="margin-top:16px"><strong>Survey Responses (${resp.length}):</strong></div>
+            <table style="margin-top:8px"><thead><tr><th>Survey</th><th>Cohort</th><th>Status</th><th>Date</th></tr></thead><tbody>`;
+            resp.forEach(r=>{ html+=`<tr><td style="font-size:12px">${esc(r.surveyId)}</td><td>${esc(r.cohortType||'-')}</td><td>${badge(r.status)}</td><td>${fmtDate(r.createdAt)}</td></tr>`; });
+            html+='</tbody></table>';
+        }
+    }catch(e){}
+    document.getElementById('detailTitle').textContent = (p.firstName||'')+' '+(p.lastName||'');
+    document.getElementById('detailBody').innerHTML = html;
+    document.getElementById('detailModal').classList.add('active');
+}
+
+function closeModal(){ document.getElementById('modal').classList.remove('active'); }
+function closeDetail(){ document.getElementById('detailModal').classList.remove('active'); }
+function badge(s){ return `<span class="badge badge-${(s||'draft').toLowerCase()}">${esc(s)}</span>`; }
+function fmtDate(d){ return d?new Date(d).toLocaleDateString():'-'; }
+function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function showAlert(msg,err){ const a=document.getElementById('alert'); a.className='alert '+(err?'alert-error':'alert-success'); a.textContent=msg; a.style.display='block'; setTimeout(()=>a.style.display='none',4000); }
+
+load();
+</script>
+}

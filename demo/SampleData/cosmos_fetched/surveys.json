@@ -1,0 +1,874 @@
+﻿[
+    {
+        "id":  "survey_fitness_gym_new_year_2025",
+        "surveyId":  "survey_fitness_gym_new_year_2025",
+        "campaignId":  "campaign_fitness_gym_new_year_2025",
+        "surveyName":  "New Year Fitness Membership Study",
+        "description":  "Brand lift for FitLife gym membership campaign targeting New Year resolutions",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with FitLife Gyms?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_membership_intent",
+                              "questionText":  "How likely are you to join FitLife Gyms in 2025?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_message_recall",
+                              "questionText":  "Do you recall seeing any New Year promotions from FitLife?",
+                              "questionType":  "YesNo",
+                              "metric":  "message_recall",
+                              "options":  null,
+                              "required":  true,
+                              "order":  3
+                          },
+                          {
+                              "questionId":  "q4_motivation",
+                              "questionText":  "How motivated do you feel by FitLife\u0027s advertising message?",
+                              "questionType":  "Rating",
+                              "metric":  "message_impact",
+                              "options":  null,
+                              "required":  false,
+                              "order":  4
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-12-20T00:00:00",
+        "distributionEndDate":  "2025-03-15T23:59:59",
+        "status":  "Scheduled",
+        "createdBy":  null,
+        "createdAt":  "2024-11-15T10:00:00",
+        "updatedAt":  "2024-11-15T10:00:00"
+    },
+    {
+        "id":  "survey_tech_smartphone_holiday_2024",
+        "surveyId":  "survey_tech_smartphone_holiday_2024",
+        "campaignId":  "campaign_tech_smartphone_holiday_2024",
+        "surveyName":  "Smartphone Brand Lift - Holiday Season",
+        "description":  "Measure brand awareness and purchase intent for TechNova flagship smartphone",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with TechNova smartphones?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_purchase_intent",
+                              "questionText":  "How likely are you to purchase a TechNova smartphone in the next 6 months?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_feature_perception",
+                              "questionText":  "How would you rate TechNova\u0027s camera quality compared to competitors?",
+                              "questionType":  "Rating",
+                              "metric":  "feature_perception",
+                              "options":  null,
+                              "required":  true,
+                              "order":  3
+                          },
+                          {
+                              "questionId":  "q4_message_recall",
+                              "questionText":  "Do you recall seeing any TechNova holiday advertising?",
+                              "questionType":  "YesNo",
+                              "metric":  "message_recall",
+                              "options":  null,
+                              "required":  true,
+                              "order":  4
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-11-15T00:00:00",
+        "distributionEndDate":  "2025-01-15T23:59:59",
+        "status":  "Scheduled",
+        "createdBy":  null,
+        "createdAt":  "2024-10-01T10:00:00",
+        "updatedAt":  "2024-10-01T10:00:00"
+    },
+    {
+        "id":  "survey_insurance_home_q4_2024",
+        "surveyId":  "survey_insurance_home_q4_2024",
+        "campaignId":  "campaign_insurance_home_q4_2024",
+        "surveyName":  "Home Insurance Bundle Brand Study",
+        "description":  "Measure effectiveness of SecureLife insurance bundle campaign",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with SecureLife Insurance?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_quote_intent",
+                              "questionText":  "How likely are you to request a quote from SecureLife for home insurance?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_trust",
+                              "questionText":  "How much do you trust SecureLife as an insurance provider?",
+                              "questionType":  "Rating",
+                              "metric":  "brand_trust",
+                              "options":  null,
+                              "required":  true,
+                              "order":  3
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-10-15T00:00:00",
+        "distributionEndDate":  "2025-01-15T23:59:59",
+        "status":  "Scheduled",
+        "createdBy":  null,
+        "createdAt":  "2024-09-20T10:00:00",
+        "updatedAt":  "2024-09-20T10:00:00"
+    },
+    {
+        "id":  "survey_auto_suv_fall_2024",
+        "surveyId":  "survey_auto_suv_fall_2024",
+        "campaignId":  "campaign_auto_suv_fall_2024",
+        "surveyName":  "SUV Purchase Intent Study",
+        "description":  "Brand lift for DriveMax SUV launch campaign targeting families",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with DriveMax Automotive?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_purchase_intent",
+                              "questionText":  "How likely are you to consider DriveMax SUV for your next vehicle purchase?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_favorability",
+                              "questionText":  "What is your overall opinion of DriveMax vehicles?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_favorability",
+                              "options":  [
+                                              "Very unfavorable",
+                                              "Somewhat unfavorable",
+                                              "Neutral",
+                                              "Somewhat favorable",
+                                              "Very favorable"
+                                          ],
+                              "required":  true,
+                              "order":  3
+                          },
+                          {
+                              "questionId":  "q4_message_recall",
+                              "questionText":  "Do you recall seeing any advertising for DriveMax SUVs recently?",
+                              "questionType":  "YesNo",
+                              "metric":  "message_recall",
+                              "options":  null,
+                              "required":  true,
+                              "order":  4
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-09-15T00:00:00",
+        "distributionEndDate":  "2024-12-15T23:59:59",
+        "status":  "Scheduled",
+        "createdBy":  null,
+        "createdAt":  "2024-08-20T10:00:00",
+        "updatedAt":  "2024-08-20T10:00:00"
+    },
+    {
+        "id":  "survey_retail_back_to_school_2024",
+        "surveyId":  "survey_retail_back_to_school_2024",
+        "campaignId":  "campaign_retail_back_to_school_2024",
+        "surveyName":  "Back to School Retail Brand Lift",
+        "description":  "Measure effectiveness of back-to-school campaign",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with SmartShop Retail?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_purchase_intent",
+                              "questionText":  "How likely are you to shop at SmartShop for back-to-school supplies?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_message_recall",
+                              "questionText":  "Do you recall seeing any back-to-school advertising from SmartShop recently?",
+                              "questionType":  "YesNo",
+                              "metric":  "message_recall",
+                              "options":  null,
+                              "required":  true,
+                              "order":  3
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-08-20T00:00:00",
+        "distributionEndDate":  "2024-09-30T23:59:59",
+        "status":  "Active",
+        "createdBy":  null,
+        "createdAt":  "2024-08-15T10:00:00",
+        "updatedAt":  "2024-08-20T08:00:00"
+    },
+    {
+        "id":  "survey_food_delivery_q3_2024",
+        "surveyId":  "survey_food_delivery_q3_2024",
+        "campaignId":  "campaign_food_delivery_q3_2024",
+        "surveyName":  "Food Delivery App Brand Study",
+        "description":  "Brand lift measurement for QuickBite app launch",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with the QuickBite food delivery app?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_download_intent",
+                              "questionText":  "How likely are you to download and use QuickBite?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_message_recall",
+                              "questionText":  "Do you recall seeing any advertising for QuickBite recently?",
+                              "questionType":  "YesNo",
+                              "metric":  "message_recall",
+                              "options":  null,
+                              "required":  true,
+                              "order":  3
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-08-01T00:00:00",
+        "distributionEndDate":  "2024-10-01T23:59:59",
+        "status":  "Active",
+        "createdBy":  null,
+        "createdAt":  "2024-07-25T10:00:00",
+        "updatedAt":  "2024-08-01T08:00:00"
+    },
+    {
+        "id":  "survey_summer_beverage_2024",
+        "surveyId":  "survey_summer_beverage_2024",
+        "campaignId":  "campaign_summer_beverage_2024",
+        "surveyName":  "Summer Beverage Brand Lift Study",
+        "description":  "Post-campaign survey to measure brand awareness and purchase intent for Summer Refresh energy drink launch",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with FreshBurst Energy Drink?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_purchase_intent",
+                              "questionText":  "How likely are you to purchase FreshBurst Energy Drink in the next 30 days?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_favorability",
+                              "questionText":  "What is your overall opinion of FreshBurst Energy Drink?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_favorability",
+                              "options":  [
+                                              "Very unfavorable",
+                                              "Somewhat unfavorable",
+                                              "Neutral",
+                                              "Somewhat favorable",
+                                              "Very favorable"
+                                          ],
+                              "required":  true,
+                              "order":  3
+                          },
+                          {
+                              "questionId":  "q4_message_recall",
+                              "questionText":  "Do you recall seeing any advertising for FreshBurst Energy Drink recently?",
+                              "questionType":  "YesNo",
+                              "metric":  "message_recall",
+                              "options":  null,
+                              "required":  true,
+                              "order":  4
+                          },
+                          {
+                              "questionId":  "q5_consideration",
+                              "questionText":  "When choosing an energy drink, how likely would you be to consider FreshBurst?",
+                              "questionType":  "Rating",
+                              "metric":  "brand_consideration",
+                              "options":  null,
+                              "required":  false,
+                              "order":  5
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-07-15T00:00:00",
+        "distributionEndDate":  "2024-09-15T23:59:59",
+        "status":  "Active",
+        "createdBy":  null,
+        "createdAt":  "2024-07-10T10:00:00",
+        "updatedAt":  "2024-07-15T08:00:00"
+    },
+    {
+        "id":  "survey_travel_cruise_summer_2024",
+        "surveyId":  "survey_travel_cruise_summer_2024",
+        "campaignId":  "campaign_travel_cruise_summer_2024",
+        "surveyName":  "Luxury Cruise Brand Lift",
+        "description":  "Mediterranean cruise campaign effectiveness study",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with OceanVoyage Cruises?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_booking_intent",
+                              "questionText":  "How likely are you to book a Mediterranean cruise with OceanVoyage in the next 12 months?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_luxury_perception",
+                              "questionText":  "How would you rate OceanVoyage in terms of luxury and quality?",
+                              "questionType":  "Rating",
+                              "metric":  "brand_perception",
+                              "options":  null,
+                              "required":  true,
+                              "order":  3
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-06-15T00:00:00",
+        "distributionEndDate":  "2024-08-15T23:59:59",
+        "status":  "Active",
+        "createdBy":  null,
+        "createdAt":  "2024-06-10T10:00:00",
+        "updatedAt":  "2024-06-15T08:00:00"
+    },
+    {
+        "id":  "survey_finance_credit_card_q2_2024",
+        "surveyId":  "survey_finance_credit_card_q2_2024",
+        "campaignId":  "campaign_finance_credit_card_q2_2024",
+        "surveyName":  "Credit Card Brand Lift Study",
+        "description":  "Measure effectiveness of premium credit card campaign",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with GlobalBank Rewards Plus credit card?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_application_intent",
+                              "questionText":  "How likely are you to apply for the GlobalBank Rewards Plus card?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_value_perception",
+                              "questionText":  "Rate the perceived value of the rewards program (1-10)",
+                              "questionType":  "Rating",
+                              "metric":  "value_perception",
+                              "options":  null,
+                              "required":  true,
+                              "order":  3
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-06-15T00:00:00",
+        "distributionEndDate":  "2024-07-15T23:59:59",
+        "status":  "Completed",
+        "createdBy":  null,
+        "createdAt":  "2024-06-10T10:00:00",
+        "updatedAt":  "2024-07-15T23:59:59"
+    },
+    {
+        "id":  "survey_pharma_allergy_spring_2024",
+        "surveyId":  "survey_pharma_allergy_spring_2024",
+        "campaignId":  "campaign_pharma_allergy_spring_2024",
+        "surveyName":  "Allergy Medication Brand Study",
+        "description":  "Post-campaign brand lift for spring allergy medication",
+        "surveyType":  "BrandLift",
+        "questions":  [
+                          {
+                              "questionId":  "q1_awareness",
+                              "questionText":  "How familiar are you with HealthFirst Allergy Relief?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_awareness",
+                              "options":  [
+                                              "Not at all familiar",
+                                              "Slightly familiar",
+                                              "Moderately familiar",
+                                              "Very familiar",
+                                              "Extremely familiar"
+                                          ],
+                              "required":  true,
+                              "order":  1
+                          },
+                          {
+                              "questionId":  "q2_purchase_intent",
+                              "questionText":  "How likely are you to use HealthFirst Allergy Relief for your allergy symptoms?",
+                              "questionType":  "LikertScale",
+                              "metric":  "purchase_intent",
+                              "options":  [
+                                              "Not at all likely",
+                                              "Slightly likely",
+                                              "Moderately likely",
+                                              "Very likely",
+                                              "Extremely likely"
+                                          ],
+                              "required":  true,
+                              "order":  2
+                          },
+                          {
+                              "questionId":  "q3_favorability",
+                              "questionText":  "What is your overall opinion of HealthFirst as a pharmaceutical brand?",
+                              "questionType":  "LikertScale",
+                              "metric":  "brand_favorability",
+                              "options":  [
+                                              "Very unfavorable",
+                                              "Somewhat unfavorable",
+                                              "Neutral",
+                                              "Somewhat favorable",
+                                              "Very favorable"
+                                          ],
+                              "required":  true,
+                              "order":  3
+                          },
+                          {
+                              "questionId":  "q4_message_recall",
+                              "questionText":  "Do you recall seeing advertising for HealthFirst Allergy Relief in the past 3 months?",
+                              "questionType":  "YesNo",
+                              "metric":  "message_recall",
+                              "options":  null,
+                              "required":  true,
+                              "order":  4
+                          }
+                      ],
+        "targetAudience":  [
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ],
+                               [
+                                   [
+                                       [
+
+                                       ],
+                                       [
+
+                                       ]
+                                   ]
+                               ]
+                           ],
+        "distributionStartDate":  "2024-05-15T00:00:00",
+        "distributionEndDate":  "2024-06-15T23:59:59",
+        "status":  "Completed",
+        "createdBy":  null,
+        "createdAt":  "2024-05-10T10:00:00",
+        "updatedAt":  "2024-06-15T23:59:59"
+    }
+]

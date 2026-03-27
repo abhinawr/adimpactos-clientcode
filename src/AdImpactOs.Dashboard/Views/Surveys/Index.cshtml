@@ -1,0 +1,485 @@
+@{ ViewData["Title"] = "Surveys"; }
+
+<div id="alert" class="alert"></div>
+
+<div class="stats-row">
+    <div class="stat-card"><div class="stat-label">Total Surveys</div><div class="stat-value" id="statTotal"><span class="spinner"></span></div></div>
+    <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value" id="statActive">-</div></div>
+    <div class="stat-card"><div class="stat-label">Total Responses</div><div class="stat-value" id="statResponses">-</div></div>
+    <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value" id="statCompletedR">-</div></div>
+</div>
+
+<div class="tabs">
+    <div class="tab active" onclick="switchTab('surveys')">Surveys</div>
+    <div class="tab" onclick="switchTab('results')">Results</div>
+    <div class="tab" onclick="switchTab('trigger')">Trigger</div>
+</div>
+
+<!-- SURVEYS TAB -->
+<div class="tab-content active" id="tab-surveys">
+    <div class="card">
+        <div class="card-header">
+            <h2>All Surveys</h2>
+            <div class="btn-group">
+                <select id="filterStatus" class="form-control" style="width:140px" onchange="loadSurveys()">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                <button class="btn btn-primary" onclick="openCreate()">+ New Survey</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Name</th><th>Campaign</th><th>Type</th><th>Status</th><th>Questions</th><th>Created</th><th>Actions</th></tr></thead>
+                    <tbody id="surveyTable"></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="surveyPagination"></div>
+        </div>
+    </div>
+</div>
+
+<!-- RESULTS TAB -->
+<div class="tab-content" id="tab-results">
+    <div class="card">
+        <div class="card-header">
+            <h2>Survey Results</h2>
+            <select id="resultSurveySelect" class="form-control" style="width:320px" onchange="loadResults()">
+                <option value="">Select a survey...</option>
+            </select>
+        </div>
+        <div class="card-body" id="resultsBody">
+            <div class="loading-state">Select a survey to view results</div>
+        </div>
+    </div>
+</div>
+
+<!-- TRIGGER TAB -->
+<div class="tab-content" id="tab-trigger">
+    <div class="card">
+        <div class="card-header"><h2>Trigger Survey</h2></div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Survey</label>
+                    <select id="trigSurvey" class="form-control"><option value="">Select survey...</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Cohort Type</label>
+                    <select id="trigCohort" class="form-control">
+                        <option value="exposed">Exposed</option>
+                        <option value="control">Control</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Filter Panelists by Demographics</label>
+                <div class="form-row" style="margin-bottom:8px">
+                    <div class="form-group" style="margin-bottom:0">
+                        <select id="trigFilterAge" class="form-control" onchange="filterTriggerPanelists()">
+                            <option value="">All Ages</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <select id="trigFilterGender" class="form-control" onchange="filterTriggerPanelists()">
+                            <option value="">All Gender</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-bottom:8px">
+                    <div class="form-group" style="margin-bottom:0">
+                        <select id="trigFilterCountry" class="form-control" onchange="filterTriggerPanelists()">
+                            <option value="">All Countries</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <button class="btn btn-sm btn-outline" onclick="loadPanelistSelector()" style="margin-top:0">Load Panelists</button>
+                        <button class="btn btn-sm btn-outline" onclick="selectAllVisible()">Select All Visible</button>
+                        <button class="btn btn-sm btn-outline" onclick="deselectAll()">Deselect All</button>
+                    </div>
+                </div>
+                <div id="panelistCheckboxes" style="max-height:240px;overflow-y:auto;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:8px"></div>
+            </div>
+            <div class="form-group">
+                <label>Or enter Panelist IDs manually (comma-separated)</label>
+                <input id="trigPanelists" class="form-control" placeholder="panelist-001, panelist-002" />
+            </div>
+            <button class="btn btn-primary" onclick="triggerSurvey()">Trigger Survey</button>
+            <div id="triggerResult" style="margin-top:16px"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Create modal -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal" style="width:620px">
+        <div class="modal-header"><h3>New Survey</h3><button class="close-btn" onclick="closeCreate()">&times;</button></div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group"><label>Survey Name *</label><input id="cName" class="form-control" /></div>
+                <div class="form-group">
+                    <label>Campaign *</label>
+                    <select id="cCampaign" class="form-control"><option value="">Select campaign...</option></select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Survey Type</label>
+                    <select id="cType" class="form-control"><option>BrandLift</option><option>AdRecall</option><option>MessageAssociation</option></select>
+                </div>
+                <div class="form-group"><label>Description</label><input id="cDesc" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Start Date</label><input id="cStart" type="date" class="form-control" /></div>
+                <div class="form-group"><label>End Date</label><input id="cEnd" type="date" class="form-control" /></div>
+            </div>
+            <div style="margin-top:8px"><strong style="font-size:13px">Questions</strong></div>
+            <div id="questionsList"></div>
+            <button class="btn btn-sm btn-outline" style="margin-top:8px" onclick="addQuestion()">+ Add Question</button>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeCreate()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveSurvey()">Create Survey</button>
+        </div>
+    </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal" style="width:640px">
+        <div class="modal-header"><h3 id="detailTitle">Survey</h3><button class="close-btn" onclick="closeDetail()">&times;</button></div>
+        <div class="modal-body" id="detailBody"></div>
+        <div class="modal-footer"><button class="btn btn-outline" onclick="closeDetail()">Close</button></div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const API = '/Surveys/api';
+const CAMP_API = '/Campaigns/api';
+const PAN_API = '/Panelists/api';
+let allSurveys=[], allResponses=[], allPanelists=[], panelistMap={}, qIdx=0;
+let surveyPage = 1;
+const surveyPageSize = 10;
+
+async function init() {
+    await Promise.all([loadSurveys(), loadResponseCount(), loadCampaignDropdowns(), loadPanelistData()]);
+}
+
+async function loadPanelistData() {
+    allPanelists = await (await fetch(PAN_API+'/list')).json();
+    panelistMap = {};
+    allPanelists.forEach(p => { panelistMap[p.id || p.panelistId] = p; });
+    populateTriggerFilters();
+}
+
+function getPanelist(pid) { return panelistMap[pid] || null; }
+
+async function loadSurveys() {
+    const status = document.getElementById('filterStatus').value;
+    const qs = status ? '?status='+status : '';
+    allSurveys = await (await fetch(API+'/list'+qs)).json();
+    document.getElementById('statTotal').textContent = allSurveys.length;
+    document.getElementById('statActive').textContent = allSurveys.filter(s=>s.status==='Active').length;
+    surveyPage = 1;
+    renderSurveyPage();
+    populateSurveyDropdowns();
+}
+
+async function loadResponseCount() {
+    allResponses = await (await fetch(API+'/responses/all')).json();
+    document.getElementById('statResponses').textContent = allResponses.length;
+    document.getElementById('statCompletedR').textContent = allResponses.filter(r=>r.status==='Completed').length;
+}
+
+function renderSurveyPage(){
+    const totalPages = Math.ceil(allSurveys.length / surveyPageSize) || 1;
+    if(surveyPage > totalPages) surveyPage = totalPages;
+    const start = (surveyPage - 1) * surveyPageSize;
+    const pageData = allSurveys.slice(start, start + surveyPageSize);
+    renderSurveyTable(pageData);
+    renderSurveyPagination(totalPages);
+}
+
+function renderSurveyTable(data) {
+    const t = document.getElementById('surveyTable');
+    if(!data.length){ t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text-muted)">No surveys</td></tr>'; return; }
+    t.innerHTML = data.map(s=>`<tr>
+        <td><a href="#" onclick="viewDetail('${s.surveyId}');return false"><strong>${esc(s.surveyName)}</strong></a></td>
+        <td style="font-size:12px">${esc(s.campaignId)}</td>
+        <td>${esc(s.surveyType)}</td>
+        <td>${badge(s.status)}</td>
+        <td>${s.questions?.length||0}</td>
+        <td>${fmtDate(s.createdAt)}</td>
+        <td class="btn-group">
+            <button class="btn btn-sm btn-outline" onclick="setStatus('${s.surveyId}','Active')">Activate</button>
+            <button class="btn btn-sm btn-outline" onclick="setStatus('${s.surveyId}','Completed')">Complete</button>
+        </td>
+    </tr>`).join('');
+}
+
+function renderSurveyPagination(totalPages){
+    const el = document.getElementById('surveyPagination');
+    if(totalPages <= 1){ el.innerHTML = `<span style="color:var(--text-muted);font-size:13px">Showing ${allSurveys.length} survey(s)</span>`; return; }
+    let html = `<span style="color:var(--text-muted);font-size:13px;margin-right:12px">Page ${surveyPage} of ${totalPages} (${allSurveys.length} total)</span>`;
+    html += `<button class="btn btn-outline btn-sm" ${surveyPage<=1?'disabled':''} onclick="goSurveyPage(1)">&laquo;</button> `;
+    html += `<button class="btn btn-outline btn-sm" ${surveyPage<=1?'disabled':''} onclick="goSurveyPage(${surveyPage-1})">&lsaquo;</button> `;
+    const startP = Math.max(1, surveyPage - 2);
+    const endP = Math.min(totalPages, surveyPage + 2);
+    for(let i=startP;i<=endP;i++){
+        html += `<button class="btn btn-sm ${i===surveyPage?'btn-primary':'btn-outline'}" onclick="goSurveyPage(${i})">${i}</button> `;
+    }
+    html += `<button class="btn btn-outline btn-sm" ${surveyPage>=totalPages?'disabled':''} onclick="goSurveyPage(${surveyPage+1})">&rsaquo;</button> `;
+    html += `<button class="btn btn-outline btn-sm" ${surveyPage>=totalPages?'disabled':''} onclick="goSurveyPage(${totalPages})">&raquo;</button>`;
+    el.innerHTML = html;
+}
+
+function goSurveyPage(p){ surveyPage=p; renderSurveyPage(); }
+
+async function loadCampaignDropdowns() {
+    try {
+        const res = await fetch(CAMP_API+'/list');
+        if (!res.ok) return;
+        const campaigns = await res.json();
+        const sel = document.getElementById('cCampaign');
+        sel.innerHTML = '<option value="">Select campaign...</option>';
+        campaigns.forEach(c => {
+            const o = document.createElement('option');
+            o.value = c.campaignId;
+            o.textContent = c.campaignName + ' (' + c.campaignId + ')';
+            sel.appendChild(o);
+        });
+    } catch(e) { console.warn('Failed to load campaigns', e); }
+}
+
+function populateSurveyDropdowns() {
+    const rsel = document.getElementById('resultSurveySelect');
+    const tsel = document.getElementById('trigSurvey');
+    rsel.innerHTML = '<option value="">Select a survey...</option>';
+    tsel.innerHTML = '<option value="">Select survey...</option>';
+    allSurveys.forEach(s => {
+        const o1 = document.createElement('option');
+        o1.value = s.surveyId; o1.textContent = s.surveyName;
+        rsel.appendChild(o1);
+        const o2 = document.createElement('option');
+        o2.value = s.surveyId; o2.textContent = s.surveyName;
+        tsel.appendChild(o2);
+    });
+}
+
+function populateTriggerFilters() {
+    const ages = new Set(), genders = new Set(), countries = new Set();
+    allPanelists.forEach(p => {
+        if (p.ageRange) ages.add(p.ageRange);
+        if (p.gender) genders.add(p.gender);
+        if (p.country) countries.add(p.country);
+    });
+    fillSelect('trigFilterAge', ages, 'All Ages');
+    fillSelect('trigFilterGender', genders, 'All Gender');
+    fillSelect('trigFilterCountry', countries, 'All Countries');
+}
+
+function fillSelect(id, values, defaultLabel) {
+    const sel = document.getElementById(id);
+    sel.innerHTML = `<option value="">${defaultLabel}</option>`;
+    [...values].sort().forEach(v => {
+        const o = document.createElement('option');
+        o.value = v; o.textContent = v;
+        sel.appendChild(o);
+    });
+}
+
+function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('tab-'+name).classList.add('active');
+}
+
+async function loadResults() {
+    const id = document.getElementById('resultSurveySelect').value;
+    const body = document.getElementById('resultsBody');
+    if (!id) { body.innerHTML = '<div class="loading-state">Select a survey to view results</div>'; return; }
+    body.innerHTML = '<div class="loading-state"><span class="spinner"></span></div>';
+    try {
+        const res = await fetch(API+'/'+id+'/results');
+        if (!res.ok) throw new Error('Failed');
+        const data = await res.json();
+        let html = `<div class="stats-row" style="margin-bottom:16px">
+            <div class="stat-card"><div class="stat-label">Total Responses</div><div class="stat-value">${data.totalResponses}</div></div>
+            <div class="stat-card"><div class="stat-label">Exposed</div><div class="stat-value">${data.exposedResponses}</div></div>
+            <div class="stat-card"><div class="stat-label">Control</div><div class="stat-value">${data.controlResponses}</div></div>
+        </div>`;
+        if (data.questionResults && data.questionResults.length) {
+            html += '<div class="table-wrapper"><table><thead><tr><th>Question</th><th>Metric</th><th>Exposed Mean</th><th>Control Mean</th><th>Lift</th></tr></thead><tbody>';
+            data.questionResults.forEach(q => {
+                const lift = q.liftPercent != null ? q.liftPercent.toFixed(1)+'%' : '-';
+                const liftClass = q.liftPercent > 0 ? 'lift-positive' : q.liftPercent < 0 ? 'lift-negative' : 'lift-neutral';
+                html += `<tr>
+                    <td>${esc(q.questionText)}</td>
+                    <td><span class="badge badge-draft">${esc(q.metric||'')}</span></td>
+                    <td>${q.exposedMean != null ? q.exposedMean.toFixed(2) : '-'}</td>
+                    <td>${q.controlMean != null ? q.controlMean.toFixed(2) : '-'}</td>
+                    <td class="${liftClass}" style="font-weight:600">${lift}</td>
+                </tr>`;
+            });
+            html += '</tbody></table></div>';
+        }
+        body.innerHTML = html;
+    } catch(e) { body.innerHTML = '<div class="loading-state" style="color:var(--danger)">Failed to load results</div>'; }
+}
+
+async function viewDetail(id) {
+    try {
+        const res = await fetch(API+'/'+id);
+        const s = await res.json();
+        let html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px">
+            <div><strong>Survey ID:</strong><br/>${esc(s.surveyId)}</div>
+            <div><strong>Status:</strong><br/>${badge(s.status)}</div>
+            <div><strong>Campaign:</strong><br/>${esc(s.campaignId)}</div>
+            <div><strong>Type:</strong><br/>${esc(s.surveyType)}</div>
+        </div>`;
+        if (s.description) html += `<div style="margin-top:12px"><strong>Description:</strong><br/>${esc(s.description)}</div>`;
+        if (s.questions && s.questions.length) {
+            html += `<div style="margin-top:12px"><strong>Questions (${s.questions.length}):</strong><ol style="font-size:13px;margin-top:4px;padding-left:20px">`;
+            s.questions.forEach(q => { html += `<li style="margin-bottom:4px">${esc(q.questionText)} <span class="badge badge-draft" style="font-size:10px">${esc(q.metric||q.questionType||'')}</span></li>`; });
+            html += '</ol></div>';
+        }
+        document.getElementById('detailTitle').textContent = s.surveyName;
+        document.getElementById('detailBody').innerHTML = html;
+        document.getElementById('detailModal').classList.add('active');
+    } catch(e) { showAlert('Failed to load survey details', true); }
+}
+
+async function setStatus(id, status) {
+    try {
+        const res = await fetch(API+'/'+id+'/status', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(status) });
+        if (res.ok) { showAlert('Status updated to '+status); loadSurveys(); }
+        else showAlert('Error updating status', true);
+    } catch(e) { showAlert('Error updating status', true); }
+}
+
+function openCreate() { qIdx=0; document.getElementById('questionsList').innerHTML=''; document.getElementById('createModal').classList.add('active'); }
+function closeCreate() { document.getElementById('createModal').classList.remove('active'); }
+function closeDetail() { document.getElementById('detailModal').classList.remove('active'); }
+
+function addQuestion() {
+    const idx = qIdx++;
+    const div = document.createElement('div');
+    div.style.cssText = 'border:1px solid var(--border);border-radius:6px;padding:12px;margin-top:8px;position:relative';
+    div.innerHTML = `<button style="position:absolute;top:4px;right:8px;background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-muted)" onclick="this.parentElement.remove()">&times;</button>
+        <div class="form-row">
+            <div class="form-group"><label>Question Text *</label><input class="form-control q-text" /></div>
+            <div class="form-group"><label>Type</label>
+                <select class="form-control q-type"><option>LikertScale</option><option>YesNo</option><option>Rating</option><option>OpenEnded</option></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Metric</label><input class="form-control q-metric" placeholder="brand_awareness" /></div>
+            <div class="form-group"><label>Options (comma-separated)</label><input class="form-control q-options" placeholder="Option 1, Option 2, ..." /></div>
+        </div>`;
+    document.getElementById('questionsList').appendChild(div);
+}
+
+async function saveSurvey() {
+    const name = document.getElementById('cName').value;
+    const campaign = document.getElementById('cCampaign').value;
+    if (!name || !campaign) { showAlert('Name and Campaign are required', true); return; }
+    const questions = [];
+    document.querySelectorAll('#questionsList > div').forEach((div, i) => {
+        const text = div.querySelector('.q-text').value;
+        if (!text) return;
+        questions.push({
+            questionId: 'q'+(i+1),
+            questionText: text,
+            questionType: div.querySelector('.q-type').value,
+            metric: div.querySelector('.q-metric').value || null,
+            options: div.querySelector('.q-options').value ? div.querySelector('.q-options').value.split(',').map(s=>s.trim()).filter(Boolean) : [],
+            required: true,
+            order: i+1
+        });
+    });
+    const body = {
+        campaignId: campaign, surveyName: name,
+        description: document.getElementById('cDesc').value || null,
+        surveyType: document.getElementById('cType').value,
+        distributionStartDate: document.getElementById('cStart').value || null,
+        distributionEndDate: document.getElementById('cEnd').value || null,
+        questions: questions
+    };
+    try {
+        const res = await fetch(API+'/create', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        if (res.ok) { closeCreate(); showAlert('Survey created'); loadSurveys(); }
+        else showAlert('Error creating survey: '+(await res.text()), true);
+    } catch(e) { showAlert('Error creating survey', true); }
+}
+
+async function triggerSurvey() {
+    const surveyId = document.getElementById('trigSurvey').value;
+    if (!surveyId) { showAlert('Select a survey', true); return; }
+    const checked = document.querySelectorAll('#panelistCheckboxes input:checked');
+    let ids = [...checked].map(cb => cb.value);
+    const manual = document.getElementById('trigPanelists').value;
+    if (manual) ids = ids.concat(manual.split(',').map(s=>s.trim()).filter(Boolean));
+    if (!ids.length) { showAlert('Select or enter at least one panelist', true); return; }
+    const cohort = document.getElementById('trigCohort').value;
+    try {
+        const res = await fetch(API+'/trigger', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ surveyId, panelistIds: ids, cohortType: cohort })
+        });
+        if (!res.ok) {
+            const errText = await res.text();
+            showAlert('Error triggering survey: ' + errText, true);
+            return;
+        }
+        const data = await res.json();
+        let html = `<div class="alert alert-success" style="display:block">Triggered: ${data.totalTriggered}, Skipped: ${data.totalSkipped}</div>`;
+        if (data.results) {
+            html += '<div style="max-height:200px;overflow-y:auto;font-size:13px;margin-top:8px">';
+            data.results.forEach(r => {
+                const icon = r.status === 'Triggered' ? '\u2705' : r.status === 'AlreadyResponded' ? '\u26A0\uFE0F' : '\u274C';
+                html += `<div>${icon} ${esc(r.panelistId)}: ${esc(r.status)} ${r.surveyUrl ? '- <a href="'+esc(r.surveyUrl)+'" target="_blank">Survey Link</a>' : ''}</div>`;
+            });
+            html += '</div>';
+        }
+        document.getElementById('triggerResult').innerHTML = html;
+    } catch(e) { showAlert('Error triggering survey: ' + e.message, true); }
+}
+
+function loadPanelistSelector() { filterTriggerPanelists(); }
+
+function filterTriggerPanelists() {
+    const age = document.getElementById('trigFilterAge').value;
+    const gender = document.getElementById('trigFilterGender').value;
+    const country = document.getElementById('trigFilterCountry').value;
+    let filtered = allPanelists;
+    if (age) filtered = filtered.filter(p => p.ageRange === age);
+    if (gender) filtered = filtered.filter(p => p.gender === gender);
+    if (country) filtered = filtered.filter(p => p.country === country);
+    const container = document.getElementById('panelistCheckboxes');
+    if (!filtered.length) { container.innerHTML = '<span style="color:var(--text-muted)">No panelists match filters</span>'; return; }
+    container.innerHTML = filtered.map(p => {
+        const pid = p.id || p.panelistId;
+        return `<label style="display:block;padding:2px 0;cursor:pointer"><input type="checkbox" value="${esc(pid)}" style="margin-right:6px" />${esc(pid)} - ${esc(p.firstName||'')} ${esc(p.lastName||'')} (${esc(p.country||'?')})</label>`;
+    }).join('');
+}
+
+function selectAllVisible() {
+    document.querySelectorAll('#panelistCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = true);
+}
+
+function deselectAll() {
+    document.querySelectorAll('#panelistCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+}
+
+function badge(s) { return `<span class="badge badge-${(s||'draft').toLowerCase()}">${esc(s)}</span>`; }
+function fmtDate(d) { return d ? new Date(d).toLocaleDateString() : '-'; }
+function esc(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function showAlert(msg,err) { const a=document.getElementById('alert'); a.className='alert '+(err?'alert-error':'alert-success'); a.textContent=msg; a.style.display='block'; setTimeout(()=>a.style.display='none',4000); }
+
+init();
+</script>
+}

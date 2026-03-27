@@ -1,0 +1,257 @@
+@{ ViewData["Title"] = "Campaigns"; }
+
+<div id="alert" class="alert"></div>
+
+<div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal"><span class="spinner"></span></div></div>
+    <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value" id="statActive">-</div></div>
+    <div class="stat-card"><div class="stat-label">Scheduled</div><div class="stat-value" id="statScheduled">-</div></div>
+    <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value" id="statCompleted">-</div></div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>All Campaigns</h2>
+        <div class="btn-group">
+            <select id="filterStatus" class="form-control" style="width:140px" onchange="load()">
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Completed">Completed</option>
+                <option value="Draft">Draft</option>
+            </select>
+            <button class="btn btn-primary" onclick="openCreate()">+ New Campaign</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-wrapper">
+            <table>
+                <thead><tr>
+                    <th>Name</th><th>Advertiser</th><th>Industry</th><th>Status</th><th>Budget</th><th>Start</th><th>End</th><th>Actions</th>
+                </tr></thead>
+                <tbody id="tBody"></tbody>
+            </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+</div>
+
+<!-- Create / Edit modal -->
+<div class="modal-overlay" id="modal">
+    <div class="modal">
+        <div class="modal-header"><h3 id="modalTitle">New Campaign</h3><button class="close-btn" onclick="closeModal()">&times;</button></div>
+        <div class="modal-body">
+            <input type="hidden" id="editId" />
+            <div class="form-row">
+                <div class="form-group"><label>Campaign Name *</label><input id="fName" class="form-control" /></div>
+                <div class="form-group"><label>Advertiser *</label><input id="fAdvertiser" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Industry</label><input id="fIndustry" class="form-control" /></div>
+                <div class="form-group"><label>Budget</label><input id="fBudget" type="number" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Start Date</label><input id="fStart" type="date" class="form-control" /></div>
+                <div class="form-group"><label>End Date</label><input id="fEnd" type="date" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Target Age Ranges</label><input id="fAge" class="form-control" placeholder="18-24, 25-34" /></div>
+                <div class="form-group"><label>Target Countries</label><input id="fCountries" class="form-control" placeholder="US, UK" /></div>
+            </div>
+            <div class="form-group"><label>KPI - Target Impressions</label><input id="fImpressions" type="number" class="form-control" /></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" id="saveBtn" onclick="save()">Create</button>
+        </div>
+    </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal" style="width:640px">
+        <div class="modal-header"><h3 id="detailTitle">Campaign Detail</h3><button class="close-btn" onclick="closeDetail()">&times;</button></div>
+        <div class="modal-body" id="detailBody"></div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeDetail()">Close</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const API = '/Campaigns/api';
+let allCampaigns = [];
+let currentPage = 1;
+const pageSize = 10;
+
+async function load() {
+    try {
+        const status = document.getElementById('filterStatus').value;
+        const qs = status ? '?status='+status : '';
+        const res = await fetch(API+'/list'+qs);
+        allCampaigns = await res.json();
+        renderStats(allCampaigns);
+        currentPage = 1;
+        renderPage();
+    } catch(e) { showAlert('Error loading campaigns: '+e.message, true); }
+}
+
+function renderStats(data) {
+    const count = (s) => data.filter(c=>c.status===s).length;
+    document.getElementById('statTotal').textContent = data.length;
+    document.getElementById('statActive').textContent = count('Active');
+    document.getElementById('statScheduled').textContent = count('Scheduled');
+    document.getElementById('statCompleted').textContent = count('Completed');
+}
+
+function renderPage(){
+    const totalPages = Math.ceil(allCampaigns.length / pageSize) || 1;
+    if(currentPage > totalPages) currentPage = totalPages;
+    const start = (currentPage - 1) * pageSize;
+    const pageData = allCampaigns.slice(start, start + pageSize);
+    renderTable(pageData);
+    renderPagination(totalPages);
+}
+
+function renderTable(data) {
+    const tbody = document.getElementById('tBody');
+    if (!data.length) { tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text-muted)">No campaigns found</td></tr>'; return; }
+    tbody.innerHTML = data.map(c => `<tr>
+        <td><a href="#" onclick="viewDetail('${c.campaignId}');return false"><strong>${esc(c.campaignName)}</strong></a></td>
+        <td>${esc(c.advertiser)}</td>
+        <td>${esc(c.industry)}</td>
+        <td>${badge(c.status)}</td>
+        <td>$${(c.budget||0).toLocaleString()}</td>
+        <td>${fmtDate(c.startDate)}</td>
+        <td>${fmtDate(c.endDate)}</td>
+        <td class="btn-group">
+            <button class="btn btn-outline btn-sm" onclick="openEdit('${c.campaignId}')">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="del('${c.campaignId}')">Del</button>
+        </td>
+    </tr>`).join('');
+}
+
+function renderPagination(totalPages){
+    const el = document.getElementById('pagination');
+    if(totalPages <= 1){ el.innerHTML = `<span style="color:var(--text-muted);font-size:13px">Showing ${allCampaigns.length} campaign(s)</span>`; return; }
+    let html = `<span style="color:var(--text-muted);font-size:13px;margin-right:12px">Page ${currentPage} of ${totalPages} (${allCampaigns.length} total)</span>`;
+    html += `<button class="btn btn-outline btn-sm" ${currentPage<=1?'disabled':''} onclick="goPage(1)">&laquo;</button> `;
+    html += `<button class="btn btn-outline btn-sm" ${currentPage<=1?'disabled':''} onclick="goPage(${currentPage-1})">&lsaquo;</button> `;
+    const startP = Math.max(1, currentPage - 2);
+    const endP = Math.min(totalPages, currentPage + 2);
+    for(let i=startP;i<=endP;i++){
+        html += `<button class="btn btn-sm ${i===currentPage?'btn-primary':'btn-outline'}" onclick="goPage(${i})">${i}</button> `;
+    }
+    html += `<button class="btn btn-outline btn-sm" ${currentPage>=totalPages?'disabled':''} onclick="goPage(${currentPage+1})">&rsaquo;</button> `;
+    html += `<button class="btn btn-outline btn-sm" ${currentPage>=totalPages?'disabled':''} onclick="goPage(${totalPages})">&raquo;</button>`;
+    el.innerHTML = html;
+}
+
+function goPage(p){ currentPage=p; renderPage(); }
+
+async function openCreate() {
+    document.getElementById('editId').value='';
+    document.getElementById('modalTitle').textContent='New Campaign';
+    document.getElementById('saveBtn').textContent='Create';
+    ['fName','fAdvertiser','fIndustry','fBudget','fStart','fEnd','fAge','fCountries','fImpressions'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('modal').classList.add('active');
+}
+
+async function openEdit(id) {
+    const res = await fetch(API+'/'+id);
+    const c = await res.json();
+    document.getElementById('editId').value = c.campaignId;
+    document.getElementById('modalTitle').textContent = 'Edit Campaign';
+    document.getElementById('saveBtn').textContent = 'Update';
+    document.getElementById('fName').value = c.campaignName||'';
+    document.getElementById('fAdvertiser').value = c.advertiser||'';
+    document.getElementById('fIndustry').value = c.industry||'';
+    document.getElementById('fBudget').value = c.budget||'';
+    document.getElementById('fStart').value = c.startDate ? c.startDate.substring(0,10) : '';
+    document.getElementById('fEnd').value = c.endDate ? c.endDate.substring(0,10) : '';
+    document.getElementById('fAge').value = c.targetAudience?.ageRange?.join(', ')||'';
+    document.getElementById('fCountries').value = c.targetAudience?.countries?.join(', ')||'';
+    document.getElementById('fImpressions').value = c.kpis?.targetImpressions||'';
+    document.getElementById('modal').classList.add('active');
+}
+
+async function save() {
+    const id = document.getElementById('editId').value;
+    const body = {
+        campaignName: document.getElementById('fName').value,
+        advertiser: document.getElementById('fAdvertiser').value,
+        industry: document.getElementById('fIndustry').value,
+        budget: parseFloat(document.getElementById('fBudget').value)||0,
+        startDate: document.getElementById('fStart').value || new Date().toISOString(),
+        endDate: document.getElementById('fEnd').value || new Date(Date.now()+30*86400000).toISOString(),
+        targetAudience: {
+            ageRange: splitCSV(document.getElementById('fAge').value),
+            countries: splitCSV(document.getElementById('fCountries').value),
+            gender:[], interests:[]
+        },
+        kpis: { targetImpressions: parseInt(document.getElementById('fImpressions').value)||0, targetReach:0, targetLift:0 },
+        creatives: []
+    };
+    const url = id ? API+'/'+id : API+'/create';
+    const method = id ? 'PUT' : 'POST';
+    const res = await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (res.ok) { closeModal(); showAlert(id?'Campaign updated':'Campaign created'); load(); }
+    else showAlert('Error: '+(await res.text()), true);
+}
+
+async function del(id) {
+    if (!confirm('Delete this campaign?')) return;
+    const res = await fetch(API+'/'+id, { method:'DELETE' });
+    if (res.ok||res.status===204) { showAlert('Campaign deleted'); load(); }
+    else showAlert('Error deleting campaign', true);
+}
+
+async function viewDetail(id) {
+    const res = await fetch(API+'/'+id);
+    const c = await res.json();
+    const html = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px">
+            <div><strong>Campaign ID:</strong><br/>${esc(c.campaignId)}</div>
+            <div><strong>Status:</strong><br/>${badge(c.status)}</div>
+            <div><strong>Advertiser:</strong><br/>${esc(c.advertiser)}</div>
+            <div><strong>Industry:</strong><br/>${esc(c.industry)}</div>
+            <div><strong>Budget:</strong><br/>$${(c.budget||0).toLocaleString()}</div>
+            <div><strong>Dates:</strong><br/>${fmtDate(c.startDate)} &ndash; ${fmtDate(c.endDate)}</div>
+        </div>
+        ${c.targetAudience ? `<div style="margin-top:16px"><strong>Target Audience:</strong><br/><span style="font-size:13px">
+            Age: ${c.targetAudience.ageRange?.join(', ')||'-'} &middot;
+            Countries: ${c.targetAudience.countries?.join(', ')||'-'} &middot;
+            Gender: ${c.targetAudience.gender?.join(', ')||'-'}
+        </span></div>` : ''}
+        ${c.kpis ? `<div style="margin-top:12px"><strong>KPIs:</strong> <span style="font-size:13px">Impressions: ${(c.kpis.targetImpressions||0).toLocaleString()} &middot; Reach: ${(c.kpis.targetReach||0).toLocaleString()} &middot; Lift: ${c.kpis.targetLift||0}%</span></div>` : ''}
+        ${c.actualMetrics ? `<div style="margin-top:12px"><strong>Actual Metrics:</strong> <span style="font-size:13px">Impressions: ${(c.actualMetrics.impressions||0).toLocaleString()} &middot; Reach: ${(c.actualMetrics.reach||0).toLocaleString()} &middot; Lift: ${c.actualMetrics.averageLift||0}%</span></div>` : ''}
+        ${c.creatives?.length ? `<div style="margin-top:12px"><strong>Creatives (${c.creatives.length}):</strong><ul style="font-size:13px;margin-top:4px;padding-left:20px">${c.creatives.map(cr=>`<li>${esc(cr.variantName)} &ndash; ${esc(cr.format)} ${esc(cr.size)}</li>`).join('')}</ul></div>` : ''}
+        <div style="margin-top:16px;display:flex;gap:8px">
+            <button class="btn btn-sm btn-success" onclick="setStatus('${c.campaignId}','Active')">Set Active</button>
+            <button class="btn btn-sm btn-outline" onclick="setStatus('${c.campaignId}','Paused')">Pause</button>
+            <button class="btn btn-sm btn-outline" onclick="setStatus('${c.campaignId}','Completed')">Complete</button>
+        </div>`;
+    document.getElementById('detailTitle').textContent = c.campaignName;
+    document.getElementById('detailBody').innerHTML = html;
+    document.getElementById('detailModal').classList.add('active');
+}
+
+async function setStatus(id, status) {
+    const res = await fetch(API+'/'+id+'/status', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(status) });
+    if (res.ok) { closeDetail(); showAlert('Status updated to '+status); load(); }
+    else showAlert('Error updating status', true);
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('active'); }
+function closeDetail() { document.getElementById('detailModal').classList.remove('active'); }
+
+function badge(s) { return `<span class="badge badge-${(s||'draft').toLowerCase()}">${esc(s)}</span>`; }
+function fmtDate(d) { return d ? new Date(d).toLocaleDateString() : '-'; }
+function esc(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+function splitCSV(s) { return s ? s.split(',').map(x=>x.trim()).filter(Boolean) : []; }
+function showAlert(msg,err) { const a=document.getElementById('alert'); a.className='alert '+(err?'alert-error':'alert-success'); a.textContent=msg; a.style.display='block'; setTimeout(()=>a.style.display='none',4000); }
+
+load();
+</script>
+}

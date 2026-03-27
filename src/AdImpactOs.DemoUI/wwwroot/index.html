@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ad Tracking Demo � Pixel &amp; S2S Impression Tracker</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --primary:#1a73e8; --success:#34a853; --warning:#f9ab00; --danger:#ea4335; --bg:#f0f2f5; --card:#fff; --text:#202124; --muted:#5f6368; --border:#dadce0; --radius:8px; }
+        body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); }
+        a { color:var(--primary); text-decoration:none; }
+
+        /* Header */
+        .header { background:linear-gradient(135deg,#1e293b,#334155); color:#fff; padding:24px 32px; }
+        .header h1 { font-size:22px; font-weight:700; }
+        .header p { color:#94a3b8; font-size:14px; margin-top:4px; }
+        .header .badge { display:inline-block; background:#f97316; color:#fff; font-size:11px; padding:2px 8px; border-radius:10px; margin-left:8px; vertical-align:middle; }
+
+        .container { max-width:1200px; margin:0 auto; padding:24px; }
+
+        /* Config panel */
+        .config-panel { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:24px; }
+        .config-panel h2 { font-size:16px; font-weight:600; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+        .config-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+        .config-row label { display:block; font-size:12px; font-weight:600; color:var(--muted); margin-bottom:4px; }
+        .config-row input, .config-row select { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:6px; font-size:13px; font-family:inherit; }
+        .config-row input:focus, .config-row select:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(26,115,232,.15); }
+
+        /* Buttons */
+        .btn { display:inline-flex; align-items:center; gap:6px; padding:10px 20px; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; transition:all .15s; }
+        .btn-primary { background:var(--primary); color:#fff; }
+        .btn-primary:hover { background:#1557b0; }
+        .btn-success { background:var(--success); color:#fff; }
+        .btn-success:hover { background:#2d8e47; }
+        .btn-warning { background:var(--warning); color:#fff; }
+        .btn-warning:hover { background:#d4900a; }
+        .btn-danger { background:var(--danger); color:#fff; }
+        .btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+        .btn-outline:hover { background:#f8f9fa; }
+        .btn-sm { padding:6px 12px; font-size:12px; }
+        .btn-group { display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+
+        /* Cards */
+        .card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:20px; overflow:hidden; }
+        .card-header { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+        .card-header h2 { font-size:15px; font-weight:600; }
+        .card-body { padding:20px; }
+
+        /* Stats */
+        .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:20px; }
+        .stat-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:16px; text-align:center; }
+        .stat-card .label { font-size:12px; color:var(--muted); margin-bottom:4px; }
+        .stat-card .value { font-size:26px; font-weight:700; }
+
+        /* Tabs */
+        .tabs { display:flex; border-bottom:2px solid var(--border); margin-bottom:20px; }
+        .tab { padding:10px 20px; cursor:pointer; font-size:14px; font-weight:500; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px; }
+        .tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+        .tab-content { display:none; }
+        .tab-content.active { display:block; }
+
+        /* Log */
+        .log-area { background:#1e293b; color:#e2e8f0; border-radius:var(--radius); padding:16px; font-family:'Cascadia Code','Fira Code','Consolas',monospace; font-size:12px; max-height:400px; overflow-y:auto; line-height:1.6; }
+        .log-area .log-entry { padding:2px 0; border-bottom:1px solid #334155; }
+        .log-area .ts { color:#60a5fa; }
+        .log-area .ok { color:#4ade80; }
+        .log-area .err { color:#f87171; }
+        .log-area .info { color:#fbbf24; }
+        .log-area .dim { color:#64748b; }
+
+        /* Ad preview */
+        .ad-preview { border:2px dashed var(--border); border-radius:var(--radius); padding:24px; text-align:center; background:#fafbfc; position:relative; }
+        .ad-preview .ad-banner { display:inline-block; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; padding:20px 40px; border-radius:8px; font-size:16px; font-weight:600; cursor:pointer; transition:transform .15s; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+        .ad-preview .ad-banner:hover { transform:scale(1.03); }
+        .ad-preview .ad-banner small { display:block; font-weight:400; font-size:11px; margin-top:4px; opacity:.8; }
+        .pixel-indicator { position:absolute; top:8px; right:8px; display:none; }
+        .pixel-indicator.show { display:inline-flex; }
+        .pixel-dot { width:10px; height:10px; background:var(--success); border-radius:50%; animation:pulse 1s; }
+        @keyframes pulse { 0%{transform:scale(1);opacity:1} 50%{transform:scale(1.8);opacity:.5} 100%{transform:scale(1);opacity:1} }
+
+        /* Table */
+        table { width:100%; border-collapse:collapse; font-size:13px; }
+        th { text-align:left; padding:8px 10px; background:#f8f9fa; border-bottom:2px solid var(--border); font-weight:600; font-size:11px; text-transform:uppercase; color:var(--muted); }
+        td { padding:8px 10px; border-bottom:1px solid var(--border); }
+        tr:hover td { background:#f8f9fa; }
+
+        /* Badge */
+        .badge-pill { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+        .badge-pixel { background:#e8f0fe; color:#1a73e8; }
+        .badge-s2s { background:#fef7e0; color:#b06000; }
+        .badge-ok { background:#e6f4ea; color:#137333; }
+        .badge-bot { background:#fce8e6; color:#c5221f; }
+
+        /* Responsive */
+        @media (max-width:768px) { .config-row { grid-template-columns:1fr; } .stats-row { grid-template-columns:1fr 1fr; } }
+
+        /* Two-col layout */
+        .two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        @media (max-width:900px) { .two-col { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>&#9678; AdImpact Os � Client Demo <span class="badge">EXTERNAL</span></h1>
+    <p>Demonstrates how ad impressions are tracked via Pixel (GET) and Server-to-Server (POST) Azure Function APIs</p>
+</div>
+
+<div class="container">
+
+    <!-- Configuration -->
+    <div class="config-panel">
+        <h2>&#9881; Tracker Configuration</h2>
+        <div class="config-row">
+            <div>
+                <label>Campaign API URL</label>
+                <input type="text" id="cfgBaseUrl" value="http://localhost:5003" disabled />
+            </div>
+            <div>
+                <label>Campaign ID</label>
+                <select id="cfgCampaign">
+                    <option value="campaign_summer_beverage_2024">Summer Refresh � Energy Drink</option>
+                    <option value="campaign_retail_back_to_school_2024">Back to School Blowout</option>
+                    <option value="campaign_pharma_allergy_spring_2024">Spring Relief � Allergy Medication</option>
+                    <option value="campaign_food_delivery_q3_2024">Quick Eats � Food Delivery</option>
+                    <option value="campaign_travel_cruise_summer_2024">Mediterranean Dreams � Cruise</option>
+                    <option value="campaign_finance_credit_card_q2_2024">Rewards Plus � Credit Card</option>
+                </select>
+            </div>
+            <div>
+                <label>Creative ID</label>
+                <select id="cfgCreative">
+                    <option value="creative_banner_728x90_v1">banner_728x90_v1 (Lifestyle)</option>
+                    <option value="creative_banner_728x90_v2">banner_728x90_v2 (Action)</option>
+                    <option value="creative_banner_300x250_v1">banner_300x250_v1 (Compact)</option>
+                    <option value="creative_banner_300x600_v1">banner_300x600_v1 (Value)</option>
+                    <option value="creative_banner_320x50_mobile_v1">banner_320x50_mobile (Promo)</option>
+                </select>
+            </div>
+        </div>
+        <div class="config-row" style="margin-top:12px">
+            <div>
+                <label>Panelist Token (User ID)</label>
+                <input type="text" id="cfgPanelist" value="panelist_001" />
+            </div>
+            <div>
+                <label>Ad Server</label>
+                <input type="text" id="cfgAdServer" value="doubleclick" />
+            </div>
+            <div>
+                <label>Ingest Mode</label>
+                <input type="text" id="cfgFuncKey" value="Direct to Campaign API" disabled />
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('pixel')">&#128248; Pixel Tracking</div>
+        <div class="tab" onclick="switchTab('s2s')">&#128640; S2S Tracking</div>
+        <div class="tab" onclick="switchTab('bulk')">&#9889; Bulk Simulation</div>
+        <div class="tab" onclick="switchTab('log')">&#128203; Event Log</div>
+    </div>
+
+    <!-- PIXEL TAB -->
+    <div class="tab-content active" id="tab-pixel">
+        <div class="two-col">
+            <div class="card">
+                <div class="card-header"><h2>&#127912; Ad Banner Preview</h2></div>
+                <div class="card-body">
+                    <div class="ad-preview" id="adPreview">
+                        <div class="pixel-indicator" id="pixelIndicator"><div class="pixel-dot"></div>&nbsp;<span style="font-size:11px;color:var(--success)">Tracked!</span></div>
+                        <div class="ad-banner" onclick="firePixel()">
+                            <span id="adMessage">Fuel Your Summer Adventures</span>
+                            <small>Click to fire pixel impression</small>
+                        </div>
+                        <p style="margin-top:12px;font-size:12px;color:var(--muted)">Clicking the banner fires a <code>GET /api/pixel</code> request with a 1�1 transparent GIF response.</p>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="firePixel()">&#128248; Fire Pixel Impression</button>
+                        <button class="btn btn-outline" onclick="copyPixelUrl()">&#128203; Copy Pixel URL</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>&#128279; Pixel URL</h2></div>
+                <div class="card-body">
+                    <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">This is the tracking pixel URL that would be embedded in an ad tag or web page:</p>
+                    <div style="background:#1e293b;color:#e2e8f0;padding:12px;border-radius:6px;font-family:monospace;font-size:12px;word-break:break-all;" id="pixelUrlDisplay">�</div>
+                    <p style="font-size:12px;color:var(--muted);margin-top:12px;">
+                        <strong>How it works:</strong> The browser makes a <code>GET</code> request to this URL. The Azure Function returns a 1�1 transparent GIF while simultaneously publishing the impression event to Azure Event Hub (<code>ad-impressions</code> topic).
+                    </p>
+                    <h3 style="font-size:13px;margin-top:16px;font-weight:600;">HTML Embed Example:</h3>
+                    <div style="background:#1e293b;color:#e2e8f0;padding:12px;border-radius:6px;font-family:monospace;font-size:11px;margin-top:6px;word-break:break-all;" id="pixelHtmlEmbed">�</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- S2S TAB -->
+    <div class="tab-content" id="tab-s2s">
+        <div class="two-col">
+            <div class="card">
+                <div class="card-header"><h2>&#128640; Server-to-Server Request</h2></div>
+                <div class="card-body">
+                    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Simulate an ad server sending an impression event via the S2S POST API:</p>
+                    <div style="background:#1e293b;color:#e2e8f0;padding:16px;border-radius:6px;font-family:monospace;font-size:12px;" id="s2sPayloadDisplay">�</div>
+                    <div class="btn-group">
+                        <button class="btn btn-warning" onclick="fireS2S()">&#128640; Send S2S Impression</button>
+                        <button class="btn btn-outline" onclick="fireS2SWithIdempotency()">&#128274; Send with Idempotency Key</button>
+                        <button class="btn btn-outline" onclick="copyS2SPayload()">&#128203; Copy Payload</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>&#128196; Last S2S Response</h2></div>
+                <div class="card-body">
+                    <div style="background:#1e293b;color:#e2e8f0;padding:16px;border-radius:6px;font-family:monospace;font-size:12px;min-height:120px;" id="s2sResponseDisplay">No requests sent yet.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BULK TAB -->
+    <div class="tab-content" id="tab-bulk">
+        <div class="card">
+            <div class="card-header"><h2>&#9889; Bulk Impression Simulation</h2></div>
+            <div class="card-body">
+                <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Simulate a burst of impressions from multiple panelists across different devices to test throughput and EventHub ingestion.</p>
+                <div class="config-row">
+                    <div>
+                        <label>Number of Impressions</label>
+                        <input type="number" id="bulkCount" value="10" min="1" max="100" />
+                    </div>
+                    <div>
+                        <label>Method</label>
+                        <select id="bulkMethod">
+                            <option value="pixel">Pixel (GET)</option>
+                            <option value="s2s">S2S (POST)</option>
+                            <option value="mixed">Mixed (50/50)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Delay Between Requests (ms)</label>
+                        <input type="number" id="bulkDelay" value="200" min="0" max="5000" />
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-danger" onclick="startBulk()" id="bulkStartBtn">&#9889; Start Bulk Simulation</button>
+                    <button class="btn btn-outline" onclick="stopBulk()" id="bulkStopBtn" disabled>&#9632; Stop</button>
+                </div>
+                <div style="margin-top:16px">
+                    <div style="background:var(--border);border-radius:4px;height:8px;overflow:hidden;">
+                        <div id="bulkProgress" style="height:100%;width:0%;background:var(--primary);transition:width .3s;border-radius:4px;"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px;">
+                        <span id="bulkStatus">Ready</span>
+                        <span id="bulkCounter">0 / 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stats-row" id="bulkStats" style="display:none">
+            <div class="stat-card"><div class="label">Sent</div><div class="value" id="bsSent">0</div></div>
+            <div class="stat-card"><div class="label">Success</div><div class="value" style="color:var(--success)" id="bsOk">0</div></div>
+            <div class="stat-card"><div class="label">Failed</div><div class="value" style="color:var(--danger)" id="bsFail">0</div></div>
+            <div class="stat-card"><div class="label">Avg Latency</div><div class="value" id="bsLatency">�</div></div>
+        </div>
+    </div>
+
+    <!-- LOG TAB -->
+    <div class="tab-content" id="tab-log">
+        <div class="card">
+            <div class="card-header">
+                <h2>&#128203; Event Log</h2>
+                <div>
+                    <button class="btn btn-outline btn-sm" onclick="clearLog()">Clear</button>
+                    <button class="btn btn-outline btn-sm" onclick="exportLog()">Export</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="log-area" id="logArea">
+                    <div class="log-entry"><span class="dim">[Waiting for events...]</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h2>&#128200; Session Summary</h2></div>
+            <div class="card-body">
+                <div class="stats-row">
+                    <div class="stat-card"><div class="label">Total Fired</div><div class="value" id="logTotal">0</div></div>
+                    <div class="stat-card"><div class="label">Pixel</div><div class="value" style="color:var(--primary)" id="logPixel">0</div></div>
+                    <div class="stat-card"><div class="label">S2S</div><div class="value" style="color:var(--warning)" id="logS2S">0</div></div>
+                    <div class="stat-card"><div class="label">Errors</div><div class="value" style="color:var(--danger)" id="logErrors">0</div></div>
+                </div>
+                <table>
+                    <thead><tr><th>Time</th><th>Method</th><th>Campaign</th><th>Creative</th><th>Panelist</th><th>Status</th><th>Latency</th></tr></thead>
+                    <tbody id="logTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ---- State ----
+const events = [];
+let bulkRunning = false;
+let bulkAbort = null;
+
+const panelistPool = [
+    'panelist_001','panelist_002','panelist_003','panelist_004','panelist_005',
+    'panelist_006','panelist_007','panelist_008','panelist_009','panelist_010'
+];
+
+// ---- Helpers ----
+function cfg(id) { return document.getElementById(id).value.trim(); }
+function esc(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+
+function buildPixelUrl() {
+    return 'http://localhost:5003/api/impressions';
+}
+
+function buildS2SUrl() {
+    return 'http://localhost:5003/api/impressions';
+}
+
+function buildS2SPayload(panelistOverride, idempotencyKey) {
+    return {
+        impressionId: 'demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        campaignId: cfg('cfgCampaign'),
+        creativeId: cfg('cfgCreative'),
+        panelistId: panelistOverride || cfg('cfgPanelist'),
+        deviceType: 'Desktop',
+        country: 'Unknown',
+        isBot: false,
+        botReason: null,
+        ingestSource: 'S2S',
+        timestampUtc: new Date().toISOString()
+    };
+}
+
+function updateDisplays() {
+    const url = buildPixelUrl();
+    document.getElementById('pixelUrlDisplay').textContent = `POST ${url}\nContent-Type: application/json\n\n{ campaignId: "${cfg('cfgCampaign')}", creativeId: "${cfg('cfgCreative')}", panelistId: "${cfg('cfgPanelist')}", ingestSource: "Pixel" }`;
+    document.getElementById('pixelHtmlEmbed').textContent = `// Direct POST to Campaign API (no pixel GIF in direct mode)`;
+    document.getElementById('s2sPayloadDisplay').textContent = `POST ${url}\nContent-Type: application/json\n\n${JSON.stringify(buildS2SPayload(), null, 2)}`;
+}
+
+// Update on any config change
+document.querySelectorAll('.config-panel input, .config-panel select').forEach(el => {
+    el.addEventListener('change', updateDisplays);
+    el.addEventListener('input', updateDisplays);
+});
+updateDisplays();
+
+// ---- Pixel ----
+async function firePixel() {
+    // Direct POST to Campaign API
+    const payload = {
+        impressionId: 'demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        campaignId: cfg('cfgCampaign'),
+        creativeId: cfg('cfgCreative'),
+        panelistId: cfg('cfgPanelist'),
+        deviceType: 'Desktop',
+        country: 'Unknown',
+        isBot: false,
+        botReason: null,
+        ingestSource: 'Pixel',
+        timestampUtc: new Date().toISOString()
+    };
+    const url = 'http://localhost:5003/api/impressions';
+    const start = performance.now();
+    logEntry('info', `Direct Pixel POST ? ${url}`);
+    try {
+        const resp = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const ms = Math.round(performance.now() - start);
+        if (resp.ok) {
+            logEntry('ok', `Direct Pixel response received (${ms}ms)`);
+            recordEvent('Pixel', true, ms);
+            flashPixelIndicator();
+        } else {
+            logEntry('err', `Direct Pixel failed: ${resp.status} (${ms}ms)`);
+            recordEvent('Pixel', false, ms);
+        }
+    } catch (e) {
+        const ms = Math.round(performance.now() - start);
+        logEntry('err', `Direct Pixel failed: ${e.message} (${ms}ms)`);
+        recordEvent('Pixel', false, ms);
+    }
+}
+
+function flashPixelIndicator() {
+    const ind = document.getElementById('pixelIndicator');
+    ind.classList.add('show');
+    setTimeout(() => ind.classList.remove('show'), 1500);
+}
+
+function copyPixelUrl() {
+    navigator.clipboard.writeText(buildPixelUrl());
+    logEntry('info', 'Pixel URL copied to clipboard');
+}
+
+// ---- S2S ----
+async function fireS2S(panelistOverride, idempotencyKey) {
+    // Direct POST to Campaign API
+    const payload = {
+        impressionId: 'demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        campaignId: cfg('cfgCampaign'),
+        creativeId: cfg('cfgCreative'),
+        panelistId: panelistOverride || cfg('cfgPanelist'),
+        deviceType: 'Desktop',
+        country: 'Unknown',
+        isBot: false,
+        botReason: null,
+        ingestSource: 'S2S',
+        timestampUtc: new Date().toISOString()
+    };
+    const url = 'http://localhost:5003/api/impressions';
+    const start = performance.now();
+    logEntry('info', `Direct S2S POST ? ${url}`);
+    try {
+        const resp = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const ms = Math.round(performance.now() - start);
+        const body = await resp.text();
+        if (resp.ok) {
+            logEntry('ok', `Direct S2S ${resp.status} OK (${ms}ms)`);
+            document.getElementById('s2sResponseDisplay').innerHTML =
+                `<span class="ok">HTTP ${resp.status} OK</span> (${ms}ms)\n\n${body}`;
+            recordEvent('S2S', true, ms);
+        } else {
+            logEntry('err', `Direct S2S ${resp.status} (${ms}ms): ${body}`);
+            document.getElementById('s2sResponseDisplay').innerHTML =
+                `<span class="err">HTTP ${resp.status}</span> (${ms}ms)\n\n${body}`;
+            recordEvent('S2S', false, ms);
+        }
+    } catch (e) {
+        const ms = Math.round(performance.now() - start);
+        logEntry('err', `Direct S2S failed: ${e.message} (${ms}ms)`);
+        document.getElementById('s2sResponseDisplay').innerHTML = `<span class="err">Error:</span> ${esc(e.message)}`;
+        recordEvent('S2S', false, ms);
+    }
+}
+
+function fireS2SWithIdempotency() {
+    const key = 'idem_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    logEntry('info', `Using idempotency key: ${key}`);
+    fireS2S(null, key);
+}
+
+function copyS2SPayload() {
+    navigator.clipboard.writeText(JSON.stringify(buildS2SPayload(), null, 2));
+    logEntry('info', 'S2S payload copied to clipboard');
+}
+
+// ---- Bulk ----
+async function startBulk() {
+    if (bulkRunning) return;
+    bulkRunning = true;
+    bulkAbort = new AbortController();
+    const count = parseInt(document.getElementById('bulkCount').value) || 10;
+    const method = document.getElementById('bulkMethod').value;
+    const delay = parseInt(document.getElementById('bulkDelay').value) || 200;
+
+    document.getElementById('bulkStartBtn').disabled = true;
+    document.getElementById('bulkStopBtn').disabled = false;
+    document.getElementById('bulkStats').style.display = '';
+    document.getElementById('bulkStatus').textContent = 'Running...';
+
+    let sent = 0, ok = 0, fail = 0, totalMs = 0;
+
+    for (let i = 0; i < count; i++) {
+        if (!bulkRunning) break;
+        const panelist = panelistPool[Math.floor(Math.random() * panelistPool.length)];
+        const usePixel = method === 'pixel' || (method === 'mixed' && Math.random() > 0.5);
+
+        const start = performance.now();
+        try {
+            const payload = {
+                impressionId: 'demo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                campaignId: cfg('cfgCampaign'),
+                creativeId: cfg('cfgCreative'),
+                panelistId: panelist,
+                deviceType: 'Desktop',
+                country: 'Unknown',
+                isBot: false,
+                botReason: null,
+                ingestSource: usePixel ? 'Pixel' : 'S2S',
+                timestampUtc: new Date().toISOString()
+            };
+            const url = 'http://localhost:5003/api/impressions';
+            await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                signal: bulkAbort.signal
+            });
+            ok++;
+            const ms = Math.round(performance.now() - start);
+            totalMs += ms;
+            recordEvent(usePixel ? 'Pixel' : 'S2S', true, ms, panelist);
+        } catch (e) {
+            if (e.name === 'AbortError') break;
+            fail++;
+            recordEvent(usePixel ? 'Pixel' : 'S2S', false, Math.round(performance.now() - start), panelist);
+        }
+        sent++;
+        document.getElementById('bsSent').textContent = sent;
+        document.getElementById('bsOk').textContent = ok;
+        document.getElementById('bsFail').textContent = fail;
+        document.getElementById('bsLatency').textContent = ok > 0 ? Math.round(totalMs / ok) + 'ms' : '�';
+        document.getElementById('bulkProgress').style.width = ((sent / count) * 100) + '%';
+        document.getElementById('bulkCounter').textContent = `${sent} / ${count}`;
+
+        if (delay > 0 && i < count - 1) await new Promise(r => setTimeout(r, delay));
+    }
+
+    document.getElementById('bulkStatus').textContent = bulkRunning ? 'Completed' : 'Stopped';
+    document.getElementById('bulkStartBtn').disabled = false;
+    document.getElementById('bulkStopBtn').disabled = true;
+    bulkRunning = false;
+    logEntry('info', `Bulk simulation finished: ${sent} sent, ${ok} ok, ${fail} failed`);
+}
+
+function stopBulk() {
+    bulkRunning = false;
+    if (bulkAbort) bulkAbort.abort();
+}
+
+// ---- Logging ----
+function logEntry(cls, msg) {
+    const area = document.getElementById('logArea');
+    if (area.querySelector('.dim')) area.innerHTML = '';
+    const ts = new Date().toLocaleTimeString();
+    area.innerHTML += `<div class="log-entry"><span class="ts">[${ts}]</span> <span class="${cls}">${esc(msg)}</span></div>`;
+    area.scrollTop = area.scrollHeight;
+}
+
+function recordEvent(method, success, latencyMs, panelistOverride) {
+    events.push({
+        time: new Date().toLocaleTimeString(),
+        method,
+        campaign: cfg('cfgCampaign'),
+        creative: cfg('cfgCreative'),
+        panelist: panelistOverride || cfg('cfgPanelist'),
+        success,
+        latency: latencyMs
+    });
+    updateLogSummary();
+}
+
+function updateLogSummary() {
+    document.getElementById('logTotal').textContent = events.length;
+    document.getElementById('logPixel').textContent = events.filter(e => e.method === 'Pixel').length;
+    document.getElementById('logS2S').textContent = events.filter(e => e.method === 'S2S').length;
+    document.getElementById('logErrors').textContent = events.filter(e => !e.success).length;
+
+    const tbody = document.getElementById('logTable');
+    tbody.innerHTML = events.slice(-50).reverse().map(e => `<tr>
+        <td>${esc(e.time)}</td>
+        <td><span class="badge-pill ${e.method==='Pixel'?'badge-pixel':'badge-s2s'}">${e.method}</span></td>
+        <td style="font-size:11px">${esc(e.campaign)}</td>
+        <td style="font-size:11px">${esc(e.creative)}</td>
+        <td>${esc(e.panelist)}</td>
+        <td><span class="badge-pill ${e.success?'badge-ok':'badge-bot'}">${e.success?'OK':'FAIL'}</span></td>
+        <td>${e.latency}ms</td>
+    </tr>`).join('');
+}
+
+function clearLog() {
+    events.length = 0;
+    document.getElementById('logArea').innerHTML = '<div class="log-entry"><span class="dim">[Log cleared]</span></div>';
+    updateLogSummary();
+}
+
+function exportLog() {
+    const csv = 'Time,Method,Campaign,Creative,Panelist,Success,Latency(ms)\n' +
+        events.map(e => [e.time,e.method,e.campaign,e.creative,e.panelist,e.success,e.latency].join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'ad_tracking_demo_log_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+}
+
+// ---- Tabs ----
+function switchTab(name) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+        const names = ['pixel', 's2s', 'bulk', 'log'];
+        t.classList.toggle('active', names[i] === name);
+    });
+    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1322 @@
+﻿[
+    {
+        "id":  "response_040",
+        "responseId":  "response_040",
+        "surveyId":  "survey_fitness_gym_new_year_2025",
+        "campaignId":  "campaign_fitness_gym_new_year_2025",
+        "panelistId":  "panelist-011",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Not at all familiar",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q2_membership_intent",
+                            "answer":  "Not at all likely",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        },
+                        {
+                            "questionId":  "q4_motivation",
+                            "answer":  "2",
+                            "numericValue":  2
+                        }
+                    ],
+        "completedAt":  "2025-01-05T16:15:00",
+        "responseTimeSeconds":  68,
+        "deviceType":  "Mobile",
+        "createdAt":  "2025-01-05T16:15:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_039",
+        "responseId":  "response_039",
+        "surveyId":  "survey_fitness_gym_new_year_2025",
+        "campaignId":  "campaign_fitness_gym_new_year_2025",
+        "panelistId":  "panelist-019",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_membership_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        },
+                        {
+                            "questionId":  "q4_motivation",
+                            "answer":  "4",
+                            "numericValue":  4
+                        }
+                    ],
+        "completedAt":  "2025-01-02T10:30:00",
+        "responseTimeSeconds":  72,
+        "deviceType":  "Mobile",
+        "createdAt":  "2025-01-02T10:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_038",
+        "responseId":  "response_038",
+        "surveyId":  "survey_fitness_gym_new_year_2025",
+        "campaignId":  "campaign_fitness_gym_new_year_2025",
+        "panelistId":  "panelist-005",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Extremely familiar",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q2_membership_intent",
+                            "answer":  "Extremely likely",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q4_motivation",
+                            "answer":  "9",
+                            "numericValue":  9
+                        }
+                    ],
+        "completedAt":  "2024-12-28T14:00:00",
+        "responseTimeSeconds":  85,
+        "deviceType":  "Tablet",
+        "createdAt":  "2024-12-28T14:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_037",
+        "responseId":  "response_037",
+        "surveyId":  "survey_fitness_gym_new_year_2025",
+        "campaignId":  "campaign_fitness_gym_new_year_2025",
+        "panelistId":  "panelist-002",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_membership_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q4_motivation",
+                            "answer":  "8",
+                            "numericValue":  8
+                        }
+                    ],
+        "completedAt":  "2024-12-25T09:00:00",
+        "responseTimeSeconds":  95,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-12-25T09:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_032",
+        "responseId":  "response_032",
+        "surveyId":  "survey_tech_smartphone_holiday_2024",
+        "campaignId":  "campaign_tech_smartphone_holiday_2024",
+        "panelistId":  "panelist-017",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Not at all familiar",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Not at all likely",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q3_feature_perception",
+                            "answer":  "3",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-11-28T09:30:00",
+        "responseTimeSeconds":  80,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-11-28T09:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_031",
+        "responseId":  "response_031",
+        "surveyId":  "survey_tech_smartphone_holiday_2024",
+        "campaignId":  "campaign_tech_smartphone_holiday_2024",
+        "panelistId":  "panelist-019",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_feature_perception",
+                            "answer":  "5",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-11-25T14:00:00",
+        "responseTimeSeconds":  95,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-11-25T14:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_030",
+        "responseId":  "response_030",
+        "surveyId":  "survey_tech_smartphone_holiday_2024",
+        "campaignId":  "campaign_tech_smartphone_holiday_2024",
+        "panelistId":  "panelist-002",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Extremely familiar",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Extremely likely",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q3_feature_perception",
+                            "answer":  "9",
+                            "numericValue":  9
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-11-22T10:00:00",
+        "responseTimeSeconds":  120,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-11-22T10:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_029",
+        "responseId":  "response_029",
+        "surveyId":  "survey_tech_smartphone_holiday_2024",
+        "campaignId":  "campaign_tech_smartphone_holiday_2024",
+        "panelistId":  "panelist-001",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_feature_perception",
+                            "answer":  "8",
+                            "numericValue":  8
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-11-20T18:30:00",
+        "responseTimeSeconds":  150,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-11-20T18:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_036",
+        "responseId":  "response_036",
+        "surveyId":  "survey_insurance_home_q4_2024",
+        "campaignId":  "campaign_insurance_home_q4_2024",
+        "panelistId":  "panelist-009",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_quote_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_trust",
+                            "answer":  "4",
+                            "numericValue":  4
+                        }
+                    ],
+        "completedAt":  "2024-10-28T13:45:00",
+        "responseTimeSeconds":  88,
+        "deviceType":  "Tablet",
+        "createdAt":  "2024-10-28T13:45:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_035",
+        "responseId":  "response_035",
+        "surveyId":  "survey_insurance_home_q4_2024",
+        "campaignId":  "campaign_insurance_home_q4_2024",
+        "panelistId":  "panelist-003",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Not at all familiar",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q2_quote_intent",
+                            "answer":  "Not at all likely",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q3_trust",
+                            "answer":  "3",
+                            "numericValue":  3
+                        }
+                    ],
+        "completedAt":  "2024-10-25T10:00:00",
+        "responseTimeSeconds":  70,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-10-25T10:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_034",
+        "responseId":  "response_034",
+        "surveyId":  "survey_insurance_home_q4_2024",
+        "campaignId":  "campaign_insurance_home_q4_2024",
+        "panelistId":  "panelist-006",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Extremely familiar",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q2_quote_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_trust",
+                            "answer":  "8",
+                            "numericValue":  8
+                        }
+                    ],
+        "completedAt":  "2024-10-22T15:30:00",
+        "responseTimeSeconds":  100,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-10-22T15:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_033",
+        "responseId":  "response_033",
+        "surveyId":  "survey_insurance_home_q4_2024",
+        "campaignId":  "campaign_insurance_home_q4_2024",
+        "panelistId":  "panelist-007",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_quote_intent",
+                            "answer":  "Moderately likely",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q3_trust",
+                            "answer":  "7",
+                            "numericValue":  7
+                        }
+                    ],
+        "completedAt":  "2024-10-20T11:00:00",
+        "responseTimeSeconds":  110,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-10-20T11:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_028",
+        "responseId":  "response_028",
+        "surveyId":  "survey_auto_suv_fall_2024",
+        "campaignId":  "campaign_auto_suv_fall_2024",
+        "panelistId":  "panelist-010",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Moderately familiar",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Neutral",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-09-28T16:00:00",
+        "responseTimeSeconds":  130,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-09-28T16:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_027",
+        "responseId":  "response_027",
+        "surveyId":  "survey_auto_suv_fall_2024",
+        "campaignId":  "campaign_auto_suv_fall_2024",
+        "panelistId":  "panelist-004",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Not at all likely",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Neutral",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-09-25T11:15:00",
+        "responseTimeSeconds":  125,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-09-25T11:15:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_026",
+        "responseId":  "response_026",
+        "surveyId":  "survey_auto_suv_fall_2024",
+        "campaignId":  "campaign_auto_suv_fall_2024",
+        "panelistId":  "panelist-008",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Extremely familiar",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Very favorable",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-09-22T14:30:00",
+        "responseTimeSeconds":  140,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-09-22T14:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_025",
+        "responseId":  "response_025",
+        "surveyId":  "survey_auto_suv_fall_2024",
+        "campaignId":  "campaign_auto_suv_fall_2024",
+        "panelistId":  "panelist-006",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Moderately likely",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Somewhat favorable",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-09-20T10:00:00",
+        "responseTimeSeconds":  155,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-09-20T10:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_008",
+        "responseId":  "response_008",
+        "surveyId":  "survey_retail_back_to_school_2024",
+        "campaignId":  "campaign_retail_back_to_school_2024",
+        "panelistId":  "panelist-017",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Not at all familiar",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-08-28T09:00:00",
+        "responseTimeSeconds":  76,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-08-28T09:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_007",
+        "responseId":  "response_007",
+        "surveyId":  "survey_retail_back_to_school_2024",
+        "campaignId":  "campaign_retail_back_to_school_2024",
+        "panelistId":  "panelist-006",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-08-27T11:10:00",
+        "responseTimeSeconds":  85,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-08-27T11:10:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_006",
+        "responseId":  "response_006",
+        "surveyId":  "survey_retail_back_to_school_2024",
+        "campaignId":  "campaign_retail_back_to_school_2024",
+        "panelistId":  "panelist-003",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Moderately familiar",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Moderately likely",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-08-26T14:20:00",
+        "responseTimeSeconds":  98,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-08-26T14:20:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_005",
+        "responseId":  "response_005",
+        "surveyId":  "survey_retail_back_to_school_2024",
+        "campaignId":  "campaign_retail_back_to_school_2024",
+        "panelistId":  "panelist-007",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-08-25T10:30:00",
+        "responseTimeSeconds":  120,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-08-25T10:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_024",
+        "responseId":  "response_024",
+        "surveyId":  "survey_food_delivery_q3_2024",
+        "campaignId":  "campaign_food_delivery_q3_2024",
+        "panelistId":  "panelist-017",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_download_intent",
+                            "answer":  "Moderately likely",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-08-18T16:45:00",
+        "responseTimeSeconds":  82,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-08-18T16:45:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_023",
+        "responseId":  "response_023",
+        "surveyId":  "survey_food_delivery_q3_2024",
+        "campaignId":  "campaign_food_delivery_q3_2024",
+        "panelistId":  "panelist-005",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Not at all familiar",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q2_download_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-08-15T09:30:00",
+        "responseTimeSeconds":  65,
+        "deviceType":  "Tablet",
+        "createdAt":  "2024-08-15T09:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_022",
+        "responseId":  "response_022",
+        "surveyId":  "survey_food_delivery_q3_2024",
+        "campaignId":  "campaign_food_delivery_q3_2024",
+        "panelistId":  "panelist-019",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Moderately familiar",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q2_download_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-08-12T12:15:00",
+        "responseTimeSeconds":  75,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-08-12T12:15:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_021",
+        "responseId":  "response_021",
+        "surveyId":  "survey_food_delivery_q3_2024",
+        "campaignId":  "campaign_food_delivery_q3_2024",
+        "panelistId":  "panelist-001",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_download_intent",
+                            "answer":  "Extremely likely",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q3_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-08-10T18:00:00",
+        "responseTimeSeconds":  88,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-08-10T18:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_004",
+        "responseId":  "response_004",
+        "surveyId":  "survey_summer_beverage_2024",
+        "campaignId":  "campaign_summer_beverage_2024",
+        "panelistId":  "panelist-004",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Not at all familiar",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Not at all likely",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Neutral",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        },
+                        {
+                            "questionId":  "q5_consideration",
+                            "answer":  "3",
+                            "numericValue":  3
+                        }
+                    ],
+        "completedAt":  "2024-07-23T16:45:00",
+        "responseTimeSeconds":  167,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-07-23T16:45:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_003",
+        "responseId":  "response_003",
+        "surveyId":  "survey_summer_beverage_2024",
+        "campaignId":  "campaign_summer_beverage_2024",
+        "panelistId":  "panelist-003",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Neutral",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        },
+                        {
+                            "questionId":  "q5_consideration",
+                            "answer":  "4",
+                            "numericValue":  4
+                        }
+                    ],
+        "completedAt":  "2024-07-22T11:00:00",
+        "responseTimeSeconds":  198,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-07-22T11:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_002",
+        "responseId":  "response_002",
+        "surveyId":  "survey_summer_beverage_2024",
+        "campaignId":  "campaign_summer_beverage_2024",
+        "panelistId":  "panelist-002",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Extremely familiar",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Extremely likely",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Very favorable",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q5_consideration",
+                            "answer":  "9",
+                            "numericValue":  9
+                        }
+                    ],
+        "completedAt":  "2024-07-21T09:15:00",
+        "responseTimeSeconds":  142,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-07-21T09:15:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_001",
+        "responseId":  "response_001",
+        "surveyId":  "survey_summer_beverage_2024",
+        "campaignId":  "campaign_summer_beverage_2024",
+        "panelistId":  "panelist-001",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Somewhat favorable",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q5_consideration",
+                            "answer":  "8",
+                            "numericValue":  8
+                        }
+                    ],
+        "completedAt":  "2024-07-20T14:30:00",
+        "responseTimeSeconds":  185,
+        "deviceType":  "Mobile",
+        "createdAt":  "2024-07-20T14:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_020",
+        "responseId":  "response_020",
+        "surveyId":  "survey_travel_cruise_summer_2024",
+        "campaignId":  "campaign_travel_cruise_summer_2024",
+        "panelistId":  "panelist-016",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Moderately familiar",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q2_booking_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_luxury_perception",
+                            "answer":  "6",
+                            "numericValue":  6
+                        }
+                    ],
+        "completedAt":  "2024-07-08T14:00:00",
+        "responseTimeSeconds":  135,
+        "deviceType":  "Tablet",
+        "createdAt":  "2024-07-08T14:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_019",
+        "responseId":  "response_019",
+        "surveyId":  "survey_travel_cruise_summer_2024",
+        "campaignId":  "campaign_travel_cruise_summer_2024",
+        "panelistId":  "panelist-009",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_booking_intent",
+                            "answer":  "Not at all likely",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q3_luxury_perception",
+                            "answer":  "5",
+                            "numericValue":  5
+                        }
+                    ],
+        "completedAt":  "2024-07-05T12:30:00",
+        "responseTimeSeconds":  110,
+        "deviceType":  "Tablet",
+        "createdAt":  "2024-07-05T12:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_018",
+        "responseId":  "response_018",
+        "surveyId":  "survey_travel_cruise_summer_2024",
+        "campaignId":  "campaign_travel_cruise_summer_2024",
+        "panelistId":  "panelist-015",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Extremely familiar",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q2_booking_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_luxury_perception",
+                            "answer":  "9",
+                            "numericValue":  9
+                        }
+                    ],
+        "completedAt":  "2024-07-03T10:00:00",
+        "responseTimeSeconds":  160,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-07-03T10:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_017",
+        "responseId":  "response_017",
+        "surveyId":  "survey_travel_cruise_summer_2024",
+        "campaignId":  "campaign_travel_cruise_summer_2024",
+        "panelistId":  "panelist-012",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_booking_intent",
+                            "answer":  "Moderately likely",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q3_luxury_perception",
+                            "answer":  "8",
+                            "numericValue":  8
+                        }
+                    ],
+        "completedAt":  "2024-07-01T15:30:00",
+        "responseTimeSeconds":  145,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-07-01T15:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_016",
+        "responseId":  "response_016",
+        "surveyId":  "survey_finance_credit_card_q2_2024",
+        "campaignId":  "campaign_finance_credit_card_q2_2024",
+        "panelistId":  "panelist-020",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Moderately familiar",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q2_application_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_value_perception",
+                            "answer":  "5",
+                            "numericValue":  5
+                        }
+                    ],
+        "completedAt":  "2024-06-28T10:20:00",
+        "responseTimeSeconds":  112,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-06-28T10:20:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_015",
+        "responseId":  "response_015",
+        "surveyId":  "survey_finance_credit_card_q2_2024",
+        "campaignId":  "campaign_finance_credit_card_q2_2024",
+        "panelistId":  "panelist-018",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_application_intent",
+                            "answer":  "Not at all likely",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q3_value_perception",
+                            "answer":  "4",
+                            "numericValue":  4
+                        }
+                    ],
+        "completedAt":  "2024-06-25T14:00:00",
+        "responseTimeSeconds":  95,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-06-25T14:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_014",
+        "responseId":  "response_014",
+        "surveyId":  "survey_finance_credit_card_q2_2024",
+        "campaignId":  "campaign_finance_credit_card_q2_2024",
+        "panelistId":  "panelist-008",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Extremely familiar",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q2_application_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_value_perception",
+                            "answer":  "9",
+                            "numericValue":  9
+                        }
+                    ],
+        "completedAt":  "2024-06-22T09:30:00",
+        "responseTimeSeconds":  105,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-06-22T09:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_013",
+        "responseId":  "response_013",
+        "surveyId":  "survey_finance_credit_card_q2_2024",
+        "campaignId":  "campaign_finance_credit_card_q2_2024",
+        "panelistId":  "panelist-004",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_application_intent",
+                            "answer":  "Moderately likely",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q3_value_perception",
+                            "answer":  "7",
+                            "numericValue":  7
+                        }
+                    ],
+        "completedAt":  "2024-06-20T11:00:00",
+        "responseTimeSeconds":  130,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-06-20T11:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_012",
+        "responseId":  "response_012",
+        "surveyId":  "survey_pharma_allergy_spring_2024",
+        "campaignId":  "campaign_pharma_allergy_spring_2024",
+        "panelistId":  "panelist-010",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Moderately familiar",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Slightly likely",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Neutral",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-05-28T17:15:00",
+        "responseTimeSeconds":  190,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-05-28T17:15:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_011",
+        "responseId":  "response_011",
+        "surveyId":  "survey_pharma_allergy_spring_2024",
+        "campaignId":  "campaign_pharma_allergy_spring_2024",
+        "panelistId":  "panelist-012",
+        "cohortType":  "control",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Slightly familiar",
+                            "numericValue":  2
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Not at all likely",
+                            "numericValue":  1
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Neutral",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "No",
+                            "numericValue":  0
+                        }
+                    ],
+        "completedAt":  "2024-05-25T13:00:00",
+        "responseTimeSeconds":  155,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-05-25T13:00:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_010",
+        "responseId":  "response_010",
+        "surveyId":  "survey_pharma_allergy_spring_2024",
+        "campaignId":  "campaign_pharma_allergy_spring_2024",
+        "panelistId":  "panelist-006",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Very familiar",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Moderately likely",
+                            "numericValue":  3
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Somewhat favorable",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-05-22T10:30:00",
+        "responseTimeSeconds":  175,
+        "deviceType":  "Desktop",
+        "createdAt":  "2024-05-22T10:30:00",
+        "status":  "Completed"
+    },
+    {
+        "id":  "response_009",
+        "responseId":  "response_009",
+        "surveyId":  "survey_pharma_allergy_spring_2024",
+        "campaignId":  "campaign_pharma_allergy_spring_2024",
+        "panelistId":  "panelist-009",
+        "cohortType":  "exposed",
+        "answers":  [
+                        {
+                            "questionId":  "q1_awareness",
+                            "answer":  "Extremely familiar",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q2_purchase_intent",
+                            "answer":  "Very likely",
+                            "numericValue":  4
+                        },
+                        {
+                            "questionId":  "q3_favorability",
+                            "answer":  "Very favorable",
+                            "numericValue":  5
+                        },
+                        {
+                            "questionId":  "q4_message_recall",
+                            "answer":  "Yes",
+                            "numericValue":  1
+                        }
+                    ],
+        "completedAt":  "2024-05-20T15:00:00",
+        "responseTimeSeconds":  210,
+        "deviceType":  "Tablet",
+        "createdAt":  "2024-05-20T15:00:00",
+        "status":  "Completed"
+    }
+]
